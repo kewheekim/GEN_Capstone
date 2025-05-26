@@ -2,7 +2,6 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -58,7 +57,7 @@ public class MatApSingleActivity extends AppCompatActivity {
             showQuestion(currentIndex);
         } else {
             // 마지막 질문 뒤에 수행할 액션 (예: 다음 액티비티로 이동)
-            Intent intent = new Intent(this, MatchActivity.class);
+            Intent intent = new Intent(this, SetTimeActivity.class);
             intent.putStringArrayListExtra("answers",
                     new ArrayList<>(answers));
             startActivity(intent);
