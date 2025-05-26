@@ -28,19 +28,49 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
+    <TextView
+        android:id="@+id/sub_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="오늘부터 일주일 이후의 날짜까지 선택할 수 있어요\n날짜 중복 선택은 불가해요"
+        style="@style/TextAppearance.Body"
+        android:lineSpacingExtra="6sp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="3dp"/>
+
     <!-- 날짜 선택 가로 슬라이드 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_dates"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="21dp"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/title_text"
+        app:layout_constraintTop_toBottomOf="@id/sub_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/am"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="오전"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/black_text"
+        android:lineSpacingExtra="6sp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/rv_dates"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"/>
 
     <!-- 시간 슬롯 그리드 -->
     <androidx.recyclerview.widget.RecyclerView
@@ -53,7 +83,7 @@
         android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="6"
-        app:layout_constraintTop_toBottomOf="@id/rv_dates"
+        app:layout_constraintTop_toBottomOf="@id/am"
         app:layout_constraintBottom_toTopOf="@id/include_next_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

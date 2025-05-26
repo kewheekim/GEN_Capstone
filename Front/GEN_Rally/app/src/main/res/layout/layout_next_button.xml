@@ -12,6 +12,7 @@
     android:paddingRight="24dp">
 
     <Button
+        style="@style/FlatButton"
         android:id="@+id/next_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
