@@ -12,7 +12,7 @@ public enum GameStyle {
         return Arrays.stream(GameStyle.values())
                 .filter(g -> g.code == code)
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Invalid GameStyle code: " + code));
     }
     public int getCode() { return code; }
 }
