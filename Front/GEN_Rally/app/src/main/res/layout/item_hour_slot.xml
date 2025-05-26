@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="60dp"
+    android:layout_height="86dp"
+    android:gravity="center">
+
+    <!-- 시간 레이블 -->
+    <TextView
+        android:id="@+id/tv_hour"
+        android:layout_width="60dp"
+        android:layout_height="18dp"
+        android:textSize="12sp"
+        android:textColor="#525252"
+        android:gravity="center"/>
+
+    <!-- 선택 가능한 슬롯 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_slot"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:backgroundTint="#EBEBEB"/>
+</LinearLayout>
+
