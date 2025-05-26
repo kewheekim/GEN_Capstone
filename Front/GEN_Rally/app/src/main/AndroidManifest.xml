@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MatApSingleActivity"/>
-        <activity android:name=".ui.MatchActivity"/>
+        <activity android:name=".ui.SetTimeActivity"/>
+        <activity android:name=".ui.SetLocationActivity"/>
     </application>
 
 </manifest>
