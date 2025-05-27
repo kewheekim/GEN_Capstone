@@ -45,6 +45,7 @@ public class MatApSingleActivity extends AppCompatActivity {
                                 QUESTIONS[idx],
                                 OPTIONS[idx]
                         ))
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -62,6 +63,15 @@ public class MatApSingleActivity extends AppCompatActivity {
                     new ArrayList<>(answers));
             startActivity(intent);
             finish();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();  // 액티비티 종료
         }
     }
 }
