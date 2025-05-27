@@ -39,7 +39,7 @@ public class SetTimeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_match_2);
+        setContentView(R.layout.activity_time);
 
         Toolbar toolbar = findViewById(R.id.include_toolbar);
         setSupportActionBar(toolbar);
@@ -56,7 +56,7 @@ public class SetTimeActivity extends AppCompatActivity {
         setupHourRecycler();
 
         nextBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MatApActivity.class);
+            Intent intent = new Intent(this, SetLocationActivity.class);
             intent.putExtra("date", selectedDate.toString());
             intent.putIntegerArrayListExtra("hours", new ArrayList<>(selectedHours));
             startActivity(intent);
