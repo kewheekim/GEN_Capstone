@@ -50,7 +50,11 @@ public class MatApSingleFragment extends Fragment {
                     ContextThemeWrapper wrapper = new ContextThemeWrapper(getContext(), R.style.MyCustomRadioButton);
                     RadioButton rb = new RadioButton(wrapper);
                     rb.setText(option);
+                    rb.setTextColor(Color.parseColor("#676769"));
+                    rb.setTextSize(18);
                     rb.setButtonDrawable(null);
+                    float extra = 5 * getResources().getDisplayMetrics().density;  // 5dp -> px
+                    rb.setLineSpacing(extra, 1f);
 
                     Drawable radioDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.custom_radio_button);
                     rb.setCompoundDrawablesWithIntrinsicBounds(null, null, radioDrawable, null); // 오른쪽에만 설정
@@ -64,16 +68,17 @@ public class MatApSingleFragment extends Fragment {
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             (int) (88 * getResources().getDisplayMetrics().density) // 88dp
                     );
-                    params.setMargins(0, 0, 0, 13);
+                    int marginBottom = (int) (13 * getResources().getDisplayMetrics().density); // 13dp -> px
+                    params.setMargins(0, 0, 0, marginBottom);
 
                     rb.setLayoutParams(params);
 
                     // 내부 패딩 (글자 위치 조정용)
                     rb.setPadding(
                             (int) (24 * getResources().getDisplayMetrics().density),  // left padding
-                            (int) (12 * getResources().getDisplayMetrics().density),  // top
+                            (int) (16 * getResources().getDisplayMetrics().density),  // top
                             (int) (24 * getResources().getDisplayMetrics().density),  // right
-                            (int) (12 * getResources().getDisplayMetrics().density)   // bottom
+                            (int) (16 * getResources().getDisplayMetrics().density)   // bottom
                     );
 
                     radioGroup.addView(rb);
