@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rally.R;
@@ -52,6 +53,12 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.VH> {
         card.setStrokeWidth(sel? 2:1);
         card.setStrokeColor(ColorStateList.valueOf(
                 sel? Color.parseColor("#2ABA72") : Color.parseColor("#D9D9D9")));
+
+        int fillColor = ContextCompat.getColor(
+                card.getContext(),
+                sel ? R.color.green_select : R.color.white
+        );
+        card.setBackgroundTintList(ColorStateList.valueOf(fillColor));
 
         h.itemView.setOnClickListener(v->{
             int old = selectedPos;
