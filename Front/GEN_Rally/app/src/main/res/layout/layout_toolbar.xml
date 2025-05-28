@@ -14,7 +14,7 @@
         android:id="@+id/btn_back"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/arrow"
+        android:src="@drawable/ic_back_arrow"
         android:contentDescription=" "
         android:background="@color/white"
         android:layout_marginStart="10dp"

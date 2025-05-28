@@ -3,7 +3,7 @@ package com.gen.rally.entity;
 import java.util.Arrays;
 
 public enum Tier {
-    입문자(0), 초급자(1), 중급자 (2), 상급자(3);
+    입문자(0), 초보자(1), 중급자 (2), 상급자(3);
 
     private final int code;
     Tier(int code) {

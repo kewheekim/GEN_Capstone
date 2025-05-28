@@ -1,23 +1,32 @@
 package com.gen.rally.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Base64;
 
-@Entity
+@Entity @Setter @Getter
 public class User {
-
     @Id
-    @GeneratedValue
-    private String user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String userId;
     private String password;
     private String name;
-    private String profile_image;
+    @Lob
+    @Column(name= "profile_image")
+    private byte[] profileImage;
     private Gender gender;
     private Tier tier;
     private int skill;
-    private double manner_score;
-    private LocalDateTime created_at;
+    private double manner;
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    public String getProfileImageUrl() {
+        if (this.profileImage == null) return null;
+        return Base64.getEncoder().encodeToString(this.profileImage);
+    }
 }
 
