@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,6 +37,8 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     private EditText etSearch;
     private Button nextBtn;
 
+    private ActivityResultLauncher<Intent> searchLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +53,35 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         etSearch = findViewById(R.id.et_search);
         nextBtn = findViewById(R.id.next_button);
 
-        // 검색창 클릭 -> 검색 화면(Fragment)으로 이동
+        nextBtn.setEnabled(false);
+
+        // 검색창 클릭 → SearchLocationActivity 이동
+        searchLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        String name = result.getData().getStringExtra("location_name");
+                        double lat = result.getData().getDoubleExtra("latitude", 0);
+                        double lng = result.getData().getDoubleExtra("longitude", 0);
+
+                        currentLatLng = new LatLng(lat, lng);
+                        tvLocationName.setText(name);
+                        etSearch.setText(name);
+
+                        if (mMap != null) {
+                            mMap.clear(); // 기존 마커 제거
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+                            mMap.addMarker(new MarkerOptions().position(currentLatLng).title(name));
+                        }
+
+                        // "다음" 버튼 활성화
+                        nextBtn.setEnabled(true);
+                    }
+                });
+
         etSearch.setOnClickListener(v -> {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.map_container, new SetLocationFragment())
-                    .addToBackStack(null)
-                    .commit();
+            Intent intent = new Intent(this, SearchLocationActivity.class);
+            searchLauncher.launch(intent);
         });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -100,7 +127,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        // 권한이 있다면 바로 위치 표시
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
