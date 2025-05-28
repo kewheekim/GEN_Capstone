@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@id/subtitle_text"
         app:layout_constraintStart_toStartOf="@id/subtitle_text"
         app:layout_constraintEnd_toEndOf="@id/subtitle_text"
-        android:layout_marginTop="27dp"/>
+        android:layout_marginTop="24dp"/>
 
     <TextView
         android:id="@+id/single_title"
@@ -61,7 +61,7 @@
         android:textColor="@color/black_text"
         app:layout_constraintTop_toTopOf="@id/rectangle_single"
         app:layout_constraintStart_toStartOf="@id/rectangle_single"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"/>
 
     <TextView
@@ -74,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@id/single_title"
         app:layout_constraintStart_toStartOf="@id/single_title"
         app:layout_constraintEnd_toEndOf="@id/rectangle_single"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"/>
 
     <View
@@ -97,7 +97,7 @@
         android:textColor="@color/black_text"
         app:layout_constraintTop_toTopOf="@id/rectangle_double"
         app:layout_constraintStart_toStartOf="@id/rectangle_double"
-        android:layout_marginStart="28dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"/>
 
     <TextView
@@ -110,7 +110,7 @@
         app:layout_constraintTop_toBottomOf="@id/double_title"
         app:layout_constraintStart_toStartOf="@id/double_title"
         app:layout_constraintEnd_toEndOf="@id/rectangle_double"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"/>
 
     <include
