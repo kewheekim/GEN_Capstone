@@ -1,5 +1,7 @@
 package com.gen.rally;
 
+import com.gen.rally.repository.UserRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,4 +12,9 @@ public class RallyApplication {
         SpringApplication.run(RallyApplication.class, args);
     }
 
+    CommandLineRunner run(UserRepository repo) {
+        return args -> {
+            System.out.println("Saved users: " + repo.findAll());
+        };
+    }
 }
