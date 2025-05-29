@@ -18,8 +18,8 @@ public class MatchRequestService {
     private final MatchRequestRepository matchRequestRepository;
     private final UserRepository userRepository;
 
-    public Long createMatchRequest(String userId, MatchRequestCreateDto dto) {
-        User user = userRepository.findByUserId(userId)
+    public Long createMatchRequest(MatchRequestCreateDto dto) {
+        User user = userRepository.findByUserId(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자"));
 
         MatchRequest matchRequest = new MatchRequest();
