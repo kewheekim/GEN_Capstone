@@ -61,15 +61,15 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         String name = result.getData().getStringExtra("location_name");
-                        double lat = result.getData().getDoubleExtra("latitude", 0);
-                        double lng = result.getData().getDoubleExtra("longitude", 0);
+                        double lat = result.getData().getDoubleExtra("lat", 0);
+                        double lng = result.getData().getDoubleExtra("lng", 0);
 
                         currentLatLng = new LatLng(lat, lng);
                         tvLocationName.setText(name);
                         etSearch.setText(name);
 
                         if (mMap != null) {
-                            mMap.clear(); // 기존 마커 제거
+                            mMap.clear();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
                             mMap.addMarker(new MarkerOptions().position(currentLatLng).title(name));
                         }
@@ -85,12 +85,11 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.map_container, mapFragment)
-                .commit();
-
-        mapFragment.getMapAsync(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map_container);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
         checkLocationPermission();
     }
 
