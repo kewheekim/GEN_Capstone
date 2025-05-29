@@ -14,6 +14,5 @@ public enum Gender {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Gender code: " + code));
     }
-
     public int getCode() { return code; }
 }

@@ -2,19 +2,28 @@ package com.gen.rally.dto;
 
 import com.gen.rally.entity.GameStyle;
 import com.gen.rally.entity.GameType;
-import com.gen.rally.entity.Gender;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-// 매칭 신청 시 전달되는 데이터 형식
+import java.time.LocalDate;
+import java.util.Date;
+
+
+// 매칭 신청 시 프론트에서 전달하는 데이터 형식
 @Getter @Setter
+@NoArgsConstructor
 public class MatchRequestCreateDto {
-    private String user_id;
-    private GameType game_type;
-    private GameStyle game_style;
-    private int same_gender;
-    private int start_time;
-    private int end_time;
+    private String userId;
+    private GameType gameType;
+    private GameStyle gameStyle;
+    private boolean sameGender;
+
+    private LocalDate gameDate;
+    private int startTime;
+    private int endTime;
+
+    private String place;
     private double latitude;
     private double longitude;
 }
