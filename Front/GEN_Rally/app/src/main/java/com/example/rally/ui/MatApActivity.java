@@ -45,7 +45,7 @@ public class MatApActivity extends AppCompatActivity {
         };
 
         singleCard.setOnClickListener(cardClick);
-        doubleCard.setOnClickListener(cardClick);
+       // doubleCard.setOnClickListener(cardClick);
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
