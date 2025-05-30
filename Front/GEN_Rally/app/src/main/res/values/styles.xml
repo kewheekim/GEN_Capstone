@@ -10,6 +10,7 @@
         <item name="colorOnSecondary">@android:color/white</item>
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">#343434</item>
+        <item name="buttonStyle">@style/FlatButton</item>
     </style>
     <style name="TextAppearance.Title" parent="TextAppearance.AppCompat">
         <item name="android:textSize">20sp</item>
@@ -20,6 +21,7 @@
     </style>
     <style name="TextAppearance.Body" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/pretendard_variable</item>
+        <item name="android:textColor">#525252</item>
         <item name="android:textStyle">normal</item>
     </style>
     <style name="MyCustomRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
