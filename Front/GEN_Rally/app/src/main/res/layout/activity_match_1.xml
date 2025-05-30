@@ -81,6 +81,8 @@
         android:id="@+id/rectangle_double"
         android:layout_width="0dp"
         android:layout_height="148dp"
+        android:clickable="false"
+        android:focusable="false"
         android:background="@drawable/selector_rectangle"
         app:layout_constraintTop_toBottomOf="@id/rectangle_single"
         app:layout_constraintStart_toStartOf="@id/rectangle_single"
