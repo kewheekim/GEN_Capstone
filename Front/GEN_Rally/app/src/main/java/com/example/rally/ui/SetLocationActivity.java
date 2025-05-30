@@ -3,6 +3,7 @@ package com.example.rally.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,6 +77,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
 
                         // "다음" 버튼 활성화
                         nextBtn.setEnabled(true);
+                        nextBtn.setTextColor(Color.parseColor("white"));
                     }
                 });
 
