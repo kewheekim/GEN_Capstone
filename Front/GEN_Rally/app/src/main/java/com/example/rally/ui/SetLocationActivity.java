@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +30,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class SetLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
@@ -35,6 +41,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng currentLatLng;
     private TextView tvLocationName;
+    private TextView tvAddressName;
     private EditText etSearch;
     private Button nextBtn;
 
@@ -51,6 +58,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
 
         tvLocationName = findViewById(R.id.tv_location_name);
+        tvAddressName = findViewById(R.id.tv_address_name);
         etSearch = findViewById(R.id.et_search);
         nextBtn = findViewById(R.id.next_button);
 
@@ -62,11 +70,13 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         String name = result.getData().getStringExtra("location_name");
+                        String address = result.getData().getStringExtra("address_name");
                         double lat = result.getData().getDoubleExtra("lat", 0);
                         double lng = result.getData().getDoubleExtra("lng", 0);
 
                         currentLatLng = new LatLng(lat, lng);
                         tvLocationName.setText(name);
+                        tvAddressName.setText(address);
                         etSearch.setText(name);
 
                         if (mMap != null) {
@@ -107,18 +117,42 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
                         currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        // 1) 지도를 갱신
                         if (mMap != null) {
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+                            mMap.clear();
                             mMap.addMarker(new MarkerOptions().position(currentLatLng).title("현재 위치"));
                         }
-                        tvLocationName.setText("현재 위치: " + currentLatLng.latitude + ", " + currentLatLng.longitude);
+
+                        // 2) 위·경도를 주소(문자열)로 변환
+                        String addressString = "주소를 가져올 수 없습니다.";
+                        try {
+                            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                            List<Address> addresses = geocoder.getFromLocation(
+                                    location.getLatitude(),
+                                    location.getLongitude(),
+                                    1
+                            );
+                            if (addresses != null && addresses.size() > 0) {
+                                Address addr = addresses.get(0);
+                                // 원하는 형식으로 가져오기 (예: 도로명 + 상세)
+                                addressString = addr.getAddressLine(0);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        // 3) TextView에 보여주기
+                        tvLocationName.setText("현재 위치");
+                        tvAddressName.setText(addressString);
                     } else {
                         tvLocationName.setText("위치 정보를 가져올 수 없습니다.");
                     }

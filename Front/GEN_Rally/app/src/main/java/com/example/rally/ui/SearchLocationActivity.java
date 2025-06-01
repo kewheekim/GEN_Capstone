@@ -71,21 +71,25 @@ public class SearchLocationActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchPlaceDetails(AutocompletePrediction prediction) {
-        String placeId = prediction.getPlaceId();
-        List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
-        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, fields).build();
+    private void fetchPlaceDetails(AutocompletePrediction p) {
+        List<Place.Field> fields =
+                Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
 
-        placesClient.fetchPlace(request).addOnSuccessListener(response -> {
-            Place place = response.getPlace();
-            sendResult(place.getName(), place.getLatLng().latitude, place.getLatLng().longitude);
+        FetchPlaceRequest req = FetchPlaceRequest.builder(p.getPlaceId(), fields).build();
+        placesClient.fetchPlace(req).addOnSuccessListener(res -> {
+            Place place = res.getPlace();
+            sendResult(place.getName(),
+                    place.getAddress(),               // 주소
+                    place.getLatLng().latitude,
+                    place.getLatLng().longitude);
         });
     }
 
     // 선택한 장소 → SetLocationActivity로 전달
-    private void sendResult(String name, double lat, double lng) {
+    private void sendResult(String name, String address, double lat, double lng) {
         Intent intent = new Intent();
-        intent.putExtra("place_name", name);
+        intent.putExtra("location_name", name);
+        intent.putExtra("address_name", address);
         intent.putExtra("lat", lat);
         intent.putExtra("lng", lng);
         setResult(RESULT_OK, intent);
