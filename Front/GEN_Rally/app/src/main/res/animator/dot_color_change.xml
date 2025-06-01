@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="sequentially">
+
+    <objectAnimator
+        android:propertyName="textColor"
+        android:duration="0"
+        android:valueFrom="@color/gray_border"
+        android:valueTo="@color/green_active"
+        android:valueType="intType" />
+
+    <objectAnimator
+        android:propertyName="textColor"
+        android:duration="0"
+        android:valueFrom="@color/green_active"
+        android:valueTo="@color/gray_border"
+        android:valueType="intType" />
+</set>

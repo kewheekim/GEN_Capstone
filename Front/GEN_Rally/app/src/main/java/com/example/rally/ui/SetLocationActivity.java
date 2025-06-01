@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -103,6 +104,14 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
             mapFragment.getMapAsync(this);
         }
         checkLocationPermission();
+
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getApplicationContext(),LoadingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void checkLocationPermission() {

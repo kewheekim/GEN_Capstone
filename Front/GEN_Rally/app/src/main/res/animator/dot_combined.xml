@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="sequentially">
+
+    <!-- “위로 올라가기 + 색상 회색→초록”을 동시에 실행시킬 첫 번째 묶음 -->
+    <set android:ordering="together">
+        <objectAnimator
+            android:propertyName="translationY"
+            android:duration="300"
+            android:valueFrom="0"
+            android:valueTo="-8dp"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:propertyName="textColor"
+            android:duration="300"
+            android:valueFrom="@color/gray_border"
+            android:valueTo="@color/green_active"
+            android:valueType="intType" />
+    </set>
+
+    <!-- “아래로 내려가기 + 색상 초록→회색”을 동시에 실행시킬 두 번째 묶음 -->
+    <set android:ordering="together">
+        <objectAnimator
+            android:propertyName="translationY"
+            android:duration="300"
+            android:valueFrom="-8dp"
+            android:valueTo="0"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:propertyName="textColor"
+            android:duration="300"
+            android:valueFrom="@color/green_active"
+            android:valueTo="@color/gray_border"
+            android:valueType="intType" />
+    </set>
+
+</set>
