@@ -36,13 +36,46 @@
             android:layout_marginTop="-6dp"
             android:textStyle="bold" />
 
-        <View
+        <LinearLayout
+            android:id="@+id/place_container"
             android:layout_width="304dp"
             android:layout_height="120dp"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="21.5dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/bg_view_active" />
+            android:orientation="vertical"
+            android:background="@drawable/bg_view_active"
+            android:paddingVertical="22dp"
+            android:paddingHorizontal="11dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/iv_marker"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_location_s"
+                android:contentDescription="위치 아이콘" />
+
+                <TextView
+                    android:id="@+id/tv_place_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="장소명"
+                    android:textColor="@color/black_text"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/tv_place_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="상세 주소"
+                    android:textColor="@color/gray_text"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"

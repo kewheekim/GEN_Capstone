@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.io.PushbackInputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -106,12 +104,15 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         }
         checkLocationPermission();
 
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
-                startActivity(intent);
-            }
+        nextBtn.setOnClickListener(view -> {
+            // 팝업으로 장소 전달
+            String locationName = tvLocationName.getText().toString();
+            String addressName = tvAddressName.getText().toString();
+
+            Intent intent = new Intent(SetLocationActivity.this, PopupLocationActivity.class);
+            intent.putExtra("location_name", locationName);
+            intent.putExtra("address_name", addressName);
+            startActivity(intent);
         });
     }
 
