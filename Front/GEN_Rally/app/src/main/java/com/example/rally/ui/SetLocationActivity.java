@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.io.PushbackInputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -108,7 +109,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(getApplicationContext(),LoadingActivity.class);
+                Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
                 startActivity(intent);
             }
         });

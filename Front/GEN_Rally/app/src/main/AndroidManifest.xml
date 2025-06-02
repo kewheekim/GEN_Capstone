@@ -32,6 +32,7 @@
         <activity android:name=".ui.SetTimeActivity"/>
         <activity android:name=".ui.SetLocationActivity"/>
         <activity android:name=".ui.SearchLocationActivity"/>
+        <activity android:name=".ui.PopupActivity" android:theme="@style/PopupTheme" />
         <activity android:name=".ui.LoadingActivity"/>
     </application>
 
