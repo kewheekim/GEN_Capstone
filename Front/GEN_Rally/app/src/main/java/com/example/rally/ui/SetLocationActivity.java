@@ -154,7 +154,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                         // 2) 위·경도를 주소(문자열)로 변환
                         String addressString = "주소를 가져올 수 없습니다.";
                         try {
-                            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                            Geocoder geocoder = new Geocoder(this, Locale.KOREA);
                             List<Address> addresses = geocoder.getFromLocation(
                                     location.getLatitude(),
                                     location.getLongitude(),

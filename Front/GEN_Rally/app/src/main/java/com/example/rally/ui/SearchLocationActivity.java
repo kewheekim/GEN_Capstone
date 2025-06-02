@@ -22,6 +22,7 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class SearchLocationActivity extends AppCompatActivity {
     private EditText etSearch;
@@ -41,7 +42,7 @@ public class SearchLocationActivity extends AppCompatActivity {
 
         // Places API 초기화
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M");
+            Places.initialize(getApplicationContext(), "AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M", Locale.KOREAN);
         }
         placesClient = Places.createClient(this);
 
