@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rally.R;
 
+import java.util.ArrayList;
+
 public class PopupLocationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -29,6 +31,8 @@ public class PopupLocationActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String locationName = intent.getStringExtra("location_name");
         String addressName = intent.getStringExtra("address_name");
+        String date            = intent.getStringExtra("date");
+        ArrayList<Integer> hours   = intent.getIntegerArrayListExtra("hours");
 
         if (locationName != null) {
             tvPlaceName.setText(locationName);
@@ -44,13 +48,12 @@ public class PopupLocationActivity extends AppCompatActivity {
         backBtn.setOnClickListener(v -> finish());
 
         goBtn.setOnClickListener(v -> {
-            // → 두 번째 팝업(최종 매칭 확인)으로 넘어간다.
+            // → 두 번째 팝업(최종 매칭 확인)으로
             Intent nextIntent = new Intent(PopupLocationActivity.this,
                     PopupConfirmActivity.class);
-            // 두 번째 팝업에도 **날짜/시간/장소** 등 추가 정보를 넘겨줘야 한다면
-            // 그대로 putExtra 하면 된다.
-            nextIntent.putExtra("date", intent.getStringExtra("date"));
-            nextIntent.putExtra("time", intent.getStringExtra("time"));
+
+            nextIntent.putExtra("date", date);
+            nextIntent.putIntegerArrayListExtra("hours", hours);
             nextIntent.putExtra("place_name", locationName);
             nextIntent.putExtra("place_address", addressName);
 

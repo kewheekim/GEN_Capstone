@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,6 +62,11 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         tvAddressName = findViewById(R.id.tv_address_name);
         etSearch = findViewById(R.id.et_search);
         nextBtn = findViewById(R.id.next_button);
+
+        // SetTimeActivity에서 넘어온 값 꺼내기
+        Intent prev = getIntent();
+        String date = prev.getStringExtra("date");
+        ArrayList<Integer> hours = prev.getIntegerArrayListExtra("hours");
 
         nextBtn.setEnabled(false);
 
@@ -112,6 +118,8 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
             Intent intent = new Intent(SetLocationActivity.this, PopupLocationActivity.class);
             intent.putExtra("location_name", locationName);
             intent.putExtra("address_name", addressName);
+            intent.putExtra("date", date);
+            intent.putIntegerArrayListExtra("hours", hours);
             startActivity(intent);
         });
     }

@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rally"
         tools:targetApi="31">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M"/>

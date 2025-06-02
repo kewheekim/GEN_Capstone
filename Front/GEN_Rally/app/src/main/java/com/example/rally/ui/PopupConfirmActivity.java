@@ -11,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rally.R;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class PopupConfirmActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +22,6 @@ public class PopupConfirmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popup_confirm);
 
-        // 1) 뷰 바인딩
         ImageButton xBtn        = findViewById(R.id.x_btn);
         Button backBtn          = findViewById(R.id.back_Btn);
         Button goBtn            = findViewById(R.id.go_Btn);
@@ -27,22 +30,27 @@ public class PopupConfirmActivity extends AppCompatActivity {
         TextView tvTime         = findViewById(R.id.tv_time);
         TextView tvPlaceName    = findViewById(R.id.tv_place_name);
         TextView tvPlaceAddress = findViewById(R.id.tv_place_address);
-        // TextView tvStyle, tvStyleDetail 필요하면 바인딩
 
-        // 2) Intent에서 전달된 값 꺼내기
         Intent intent = getIntent();
-        String date         = intent.getStringExtra("date");
-        String time         = intent.getStringExtra("time");
+        String dateStr       = intent.getStringExtra("date");
+        ArrayList<Integer> hoursList = intent.getIntegerArrayListExtra("hours");
         String placeName    = intent.getStringExtra("place_name");
         String placeAddress = intent.getStringExtra("place_address");
-        // 스타일 정보가 있으면 같이 꺼내기 (지금은 제외)
 
-        // 3) 가져온 값을 화면에 세팅
-        if (date != null) {
-            tvDate.setText(date);
+        if (dateStr != null) {
+            // LocalDate로 파싱 (Java 8 이상)
+            LocalDate date = LocalDate.parse(dateStr);
+            String formattedDate = date.getMonthValue() + "월 " + date.getDayOfMonth() + "일";
+            tvDate.setText(formattedDate);
         }
-        if (time != null) {
-            tvTime.setText(time);
+        // 시간 포맷: 선택된 시간 리스트가 있으면 (최소값)시 ~ (최대값)시
+        if (hoursList != null && !hoursList.isEmpty()) {
+            Collections.sort(hoursList);
+            int startHour = hoursList.get(0);
+            int endHour   = hoursList.get(hoursList.size() - 1);
+
+            String formattedTime = startHour + "시 ~ " + endHour + "시";
+            tvTime.setText(formattedTime);
         }
         if (placeName != null) {
             tvPlaceName.setText(placeName);
@@ -50,14 +58,11 @@ public class PopupConfirmActivity extends AppCompatActivity {
         if (placeAddress != null) {
             tvPlaceAddress.setText(placeAddress);
         }
-        // 스타일 처리할 때는 tvStyle.setText(...), tvStyleDetail.setText(...) 등
 
-        // 4) 버튼 동작
         xBtn.setOnClickListener(v -> finish());
         backBtn.setOnClickListener(v -> finish());
 
         goBtn.setOnClickListener(v -> {
-            // 최종 확인하면 로딩 화면으로 이동
             Intent nextIntent = new Intent(PopupConfirmActivity.this,
                     LoadingActivity.class);
             startActivity(nextIntent);
