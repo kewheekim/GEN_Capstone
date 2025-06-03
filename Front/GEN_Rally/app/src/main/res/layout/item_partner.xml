@@ -14,8 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -62,20 +61,15 @@
         <LinearLayout
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
             android:gravity="center">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/iv_time_status"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_time_partial_overlap" />
+                    android:src="@drawable/ic_circlehalf" />
 
                 <TextView
                     android:id="@+id/tv_time_status"
@@ -87,7 +81,6 @@
                     android:textSize="16sp"
                     android:textColor="@color/black_text"
                     android:gravity="center"/>
-            </LinearLayout>
         </LinearLayout>
 
         <View
@@ -95,26 +88,22 @@
             android:layout_height="22dp"
             android:background="@color/gray_border"
             android:layout_marginStart="6dp"
-            android:layout_marginEnd="6dp" />
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="46.5dp"/>
 
         <LinearLayout
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="24.5dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/iv_location_status"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_time_partial_overlap" />
+                    android:src="@drawable/ic_circle" />
 
                 <TextView
                     android:id="@+id/tv_location_status"
@@ -126,7 +115,6 @@
                     android:textSize="16sp"
                     android:textColor="@color/black_text"
                     android:gravity="center"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
