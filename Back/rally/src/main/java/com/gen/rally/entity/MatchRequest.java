@@ -16,7 +16,7 @@ public class MatchRequest {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Gender gender;
+    private int gender;
     private int skill;
     private GameType gameType;   // 경기 유형: 단식(0), 복식(1)
     private GameStyle gameStyle; // 경기 스타일: 상관없음(0), 편하게(1), 열심히(2)

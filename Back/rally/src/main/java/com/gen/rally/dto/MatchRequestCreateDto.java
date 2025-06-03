@@ -15,8 +15,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class MatchRequestCreateDto {
     private String userId;
-    private GameType gameType;
-    private GameStyle gameStyle;
+    private int gameType;
+    private int gameStyle;
     private boolean sameGender;
 
     private LocalDate gameDate;

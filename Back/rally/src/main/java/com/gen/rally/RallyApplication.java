@@ -12,9 +12,4 @@ public class RallyApplication {
         SpringApplication.run(RallyApplication.class, args);
     }
 
-    CommandLineRunner run(UserRepository repo) {
-        return args -> {
-            System.out.println("Saved users: " + repo.findAll());
-        };
-    }
 }

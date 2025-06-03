@@ -19,10 +19,11 @@ public class MatchRequestController {
     private final MatchRequestService matchRequestService;
     @PostMapping("/request")
     public ResponseEntity<List<CandidatesResponseDto>> requestMatch(@RequestBody MatchRequestCreateDto dto) {
-            // match_request 테이블에 데이터 저장
-            matchRequestService.createMatchRequest(dto);
-            // findCandidates
+            // findCandidates 매칭 후보 필터링
             List<CandidatesResponseDto> candidates = matchRequestService.findCandidates(dto);
-            return ResponseEntity.ok(candidates);
+            // match_request 테이블에 데이터 저장
+           matchRequestService.createMatchRequest(dto);
+           // 매칭 후보 반환
+           return ResponseEntity.ok(candidates);
     }
 }
