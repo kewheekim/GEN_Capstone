@@ -3,10 +3,12 @@ package com.gen.rally.service;
 import com.gen.rally.dto.CandidatesResponseDto;
 import com.gen.rally.dto.MatchRequestCreateDto;
 import com.gen.rally.entity.*;
+import com.gen.rally.repository.GameRepository;
 import com.gen.rally.repository.MatchRequestRepository;
 import com.gen.rally.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class MatchRequestService {
     private final MatchRequestRepository matchRequestRepository;
     private final UserRepository userRepository;
+    private final GameRepository gameRepository;
 
     public Long createMatchRequest(MatchRequestCreateDto dto) {
         User user = userRepository.findByUserId(dto.getUserId())
@@ -57,7 +60,7 @@ public class MatchRequestService {
                 userInput.getGameDate(),
                 userInput.getStartTime(),
                 userInput.getEndTime()
-        );
+        ); 
 
         // 2. 이미 해당 조건의 신청이 있으면 에러 발생
         if (!duplicates.isEmpty()) {
@@ -117,7 +120,18 @@ public class MatchRequestService {
 
          // dto 변환
         return topCandidates.stream()
-                .map(CandidatesResponseDto::new)
+                .map(r -> {
+                    double distance = haversine(userInput.getLatitude(), userInput.getLongitude(),
+                            r.getLatitude(), r.getLongitude());
+                    double winningRate = 0;
+                    int skillGap = 0;
+                    if(userInput.getGameType() == 0)
+                        winningRate = calculateWinningRate(r.getUser().getUserId());
+                    else
+                        skillGap=Math.abs(r.getUser().getSkill()*2-r.getSkill()*2);
+
+                    return new CandidatesResponseDto(r, userInput, distance, winningRate, skillGap);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -142,5 +156,14 @@ public class MatchRequestService {
                 * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
+    }
+
+    // 최근 5경기 승률 계산
+    private double calculateWinningRate(String userId) {
+        List<Game> games = gameRepository.findRecentGamesByUserId(userId, PageRequest.of(0, 5));
+        long wins = games.stream()
+                .filter(g -> g.getWinner().getUserId().equals(userId))
+                .count();
+        return games.isEmpty() ? 0.0 : (wins * 100.0 / games.size());
     }
 }

@@ -30,19 +30,36 @@ public class CandidatesResponseDto {
     private double mannerScore;
 
     // MatchRequest 엔티티 -> CandidatesResponseDto로 변환
-    public CandidatesResponseDto(MatchRequest request) {
+    public CandidatesResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap) {
         this.userId = request.getUser().getUserId();
         this.name = request.getUser().getName();
         this.profileImage = request.getUser().getProfileImageUrl();
         this.gender= request.getGender();
         this.tier=request.getUser().getTier().getCode();
 
-        this.winningRate=0;
-        this.skillGap=0;
+        if(request.getGameType().getCode() == 0) {
+            //단식
+            this.winningRate=winningRate;
+            this.skillGap=0;
+        }
+        else{
+            // 복식
+            this.winningRate=0;
+            this.skillGap= skillGap;
+        }
 
         this.time= request.getStartTime() + ":00~" + request.getEndTime() + ":00";
+        this.isSameTime=(request.getStartTime() == userInput.getStartTime()) &&
+                (request.getEndTime() == userInput.getEndTime());
 
         this.place = request.getPlace();
+        this.isSamePlace=request.getPlace().equals(userInput.getPlace());
+        this.distance=distance;
         this.gameStyle = request.getGameStyle().getCode();
+        this.mannerScore=request.getUser().getManner();
     }
+
 }
+
+
+
