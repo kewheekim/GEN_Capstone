@@ -122,6 +122,16 @@
         />
 
 
+    <View
+        android:id="@+id/background_line"
+        android:layout_width="364dp"
+        android:layout_height="1dp"
+        android:background="@color/gray_border"
+        app:layout_constraintTop_toTopOf="@+id/card_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp" />
+
     <ImageView
         android:id="@+id/tier_image"
         android:layout_width="wrap_content"
@@ -132,17 +142,32 @@
         app:layout_constraintTop_toBottomOf="@id/tv_2"
         app:layout_constraintStart_toStartOf="parent"
         />
-    
-    <View
-        android:layout_width="364dp"
-        android:layout_height="128dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/selector_rectangle"
-        app:layout_constraintTop_toBottomOf="@id/tier_image"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_container"
+        android:layout_width="219dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="195dp"
+        android:layout_marginStart="28dp"
+        app:cardBackgroundColor="@color/green_select"
+        app:strokeColor="@color/green_active"
+        app:strokeWidth="1dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tier_image"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_inside"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="나랑 똑같은 티어인 유저와 경기 어때요?"
+            android:textColor="@color/black_text"
+            android:textSize="12sp"/>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/tv_3"

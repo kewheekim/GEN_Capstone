@@ -36,6 +36,7 @@
         <activity android:name=".ui.PopupLocationActivity" android:theme="@style/PopupTheme" />
         <activity android:name=".ui.PopupConfirmActivity" android:theme="@style/PopupTheme" />
         <activity android:name=".ui.LoadingActivity"/>
+        <activity android:name=".ui.PartnerActivity"/>
     </application>
 
 </manifest>
