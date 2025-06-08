@@ -7,7 +7,7 @@
 
     <!-- 1) 커스텀 툴바 포함 -->
     <include
-        layout="@layout/layout_toolbar"/>
+        layout="@layout/layout_toolbar_back"/>
 
     <!-- 2) Fragment container -->
     <FrameLayout

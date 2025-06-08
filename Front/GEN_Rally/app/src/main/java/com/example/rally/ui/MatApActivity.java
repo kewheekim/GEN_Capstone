@@ -19,7 +19,7 @@ public class MatApActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_match_1);
+        setContentView(R.layout.activity_match_ap_001);
 
         Toolbar toolbar = findViewById(R.id.include_toolbar);
         Log.d("MatAp", "toolbar is " + toolbar);
