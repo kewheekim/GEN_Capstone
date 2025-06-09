@@ -41,7 +41,7 @@ public class SearchLocationActivity extends AppCompatActivity {
 
         // Places API 초기화
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyBHB-noMRpwjdh2-CyN7b4_MU9J0GmeZqs", Locale.KOREAN);
+            Places.initialize(getApplicationContext(), "AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M", Locale.KOREAN);
         }
         placesClient = Places.createClient(this);
 
