@@ -10,15 +10,26 @@
     app:contentInsetLeft="0dp"
     >
 
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_back_arrow"
-        android:contentDescription=" "
-        android:background="@color/white"
-        android:layout_marginStart="10dp"
-        android:layout_gravity="center_vertical|start"
+    <TextView
+        android:id="@+id/tv_toolbar"
+        android:layout_width="58dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="매칭"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black_text"
+        android:layout_marginStart="24dp"
         />
 
-    </androidx.appcompat.widget.Toolbar>
+    <ImageButton
+        android:id="@+id/btn_noti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_notification"
+        android:contentDescription=" "
+        android:layout_marginEnd="24dp"
+        android:layout_gravity="center_vertical|end"
+        android:background="@color/white"/>
+
+</androidx.appcompat.widget.Toolbar>
