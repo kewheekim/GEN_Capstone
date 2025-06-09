@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,7 +20,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M"/>
+            android:value="AIzaSyBHB-noMRpwjdh2-CyN7b4_MU9J0GmeZqs"/>
 
         <activity
             android:name=".ui.MatApActivity"
@@ -37,6 +38,8 @@
         <activity android:name=".ui.PopupConfirmActivity" android:theme="@style/PopupTheme" />
         <activity android:name=".ui.LoadingActivity"/>
         <activity android:name=".ui.PartnerActivity"/>
+        <activity android:name=".ui.PartnerNullActivity" />
+        <activity android:name=".ui.PopupPartner1Activity" android:theme="@style/PopupTheme"/>
     </application>
 
 </manifest>

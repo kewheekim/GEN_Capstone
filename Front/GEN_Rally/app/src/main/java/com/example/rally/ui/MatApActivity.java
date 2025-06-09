@@ -15,6 +15,7 @@ import com.example.rally.R;
 public class MatApActivity extends AppCompatActivity {
     private View singleCard,doubleCard;
     private Button nextBtn;
+    private int gameType=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class MatApActivity extends AppCompatActivity {
 
         View.OnClickListener cardClick = v -> {
             boolean isSingle = v.getId() == R.id.rectangle_single;
+            gameType= isSingle? 0:1;
 
             singleCard.setSelected(isSingle);
             doubleCard.setSelected(!isSingle);
@@ -51,6 +53,7 @@ public class MatApActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 Intent intent = new Intent(getApplicationContext(),MatApSingleActivity.class);
+                intent.putExtra("gameType", gameType);
                 startActivity(intent);
             }
         });

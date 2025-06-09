@@ -34,10 +34,15 @@
         <item name="android:elevation">0dp</item>
         <item name="android:stateListAnimator">@null</item>
     </style>
+    <style name="MyGreenButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/green_active</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
     <!-- 팝업 전용 테마 정의 -->
-    <style name="PopupTheme" parent="Theme.AppCompat.Light.Dialog">
+    <style name="PopupTheme" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.5</item>
+        <item name="materialButtonStyle">@style/MyGreenButton</item>
     </style>
 </resources>

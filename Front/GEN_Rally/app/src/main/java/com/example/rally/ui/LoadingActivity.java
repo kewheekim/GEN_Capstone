@@ -4,65 +4,112 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.rally.R;
+import com.example.rally.api.MatchService;
+import com.example.rally.api.RetrofitClient;
+import com.example.rally.dto.CandidateResponseDto;
+import com.example.rally.dto.MatchRequestDto;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class LoadingActivity extends AppCompatActivity {
-    private TextView dot1, dot2, dot3;
-
+    ImageView gifView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        // 점 세개
-        dot1 = findViewById(R.id.dot1);
-        dot2 = findViewById(R.id.dot2);
-        dot3 = findViewById(R.id.dot3);
+        // 로딩 gif 불러오기
+        gifView= findViewById(R.id.loadingGif);
+        Glide.with(this).asGif().load(R.drawable.dot_animation)
+                .into(gifView);
 
-        startDotAnimationViaXML();
-    }
+        // 취소 버튼 텍스트 수정
+        View includeView = findViewById(R.id.include_next_button);
+        Button cancelButton = includeView.findViewById(R.id.next_button);
+        cancelButton.setText("매칭 취소하기");
 
-    private void startDotAnimationViaXML() {
-        // 애니메이터 설정
-        AnimatorSet animSet1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.dot_combined);
-        AnimatorSet animSet2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.dot_combined);
-        AnimatorSet animSet3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.dot_combined);
+        // api/match/request 요청
+        Intent prev= getIntent();
+        MatchRequestDto matchRequest = (MatchRequestDto) prev.getSerializableExtra("matchRequest");
 
-        // 각각 움직일 대상 (점) 설정
-        animSet1.setTarget(dot1);
-        animSet2.setTarget(dot2);
-        animSet3.setTarget(dot3);
+        MatchService service = RetrofitClient.getClient("http://172.19.10.92:8080/")
+                .create(MatchService.class);
 
-        // dot1은 지체 없이 dot2는 300ms 지연, dot3는 600ms 지연 후 시작
-        animSet1.setStartDelay(0);
-        animSet2.setStartDelay(300);
-        animSet3.setStartDelay(600);
-
-        // 세 개를 동시에 play, 끝나면 다시 반복
-        AnimatorSet allDots = new AnimatorSet();
-        allDots.playTogether(animSet1, animSet2, animSet3);
-
-        // 끝난 뒤 다시 처음부터 반복하도록 리스너 추가
-        allDots.addListener(new AnimatorListenerAdapter() {
+        service.requestMatch(matchRequest).enqueue(new retrofit2.Callback<List<CandidateResponseDto>>() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                allDots.start();
+            public void onResponse(Call<List<CandidateResponseDto>> call, Response<List<CandidateResponseDto>> response) {
+                if (response.body() != null && !response.body().isEmpty()) {
+                    // 후보 있는 경우
+                    List<CandidateResponseDto> candidates = response.body();
+                    Intent intent = new Intent(LoadingActivity.this, PartnerActivity.class);
+                    intent.putExtra("userInput", matchRequest);
+                    intent.putExtra("candidates", new ArrayList<>(candidates));
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // 후보 없음 또는 응답 body null
+                    Intent intent = new Intent(LoadingActivity.this, PartnerNullActivity.class);
+                    intent.putExtra("userInput", matchRequest);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CandidateResponseDto>> call, Throwable t) {
+                Log.d("후보 api", "네트워크 오류: " + t.getMessage());
             }
         });
-        allDots.start();
+
+        // 뒤로가기 버튼 막기
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // 처리x
+            }
+        });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dot1.animate().cancel();
-        dot2.animate().cancel();
-        dot3.animate().cancel();
+    private void showCancelDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup_cancel, null);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create();
+
+        // 버튼 처리
+        dialogView.findViewById(R.id.back_Btn).setOnClickListener(v -> dialog.dismiss());
+
+        dialogView.findViewById(R.id.go_Btn).setOnClickListener(v -> {
+            dialog.dismiss();
+//            cancelPendingRequest();
+//            goToHome();
+        });
+
+        dialog.show();
     }
 }

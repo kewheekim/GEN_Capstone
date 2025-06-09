@@ -28,11 +28,11 @@ public class PopupLocationActivity extends AppCompatActivity {
         TextView tvPlaceAddress = findViewById(R.id.tv_place_address);
 
         // Intent에서 전달된 장소 정보 꺼내기
-        Intent intent = getIntent();
-        String locationName = intent.getStringExtra("location_name");
-        String addressName = intent.getStringExtra("address_name");
-        String date            = intent.getStringExtra("date");
-        ArrayList<Integer> hours   = intent.getIntegerArrayListExtra("hours");
+        Intent prev = getIntent();
+        String locationName = prev.getStringExtra("location_name");
+        String addressName = prev.getStringExtra("address_name");
+        String date            = prev.getStringExtra("date");
+        ArrayList<Integer> hours   = prev.getIntegerArrayListExtra("hours");
 
         if (locationName != null) {
             tvPlaceName.setText(locationName);
@@ -48,14 +48,20 @@ public class PopupLocationActivity extends AppCompatActivity {
         backBtn.setOnClickListener(v -> finish());
 
         goBtn.setOnClickListener(v -> {
-            // → 두 번째 팝업(최종 매칭 확인)으로
+            // → 두 번째 팝업(최종 매칭 확인) PopupConfirmActivity로
             Intent nextIntent = new Intent(PopupLocationActivity.this,
                     PopupConfirmActivity.class);
+
+            nextIntent.putExtra("gameType", prev.getIntExtra("gameType", -1));
+            nextIntent.putExtra("gameStyle", prev.getIntExtra("gameStyle", -1));
+            nextIntent.putExtra("sameGender", prev.getBooleanExtra("sameGender", false));
 
             nextIntent.putExtra("date", date);
             nextIntent.putIntegerArrayListExtra("hours", hours);
             nextIntent.putExtra("place_name", locationName);
             nextIntent.putExtra("place_address", addressName);
+            nextIntent.putExtra("latitude", prev.getDoubleExtra("lat", 0));
+            nextIntent.putExtra("longitude", prev.getDoubleExtra("lng", 0));
 
             startActivity(nextIntent);
             finish();

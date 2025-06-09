@@ -1,5 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("com.android.application")
+    id("io.freefair.lombok") version "8.4"
 }
 
 android {
@@ -44,5 +45,10 @@ dependencies {
     implementation ("com.google.android.gms:play-services-maps:19.2.0")
     implementation ("com.google.android.gms:play-services-location:21.3.0")
     implementation ("com.google.android.libraries.places:places:4.2.0")
-
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")  // Retrofit
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")   // JSON 컨버터
+    implementation ("com.github.bumptech.glide:glide:4.16.0")    // gif 파일
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+    compileOnly("org.projectlombok:lombok:1.18.30")       // lombok
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 }

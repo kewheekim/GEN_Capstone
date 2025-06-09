@@ -2,7 +2,6 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
@@ -42,7 +41,7 @@ public class SearchLocationActivity extends AppCompatActivity {
 
         // Places API 초기화
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M", Locale.KOREAN);
+            Places.initialize(getApplicationContext(), "AIzaSyBHB-noMRpwjdh2-CyN7b4_MU9J0GmeZqs", Locale.KOREAN);
         }
         placesClient = Places.createClient(this);
 
@@ -51,9 +50,11 @@ public class SearchLocationActivity extends AppCompatActivity {
 
         // 검색어 입력 후 엔터 → 검색 실행
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH || event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                String keyword = etSearch.getText().toString();
-                searchPlaces(keyword);
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String keyword = etSearch.getText().toString().trim();
+                if(!keyword.isEmpty()) {
+                    searchPlaces(keyword);
+                }
                 return true;
             }
             return false;
@@ -63,6 +64,7 @@ public class SearchLocationActivity extends AppCompatActivity {
     private void searchPlaces(String keyword) {
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setQuery(keyword)
+                .setCountries(Arrays.asList("KR"))  // 대한민국 대상으로 검색
                 .build();
 
         placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {

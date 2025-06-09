@@ -55,8 +55,14 @@ public class SetTimeActivity extends AppCompatActivity {
         setupDateRecycler();
         setupHourRecycler();
 
+        Intent prev=getIntent();
+
         nextBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, SetLocationActivity.class);
+            intent.putExtra("gameType", prev.getIntExtra("gameType", -1));
+            intent.putExtra("gameStyle", prev.getIntExtra("gameStyle", -1));
+            intent.putExtra("sameGender", prev.getBooleanExtra("sameGender", false));
+
             intent.putExtra("date", selectedDate.toString());
             intent.putIntegerArrayListExtra("hours", new ArrayList<>(selectedHours));
             startActivity(intent);

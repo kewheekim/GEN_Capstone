@@ -12,14 +12,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="20dp"
         android:orientation="vertical">
 
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:id="@+id/x_btn"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
             android:src="@drawable/icon_x"
             android:contentDescription=" "
             android:background="@color/white"
@@ -30,62 +30,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="지정한 위치가 맞나요?"
+            android:text="매칭을 정말 취소하시겠어요?"
             android:textColor="@color/black_text"
             android:textSize="18sp"
-            android:fontFamily="@font/pretendard_variable"
             android:layout_marginTop="-6dp"
             android:textStyle="bold" />
-
+    
         <LinearLayout
-            android:id="@+id/place_container"
-            android:layout_width="304dp"
-            android:layout_height="120dp"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="21.5dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@drawable/bg_view_active"
-            android:paddingHorizontal="20dp">
-
-            <ImageView
-                android:id="@+id/iv_marker"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_location_s"
-                android:layout_marginTop="50.5dp"
-                android:contentDescription="위치 아이콘" />
-
-            <LinearLayout
+            android:layout_gravity="center"
+            android:layout_marginTop="29dp"
+            android:layout_marginBottom="50dp">
+            <TextView
+                android:id="@+id/informText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="36dp"
-                android:layout_marginStart="16dp"
-                >
-
-                <TextView
-                    android:id="@+id/tv_place_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="장소명"
-                    android:textColor="@color/black_text"
-                    android:fontFamily="@font/pretendard_variable"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/tv_place_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="상세 주소"
-                    android:textColor="@color/gray_text"
-                    android:fontFamily="@font/pretendard_variable"
-                    android:textSize="12sp"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
+                android:layout_gravity="center"
+                android:text="신청한 매칭 정보는 삭제되고,\n다시 매칭을 원하는 경우\n 재신청해야 해요"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                />
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -97,10 +64,9 @@
                 android:id="@+id/back_Btn"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
-                android:text="다시 선택"
+                android:text="돌아가기"
                 android:textSize="18sp"
                 android:textColor="#AAAAAA"
-                android:fontFamily="@font/pretendard_variable"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_button_inactive" />
 
@@ -108,10 +74,9 @@
                 android:id="@+id/go_Btn"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
-                android:text="확인"
+                android:text="취소"
                 android:textSize="18sp"
                 android:textColor="@color/white"
-                android:fontFamily="@font/pretendard_variable"
                 android:background="@drawable/bg_next_button_active" />
 
         </LinearLayout>

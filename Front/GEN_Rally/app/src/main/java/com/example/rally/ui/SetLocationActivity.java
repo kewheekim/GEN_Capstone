@@ -111,15 +111,24 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         checkLocationPermission();
 
         nextBtn.setOnClickListener(view -> {
-            // 팝업으로 장소 전달
+            // 장소 확인 팝업으로 전달
             String locationName = tvLocationName.getText().toString();
             String addressName = tvAddressName.getText().toString();
 
             Intent intent = new Intent(SetLocationActivity.this, PopupLocationActivity.class);
-            intent.putExtra("location_name", locationName);
-            intent.putExtra("address_name", addressName);
+            intent.putExtra("gameType", prev.getIntExtra("gameType", -1));
+            intent.putExtra("gameStyle", prev.getIntExtra("gameStyle", -1));
+            intent.putExtra("sameGender", prev.getBooleanExtra("sameGender", false));
+
             intent.putExtra("date", date);
             intent.putIntegerArrayListExtra("hours", hours);
+
+            intent.putExtra("location_name", locationName);
+            intent.putExtra("address_name", addressName);
+            intent.putExtra("lat", currentLatLng.latitude);
+            intent.putExtra("lng", currentLatLng.longitude);
+            intent.putExtra("address_name", addressName);
+
             startActivity(intent);
         });
     }

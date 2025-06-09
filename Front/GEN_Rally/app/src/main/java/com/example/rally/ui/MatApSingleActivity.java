@@ -2,6 +2,7 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,7 +23,9 @@ public class MatApSingleActivity extends AppCompatActivity {
     };
 
     private int currentIndex = 0;
-    private final List<String> answers = new ArrayList<>();
+    private int gameStyle=-1;
+    private boolean sameGender=false;
+    private int gameType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class MatApSingleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
+
+        gameType= getIntent().getIntExtra("gameType", -1);
 
         // 첫 질문 띄우기
         showQuestion(currentIndex);
@@ -50,17 +55,33 @@ public class MatApSingleActivity extends AppCompatActivity {
     }
 
     public void goToNextQuestion(String selectedAnswer) {
-        answers.add(selectedAnswer);
+        int selectedIndex = -1;
+        String[] options = OPTIONS[currentIndex];
+        for (int i = 0; i < options.length; i++) {
+            if (options[i].equals(selectedAnswer)) {
+                selectedIndex = i;
+                break;
+            }
+        }
+
+        if (selectedIndex == -1) return;
+
+        if (currentIndex == 0) {
+            // 경기 스타일 선택 (0~2)
+            gameStyle=selectedIndex;
+        } else if (currentIndex == 1) {
+            // 성별 조건 선택 (0 = 상관없음, 1 = 같은 성별만)
+            sameGender = (selectedIndex == 1);
+        }
 
         currentIndex++;
         if (currentIndex < QUESTIONS.length) {
-            // 아직 남은 질문이 있으면 다음 질문으로
             showQuestion(currentIndex);
         } else {
-            // 마지막 질문 뒤에 수행할 액션 (예: 다음 액티비티로 이동)
             Intent intent = new Intent(this, SetTimeActivity.class);
-            intent.putStringArrayListExtra("answers",
-                    new ArrayList<>(answers));
+            intent.putExtra("gameType", gameType);
+            intent.putExtra("gameStyle", gameStyle);
+            intent.putExtra("sameGender",sameGender);
             startActivity(intent);
             finish();
         }
