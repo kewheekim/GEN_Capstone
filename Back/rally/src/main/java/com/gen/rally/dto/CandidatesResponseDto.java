@@ -16,6 +16,7 @@ public class CandidatesResponseDto {
     private String profileImage;
     private int gender;
     private int tier;
+    private boolean isSameTier;     // 동일한 티어인지
 
     private double winningRate;      // 최근 5경기 승률 (단식)
     private int skillGap;// 팀원 간 실력 차이 정도 (복식)
@@ -30,12 +31,13 @@ public class CandidatesResponseDto {
     private double mannerScore;
 
     // MatchRequest 엔티티 -> CandidatesResponseDto로 변환
-    public CandidatesResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap) {
+    public CandidatesResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap, boolean isSameTier) {
         this.userId = request.getUser().getUserId();
         this.name = request.getUser().getName();
         this.profileImage = request.getUser().getProfileImageUrl();
         this.gender= request.getGender();
         this.tier=request.getUser().getTier().getCode();
+        this.isSameTier=isSameTier;
 
         if(request.getGameType().getCode() == 0) {
             //단식

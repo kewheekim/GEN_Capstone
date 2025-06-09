@@ -129,8 +129,10 @@ public class MatchRequestService {
                         winningRate = calculateWinningRate(r.getUser().getUserId());
                     else
                         skillGap=Math.abs(r.getUser().getSkill()*2-r.getSkill()*2);
+                    boolean isSameTier;
+                    isSameTier= (user.getTier()==r.getUser().getTier()) ? true : false;
 
-                    return new CandidatesResponseDto(r, userInput, distance, winningRate, skillGap);
+                    return new CandidatesResponseDto(r, userInput, distance, winningRate, skillGap, isSameTier);
                 })
                 .collect(Collectors.toList());
     }

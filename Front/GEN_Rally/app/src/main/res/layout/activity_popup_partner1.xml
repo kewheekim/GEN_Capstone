@@ -216,6 +216,7 @@
 
         <!-- 매너 지수 -->
         <TextView
+            android:id="@+id/tv_manner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매너 지수"
@@ -227,7 +228,19 @@
             android:layout_marginStart="24dp"
             />
 
-        <!-- 여기에 별 표시할 건데 어떻게 할지 고민 -->
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="79dp"
+            android:layout_height="15dp"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:isIndicator="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_manner"
+            app:layout_constraintStart_toStartOf="parent"
+            android:progressDrawable="@drawable/ratingbar_drawable"/>
 
         <ImageView
             android:id="@+id/iv_tier"

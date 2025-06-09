@@ -89,16 +89,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_single"
-        app:layout_constraintTop_toTopOf="@id/rectangle_single"
-        app:layout_constraintEnd_toEndOf="@id/rectangle_single"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="20dp"
-         />
-
     <View
         android:id="@+id/rectangle_double"
         android:layout_width="0dp"
@@ -110,17 +100,6 @@
         app:layout_constraintStart_toStartOf="@id/rectangle_single"
         app:layout_constraintEnd_toEndOf="@id/rectangle_single"
         android:layout_marginTop="16dp"/>
-
-    <ImageView
-        android:id="@+id/doubles_icon"
-        android:layout_width="122dp"
-        android:layout_height="132dp"
-
-        android:layout_marginEnd="32dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_doubles"
-        app:layout_constraintBottom_toBottomOf="@id/rectangle_double"
-        app:layout_constraintEnd_toEndOf="@id/rectangle_double" />
 
     <TextView
         android:id="@+id/double_title"

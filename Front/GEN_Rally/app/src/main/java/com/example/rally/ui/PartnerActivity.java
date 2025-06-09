@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -58,7 +59,6 @@ public class PartnerActivity extends AppCompatActivity {
             grouped.computeIfAbsent(dto.getTier(), k -> new ArrayList<>()).add(dto);
         }
 
-
         Map<Integer, Boolean> isSameTierMap = new HashMap<>();
 
         for (int tier : grouped.keySet()) {
@@ -87,6 +87,14 @@ public class PartnerActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 // 처리x
             }
+        });
+
+        // 다음에 고르기 버튼
+        Button nextBtn = findViewById(R.id.next_button);
+
+        nextBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(PartnerActivity.this, MatchActivity.class);
+            startActivity(intent);
         });
     }
 }

@@ -20,9 +20,11 @@ public class CandidateResponseDto  implements Serializable {
     private int skillGap;     // 팀원 간 실력 차이 정도 (복식)
 
     private String time;
-    private boolean isSameTime;
+    @SerializedName("sameTime")
+    private boolean sameTime;
     private String place;
-    private boolean isSamePlace;
+    @SerializedName("samePlace")
+    private boolean samePlace;
     private double distance;
 
     private int gameStyle;

@@ -6,6 +6,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ public class PopupPartner1Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popup_partner1);
 
@@ -40,6 +42,7 @@ public class PopupPartner1Activity extends AppCompatActivity {
         TextView style = findViewById(R.id.tv_style);
         ImageView tier = findViewById(R.id.iv_tier);
         Button requestBtn = findViewById(R.id.request_button);
+        RatingBar ratingBar = findViewById(R.id.rating_bar);
 
         // 3. 데이터 바인딩
         nickname.setText(user.getName());
@@ -87,6 +90,8 @@ public class PopupPartner1Activity extends AppCompatActivity {
         String[] gameStyleMap = {"상관없어요", "편하게 즐겨요", "열심히 경기해요"};
         style.setText(gameStyleMap[user.getGameStyle()]);
 
+        // 매너 지수
+        ratingBar.setRating((float) user.getMannerScore());
 
         switch (user.getTier()) {
             case 0:
