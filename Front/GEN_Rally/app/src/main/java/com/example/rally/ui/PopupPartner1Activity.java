@@ -1,7 +1,7 @@
 package com.example.rally.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -53,6 +53,15 @@ public class PopupPartner1Activity extends AppCompatActivity {
                     .placeholder(R.drawable.ic_default_profile)
                     .circleCrop()
                     .into(profileImg);
+        }
+        else {
+            // 프로필 이미지 하드코딩
+            if(user.getName().equals("아어려워요"))
+                profileImg.setImageResource(R.drawable.profile_image_male);
+            else if(user.getName().equals("흠냐링"))
+                profileImg.setImageResource(R.drawable.profile_image_female1);
+            else if(user.getName().equals("안세영이되"))
+                profileImg.setImageResource(R.drawable.profile_image_female2);
         }
 
         if (user.getGender() == 0) {
@@ -142,7 +151,9 @@ public class PopupPartner1Activity extends AppCompatActivity {
 
         // 매칭 요청 버튼
         requestBtn.setOnClickListener(v -> {
-            // Toast.makeText(this, "요청 전송됨", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PopupPartner1Activity.this, MatchInviteActivity.class);
+            intent.putExtra("partnerName", user.getName());
+            startActivity(intent);
         });
     }
 }

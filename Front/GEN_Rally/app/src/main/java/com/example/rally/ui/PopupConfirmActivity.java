@@ -49,9 +49,6 @@ public class PopupConfirmActivity extends AppCompatActivity {
         String placeAddress = prev.getStringExtra("place_address");
         String placeName;
 
-        Log.d("popupConfirm","place_name: "+place);
-        Log.d("popupConfirm","place_address: "+placeAddress);
-
         if (placeAddress != null && "현재 위치".equals(place)) {
             String[] parts = placeAddress.split("\\s+");
             if (parts.length >= 4) {
@@ -60,7 +57,7 @@ public class PopupConfirmActivity extends AppCompatActivity {
                 placeName = placeAddress;  // fallback
             }
         } else {
-            placeName = placeAddress;
+            placeName = place;
         }
 
         int gameType = prev.getIntExtra("gameType", -1);

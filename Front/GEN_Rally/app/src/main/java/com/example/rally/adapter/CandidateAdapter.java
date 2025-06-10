@@ -164,6 +164,14 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .circleCrop()
                     .into(profileImage);
 
+            // 프로필 이미지 하드코딩
+            if(user.getName().equals("아어려워요"))
+                profileImage.setImageResource(R.drawable.profile_image_male);
+            else if(user.getName().equals("흠냐링"))
+                profileImage.setImageResource(R.drawable.profile_image_female1);
+            else if(user.getName().equals("안세영이되"))
+                profileImage.setImageResource(R.drawable.profile_image_female2);
+
             // 시간 상태
             if(user.isSameTime()) {
                 sameTimeText.setText("시간이 동일해요");

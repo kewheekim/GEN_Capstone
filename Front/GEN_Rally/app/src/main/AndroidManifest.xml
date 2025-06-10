@@ -41,6 +41,7 @@
         <activity android:name=".ui.PartnerNullActivity" />
         <activity android:name=".ui.PopupPartner1Activity" android:theme="@style/PopupTheme"/>
         <activity android:name=".ui.MatchActivity" />
+        <activity android:name=".ui.MatchInviteActivity" android:theme="@style/PopupTheme"/>
     </application>
 
 </manifest>
