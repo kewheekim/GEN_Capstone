@@ -77,44 +77,47 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     static class TierHeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView tierImage;
         MaterialCardView speechCard;
+        View divider;
 
         TierHeaderViewHolder(View itemView) {
             super(itemView);
             tierImage = itemView.findViewById(R.id.tier_image);
             speechCard = itemView.findViewById(R.id.speech_card);
+            divider=itemView.findViewById(R.id.divider);
         }
 
         void bind(int tier, boolean isSameTier) {
             tierImage.setImageResource(getTierDrawable(tier));
             speechCard.setVisibility(isSameTier ? View.VISIBLE : View.INVISIBLE);
+            divider.setVisibility(isSameTier ? View.INVISIBLE : View.VISIBLE);
         }
 
         private int getTierDrawable(int tier) {
             switch (tier) {
                 case 0:
-                    //return R.drawble.ic_tier_bronze1;
+                    //return R.drawble.ic_tier_bronze1_detail;
                 case 1:
-                    //return R.drawble.ic_tier_bronze2;
+                    //return R.drawble.ic_tier_bronze2_detail;
                 case 2:
-                    //return R.drawble.ic_tier_bronze3;
+                    //return R.drawble.ic_tier_bronze3_detail;
                 case 3:
-                    return R.drawable.ic_tier_silver1;
+                    return R.drawable.ic_tier_silver1_detail;
                 case 4:
-                    return R.drawable.ic_tier_silver2;
+                    return R.drawable.ic_tier_silver2_detail;
                 case 5:
-                    //return R.drawable.ic_tier_silver3;
+                    //return R.drawable.ic_tier_silver3_detail;
                 case 6:
-                    //return R.drawble.ic_tier_gold1;
+                    //return R.drawble.ic_tier_gold1_detail;
                 case 7:
-                    //return R.drawble.ic_tier_gold2;
+                    //return R.drawble.ic_tier_gold2_detail;
                 case 8:
-                    //return R.drawble.ic_tier_gold3;
+                    //return R.drawble.ic_tier_gold3_detail;
                 case 9:
-                    //return R.drawble.ic_tier_platinum1;
+                    //return R.drawble.ic_tier_platinum1_detail;
                 case 10:
-                    //return R.drawble.ic_tier_platinum2;
+                    //return R.drawble.ic_tier_platinum2_detail;
                 case 11:
-                    //return R.drawble.ic_tier_platinum3;
+                    //return R.drawble.ic_tier_platinum3_detail;
                 default:
                     return R.drawable.ic_singles;
             }

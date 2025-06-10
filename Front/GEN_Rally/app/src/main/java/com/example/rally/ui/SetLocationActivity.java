@@ -47,7 +47,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
     private Button nextBtn;
 
     private ActivityResultLauncher<Intent> searchLauncher;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +126,6 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
             intent.putExtra("address_name", addressName);
             intent.putExtra("lat", currentLatLng.latitude);
             intent.putExtra("lng", currentLatLng.longitude);
-            intent.putExtra("address_name", addressName);
 
             startActivity(intent);
         });
@@ -181,6 +179,10 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
                         // 3) TextView에 보여주기
                         tvLocationName.setText("현재 위치");
                         tvAddressName.setText(addressString);
+                        etSearch.setText("현재 위치");
+
+                        nextBtn.setEnabled(true);
+                        nextBtn.setTextColor(Color.WHITE);
                     } else {
                         tvLocationName.setText("위치 정보를 가져올 수 없습니다.");
                     }

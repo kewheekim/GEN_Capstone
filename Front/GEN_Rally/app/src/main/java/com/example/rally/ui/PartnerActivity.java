@@ -53,7 +53,7 @@ public class PartnerActivity extends AppCompatActivity {
 
         // 리사이클러뷰에 전달할 데이터 가공
         List<CandidateItem> displayList = new ArrayList<>();
-        Map<Integer, List<CandidateResponseDto>> grouped = new TreeMap<>(); // 티어 기준 오름차순
+        Map<Integer, List<CandidateResponseDto>> grouped = new TreeMap<>();
 
         for (CandidateResponseDto dto : candidates) {
             grouped.computeIfAbsent(dto.getTier(), k -> new ArrayList<>()).add(dto);
@@ -61,13 +61,28 @@ public class PartnerActivity extends AppCompatActivity {
 
         Map<Integer, Boolean> isSameTierMap = new HashMap<>();
 
-        for (int tier : grouped.keySet()) {
-            List<CandidateResponseDto> group = grouped.get(tier);
+        // 동일 티어 그룹 먼저 추가
+        for (Map.Entry<Integer, List<CandidateResponseDto>> entry : grouped.entrySet()) {
+            int tier = entry.getKey();
+            List<CandidateResponseDto> group = entry.getValue();
 
             boolean hasSameTier = group.stream().anyMatch(CandidateResponseDto::isSameTier);
-            isSameTierMap.put(tier, hasSameTier);
-            Log.d("Adapter", "tier " + tier + " → " + hasSameTier);
+            if (hasSameTier) {
+                isSameTierMap.put(tier, true);
+                displayList.add(new CandidateItem.TierHeader(tier));
+                for (CandidateResponseDto user : group) {
+                    displayList.add(new CandidateItem.UserCard(user));
+                }
+            }
+        }
 
+        // 나머지 티어 그룹 추가
+        for (Map.Entry<Integer, List<CandidateResponseDto>> entry : grouped.entrySet()) {
+            int tier = entry.getKey();
+            if (isSameTierMap.containsKey(tier)) continue;  // 이미 추가된 동일 티어는 제외
+
+            List<CandidateResponseDto> group = entry.getValue();
+            isSameTierMap.put(tier, false);
             displayList.add(new CandidateItem.TierHeader(tier));
             for (CandidateResponseDto user : group) {
                 displayList.add(new CandidateItem.UserCard(user));
@@ -91,7 +106,6 @@ public class PartnerActivity extends AppCompatActivity {
 
         // 다음에 고르기 버튼
         Button nextBtn = findViewById(R.id.next_button);
-
         nextBtn.setOnClickListener(v -> {
             Intent intent = new Intent(PartnerActivity.this, MatchActivity.class);
             startActivity(intent);

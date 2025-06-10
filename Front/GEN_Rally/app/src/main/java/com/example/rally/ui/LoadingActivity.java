@@ -56,7 +56,7 @@ public class LoadingActivity extends AppCompatActivity {
         Intent prev= getIntent();
         MatchRequestDto matchRequest = (MatchRequestDto) prev.getSerializableExtra("matchRequest");
 
-        MatchService service = RetrofitClient.getClient("http://172.19.10.92:8080/")
+        MatchService service = RetrofitClient.getClient("http://172.19.7.224:8080/")
                 .create(MatchService.class);
 
         service.requestMatch(matchRequest).enqueue(new retrofit2.Callback<List<CandidateResponseDto>>() {

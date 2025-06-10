@@ -91,6 +91,9 @@ public class PopupPartner1Activity extends AppCompatActivity {
         style.setText(gameStyleMap[user.getGameStyle()]);
 
         // 매너 지수
+        if(user.getMannerScore()!=0) {
+
+        }
         ratingBar.setRating((float) user.getMannerScore());
 
         switch (user.getTier()) {

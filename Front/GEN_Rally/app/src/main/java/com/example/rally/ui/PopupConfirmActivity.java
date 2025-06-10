@@ -19,6 +19,8 @@ import com.example.rally.dto.MatchRequestDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 
@@ -43,7 +45,24 @@ public class PopupConfirmActivity extends AppCompatActivity {
         Intent prev = getIntent();
         LocalDate date= LocalDate.parse(prev.getStringExtra("date"));
         ArrayList<Integer> hoursList = prev.getIntegerArrayListExtra("hours");
-        String placeName    = prev.getStringExtra("place_name");
+        String place = prev.getStringExtra("place_name");
+        String placeAddress = prev.getStringExtra("place_address");
+        String placeName;
+
+        Log.d("popupConfirm","place_name: "+place);
+        Log.d("popupConfirm","place_address: "+placeAddress);
+
+        if (placeAddress != null && "현재 위치".equals(place)) {
+            String[] parts = placeAddress.split("\\s+");
+            if (parts.length >= 4) {
+                placeName = parts[2] + " " + parts[3];  // "노원구 공릉동"
+            } else {
+                placeName = placeAddress;  // fallback
+            }
+        } else {
+            placeName = placeAddress;
+        }
+
         int gameType = prev.getIntExtra("gameType", -1);
         int gameStyle = prev.getIntExtra("gameStyle", -1);
         boolean sameGender=prev.getBooleanExtra("sameGender", false);
