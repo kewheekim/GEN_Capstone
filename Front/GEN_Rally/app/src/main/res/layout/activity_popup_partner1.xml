@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="364dp"
-    android:layout_height="585dp"
+    android:layout_height="544dp"
     android:layout_gravity="center"
     app:cardCornerRadius="16dp"
     android:elevation="0dp">
@@ -23,11 +23,12 @@
             android:background="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-        
+
+        <!--프로필 사진-->
         <ImageView
             android:id="@+id/profile_img"
-            android:layout_width="112dp"
-            android:layout_height="112dp"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
             android:src="@drawable/ic_default_profile"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -35,42 +36,43 @@
             android:layout_marginStart="24dp"
             />
 
+        <!-- 티어 이미지-->
+        <ImageView
+            android:id="@+id/iv_tier"
+            android:layout_width="46dp"
+            android:layout_height="61dp"
+            android:src="@drawable/ic_tier_silver1"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="57dp"
+            android:layout_marginBottom="118dp"
+            app:layout_constraintStart_toEndOf="@id/profile_img"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
             android:id="@+id/tv_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="10.77dp"
+            android:fontFamily="@font/pretendard_variable"
             android:text="닉네임"
+            android:textColor="@color/black_text"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/black_text"
-            app:layout_constraintLeft_toRightOf="@+id/profile_img"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="97dp"
-            android:layout_marginStart="15dp"
-            android:fontFamily="@font/pretendard_variable"
-            />
-        <ImageView
-            android:id="@+id/iv_gender"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_gender_male"
-            app:layout_constraintLeft_toRightOf="@+id/tv_nickname"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="100dp"
-            android:layout_marginStart="8dp"
-            />
+            app:layout_constraintStart_toEndOf="@+id/iv_tier"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/win_container"
             android:layout_width="128dp"
             android:layout_height="30dp"
-            android:layout_marginTop="135dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="7dp"
             app:cardBackgroundColor="@color/green_select"
             app:strokeColor="@color/green_active"
             app:strokeWidth="1dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/profile_img"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickname"
+            app:layout_constraintLeft_toRightOf="@+id/iv_tier"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             >
@@ -82,9 +84,21 @@
                 android:gravity="center"
                 android:text="최근 5경기 승률 00%"
                 android:textColor="@color/green_active"
+                android:fontFamily="@font/pretendard_variable"
                 android:textSize="12sp"/>
 
         </com.google.android.material.card.MaterialCardView>
+
+        <ImageView
+            android:id="@+id/iv_gender"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_gender_male"
+            app:layout_constraintLeft_toRightOf="@+id/tv_nickname"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="53dp"
+            android:layout_marginStart="8dp"
+            />
 
         <!-- 가능한 시간 -->
         <TextView
@@ -252,16 +266,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:progressDrawable="@drawable/ratingbar_drawable"/>
 
-        <ImageView
-            android:id="@+id/iv_tier"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/ic_tier_silver1"
-            android:layout_marginStart="211dp"
-            android:layout_marginBottom="118dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
+
 
         <android.widget.Button
             style="@style/FlatButton"
@@ -274,7 +279,7 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:fontFamily="@font/pretendard_variable"
