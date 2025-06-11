@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     >
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -145,7 +146,7 @@
                 android:textColor="@color/black_text"
                 android:textSize="16sp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="8dp" />
 
             <android.widget.Button
                 android:id="@+id/next_button"

@@ -23,14 +23,17 @@
             android:value="AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M"/>
 
         <activity
-            android:name=".ui.MatApActivity"
+            android:name=".ui.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".ui.MatApSingleActivity"/>
+        <activity android:name=".ui.MatApActivity"/>
         <activity android:name=".ui.SetTimeActivity"/>
         <activity android:name=".ui.SetLocationActivity"/>
         <activity android:name=".ui.SearchLocationActivity"/>

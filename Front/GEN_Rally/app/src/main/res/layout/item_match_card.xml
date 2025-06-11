@@ -205,7 +205,7 @@
             android:id="@+id/tv_footer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="추천 상대 업데이트까지 59:00 남음"
+            android:text="추천 상대 업데이트까지 59:59 남음"
             android:textSize="12sp"
             android:textColor="#757575"
             android:gravity="center"
