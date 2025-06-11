@@ -108,6 +108,7 @@ public class PartnerActivity extends AppCompatActivity {
         Button nextBtn = findViewById(R.id.next_button);
         nextBtn.setOnClickListener(v -> {
             Intent intent = new Intent(PartnerActivity.this, MatchActivity.class);
+            intent.putExtra("userInput", userInput);
             startActivity(intent);
         });
     }

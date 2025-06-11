@@ -40,12 +40,11 @@
             app:cardCornerRadius="20dp"
             app:strokeColor="@color/green_active"
             app:strokeWidth="1dp"
-            app:cardElevation="1dp"
             android:layout_marginBottom="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tier_image"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="invisible"
+            android:visibility="visible"
             >
 
             <TextView
