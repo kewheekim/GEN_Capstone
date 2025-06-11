@@ -55,7 +55,7 @@ public class CandidatesResponseDto {
                 (request.getEndTime() == userInput.getEndTime());
 
         this.place = request.getPlace();
-        this.isSamePlace=request.getPlace().equals(userInput.getPlace());
+        this.isSamePlace= (distance == 0.0? true : false);
         this.distance=distance;
         this.gameStyle = request.getGameStyle().getCode();
         this.mannerScore=request.getUser().getManner();

@@ -54,18 +54,18 @@ public class MatchRequestService {
         User user = userRepository.findByUserId(userInput.getUserId()).orElseThrow();
         GameStyle enumGameStyle = GameStyle.fromCode(userInput.getGameStyle());       // one-hot 인코딩 사용하기 위한 enum 변환
 
-        // 1. 과거에 사용자가 동일한 날짜, 겹치는 시간의 신청을 했는지 확인
-        List<MatchRequest> duplicates = matchRequestRepository.findOverlappingRequests(
-                userInput.getUserId(),
-                userInput.getGameDate(),
-                userInput.getStartTime(),
-                userInput.getEndTime()
-        ); 
-
-        // 2. 이미 해당 조건의 신청이 있으면 에러 발생
-        if (!duplicates.isEmpty()) {
-            throw new IllegalStateException("동일 조건의 매칭 신청 이력이 존재합니다.");
-        }
+//        // 1. 과거에 사용자가 동일한 날짜, 겹치는 시간의 신청을 했는지 확인
+//        List<MatchRequest> duplicates = matchRequestRepository.findOverlappingRequests(
+//                userInput.getUserId(),
+//                userInput.getGameDate(),
+//                userInput.getStartTime(),
+//                userInput.getEndTime()
+//        );
+//
+//        // 2. 이미 해당 조건의 신청이 있으면 에러 발생
+//        if (!duplicates.isEmpty()) {
+//            throw new IllegalStateException("동일 조건의 매칭 신청 이력이 존재합니다.");
+//        }
 
         List<MatchRequest> candidates = matchRequestRepository.findAll().stream()
                 // (1)  대기 상태이고 날짜, 경기 유형 일치
@@ -166,6 +166,7 @@ public class MatchRequestService {
         long wins = games.stream()
                 .filter(g -> g.getWinner().getUserId().equals(userId))
                 .count();
+
         return games.isEmpty() ? 0.0 : (wins * 100.0 / games.size());
     }
 }
