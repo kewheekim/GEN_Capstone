@@ -94,7 +94,7 @@
             android:layout_gravity="center">
 
             <android.widget.Button
-                android:id="@+id/back_Btn"
+                android:id="@+id/back_btn"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="다시 선택"
@@ -105,7 +105,7 @@
                 android:background="@drawable/bg_button_inactive" />
 
             <Button
-                android:id="@+id/go_Btn"
+                android:id="@+id/go_btn"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="확인"

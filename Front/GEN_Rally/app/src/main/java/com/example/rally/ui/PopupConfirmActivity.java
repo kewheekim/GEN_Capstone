@@ -2,27 +2,19 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rally.R;
-import com.example.rally.api.MatchService;
-import com.example.rally.api.RetrofitClient;
 import com.example.rally.dto.MatchRequestDto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import retrofit2.Call;
 
 public class PopupConfirmActivity extends AppCompatActivity {
     @Override
@@ -32,8 +24,8 @@ public class PopupConfirmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_popup_confirm);
 
         ImageButton xBtn        = findViewById(R.id.x_btn);
-        Button backBtn          = findViewById(R.id.back_Btn);
-        Button goBtn            = findViewById(R.id.go_Btn);
+        Button backBtn          = findViewById(R.id.back_btn);
+        Button goBtn            = findViewById(R.id.go_btn);
 
         TextView tvDate         = findViewById(R.id.tv_date);
         TextView tvTime         = findViewById(R.id.tv_time);

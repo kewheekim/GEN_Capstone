@@ -38,7 +38,7 @@
         />
 
     <ImageButton
-        android:id="@+id/requestBtn"
+        android:id="@+id/btn_request"
         android:src="@drawable/ic_request_btn"
         android:layout_width="364dp"
         android:layout_height="148dp"
@@ -83,7 +83,8 @@
         android:layout_gravity="bottom"
         app:elevation="0dp"
         app:menu="@menu/bottom_nav_bar"
-        app:itemTextColor="#AAAAAA"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
         app:labelVisibilityMode="labeled"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

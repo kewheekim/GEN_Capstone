@@ -2,17 +2,13 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.rally.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MatApSingleActivity extends AppCompatActivity {
+public class MatConditionActivity extends AppCompatActivity {
     private static final String[] QUESTIONS = {
             "원하는 경기 스타일을 선택해주세요",
             "원하는 경기 상대 성별을 선택해주세요"
@@ -46,7 +42,7 @@ public class MatApSingleActivity extends AppCompatActivity {
     private void showQuestion(int idx) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container,
-                        MatApSingleFragment.newInstance(
+                        MatConditionFragment.newInstance(
                                 QUESTIONS[idx],
                                 OPTIONS[idx]
                         ))

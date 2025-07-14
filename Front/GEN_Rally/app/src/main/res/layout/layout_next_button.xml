@@ -7,13 +7,12 @@
     android:layout_centerHorizontal="true"
     android:layout_marginTop="787dp"
     android:paddingTop="30dp"
-    android:paddingBottom="42dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp">
 
     <Button
         style="@style/FlatButton"
-        android:id="@+id/next_button"
+        android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="다음"
@@ -21,5 +20,6 @@
         android:textColor="#AAAAAA"
         android:background="@drawable/bg_next_button_inactive"
         android:textSize="16sp"
-        android:fontFamily="@font/pretendard_variable" />
+        android:fontFamily="@font/pretendard_variable"
+        android:layout_marginBottom="5dp"/>
 </LinearLayout>

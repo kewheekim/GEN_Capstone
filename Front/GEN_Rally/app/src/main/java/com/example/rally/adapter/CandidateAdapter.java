@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.rally.R;
 import com.example.rally.dto.CandidateItem;
 import com.example.rally.dto.CandidateResponseDto;
-import com.example.rally.ui.PopupPartner1Activity;
+import com.example.rally.ui.PopupCandidateDetailActivity;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             View view = inflater.inflate(R.layout.item_tier, parent, false);
             return new TierHeaderViewHolder(view);
         } else {
-            View view = inflater.inflate(R.layout.item_partner, parent, false);
+            View view = inflater.inflate(R.layout.item_candidate, parent, false);
             return new UserCardViewHolder(view);
         }
     }
@@ -195,7 +195,7 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 클릭 시 상세화면으로 이동
             itemView.setOnClickListener(v -> {
                 Context context = v.getContext();
-                Intent intent = new Intent(context, PopupPartner1Activity.class);
+                Intent intent = new Intent(context, PopupCandidateDetailActivity.class);
                 intent.putExtra("user", user); // Serializable 객체 전달
                 context.startActivity(intent);
             });

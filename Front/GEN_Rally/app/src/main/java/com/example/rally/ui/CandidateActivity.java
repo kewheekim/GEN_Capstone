@@ -2,8 +2,6 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,18 +20,17 @@ import com.example.rally.dto.MatchRequestDto;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class PartnerActivity extends AppCompatActivity {
+public class CandidateActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_partner_result);
+        setContentView(R.layout.activity_candidate_result);
 
         Intent prev = getIntent();
         MatchRequestDto userInput = (MatchRequestDto)getIntent().getSerializableExtra("userInput");
@@ -105,9 +102,9 @@ public class PartnerActivity extends AppCompatActivity {
         });
 
         // 다음에 고르기 버튼
-        Button nextBtn = findViewById(R.id.next_button);
+        Button nextBtn = findViewById(R.id.btn_next);
         nextBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(PartnerActivity.this, MatchActivity.class);
+            Intent intent = new Intent(CandidateActivity.this, MatchActivity.class);
             intent.putExtra("userInput", userInput);
             startActivity(intent);
         });

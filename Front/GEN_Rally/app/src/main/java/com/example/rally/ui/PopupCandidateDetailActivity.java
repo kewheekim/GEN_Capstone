@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.rally.R;
 import com.example.rally.dto.CandidateResponseDto;
 
-public class PopupPartner1Activity extends AppCompatActivity {
+public class PopupCandidateDetailActivity extends AppCompatActivity {
 
     private CandidateResponseDto user;
 
@@ -23,7 +23,7 @@ public class PopupPartner1Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popup_partner1);
+        setContentView(R.layout.activity_popup_candidate_detail);
 
         user = (CandidateResponseDto) getIntent().getSerializableExtra("user");
 
@@ -151,7 +151,7 @@ public class PopupPartner1Activity extends AppCompatActivity {
 
         // 매칭 요청 버튼
         requestBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(PopupPartner1Activity.this, MatchInviteActivity.class);
+            Intent intent = new Intent(PopupCandidateDetailActivity.this, PopupInviteActivity.class);
             intent.putExtra("partnerName", user.getName());
             startActivity(intent);
         });

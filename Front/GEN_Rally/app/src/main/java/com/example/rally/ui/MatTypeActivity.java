@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.rally.R;
 
-public class MatApActivity extends AppCompatActivity {
+public class MatTypeActivity extends AppCompatActivity {
     private View singleCard,doubleCard;
     private Button nextBtn;
     private int gameType=-1;
@@ -20,9 +20,9 @@ public class MatApActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_match_ap_001);
+        setContentView(R.layout.activity_match_type);
 
-        Toolbar toolbar = findViewById(R.id.include_toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_back);
         Log.d("MatAp", "toolbar is " + toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -30,7 +30,7 @@ public class MatApActivity extends AppCompatActivity {
         // 뒤로가기
         findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
 
-        nextBtn = findViewById(R.id.next_button);
+        nextBtn = findViewById(R.id.btn_next);
         singleCard = findViewById(R.id.rectangle_single);
         doubleCard = findViewById(R.id.rectangle_double);
 
@@ -52,7 +52,7 @@ public class MatApActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(getApplicationContext(),MatApSingleActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MatConditionActivity.class);
                 intent.putExtra("gameType", gameType);
                 startActivity(intent);
             }

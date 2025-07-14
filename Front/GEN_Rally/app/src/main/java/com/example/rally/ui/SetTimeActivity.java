@@ -41,7 +41,7 @@ public class SetTimeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time);
 
-        Toolbar toolbar = findViewById(R.id.include_toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
@@ -49,7 +49,7 @@ public class SetTimeActivity extends AppCompatActivity {
         rvDates = findViewById(R.id.rv_dates);
         rvHoursAm = findViewById(R.id.rv_hours_am);
         rvHoursPm = findViewById(R.id.rv_hours_pm);
-        nextBtn = findViewById(R.id.next_button);
+        nextBtn = findViewById(R.id.btn_next);
         nextBtn.setEnabled(false);
 
         setupDateRecycler();
@@ -118,7 +118,7 @@ public class SetTimeActivity extends AppCompatActivity {
             HourAdapter.VH vh = (HourAdapter.VH) recyclerView.getChildViewHolder(child);
             int hour = hours.get(vh.getAdapterPosition());
 
-            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
+            if (action == MotionEvent.ACTION_DOWN ) { //|| action == MotionEvent.ACTION_MOVE ~ 추후에 드래그 추가
                 adapter.toggle(hour);
                 updateNextButtonState();
             }
