@@ -1,4 +1,4 @@
-package com.gen.rally.entity;
+package com.gen.rally.enums;
 
 import java.util.Arrays;
 
