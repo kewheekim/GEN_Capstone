@@ -2,7 +2,6 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,8 +20,8 @@ public class PopupLocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_popup_location);
 
         ImageButton xBtn = (ImageButton) findViewById(R.id.x_btn);
-        Button backBtn = (Button) findViewById(R.id.back_Btn);
-        Button goBtn = (Button) findViewById(R.id.go_Btn);
+        Button backBtn = (Button) findViewById(R.id.back_btn);
+        Button goBtn = (Button) findViewById(R.id.go_btn);
 
         TextView tvPlaceName = findViewById(R.id.tv_place_name);
         TextView tvPlaceAddress = findViewById(R.id.tv_place_address);

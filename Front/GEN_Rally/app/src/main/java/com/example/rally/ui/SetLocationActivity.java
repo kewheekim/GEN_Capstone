@@ -52,7 +52,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
-        Toolbar toolbar = findViewById(R.id.include_toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
@@ -60,7 +60,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         tvLocationName = findViewById(R.id.tv_location_name);
         tvAddressName = findViewById(R.id.tv_address_name);
         etSearch = findViewById(R.id.et_search);
-        nextBtn = findViewById(R.id.next_button);
+        nextBtn = findViewById(R.id.btn_next);
 
         // SetTimeActivity에서 넘어온 값 꺼내기
         Intent prev = getIntent();

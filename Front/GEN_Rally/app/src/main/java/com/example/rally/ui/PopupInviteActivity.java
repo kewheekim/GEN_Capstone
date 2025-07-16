@@ -11,16 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rally.R;
 
-public class MatchInviteActivity extends AppCompatActivity {
+public class PopupInviteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popup_partner2);
+        setContentView(R.layout.activity_popup_invite);
 
         TextView info = findViewById(R.id.popText);
         ImageButton xButton = findViewById(R.id.x_btn);
-        Button backButton = findViewById(R.id.back_Btn);
-        Button goButton = findViewById(R.id.go_Btn);
+        Button backButton = findViewById(R.id.back_btn);
+        Button goButton = findViewById(R.id.go_btn);
 
         Intent prev = getIntent();
         String name = prev.getStringExtra("partnerName");

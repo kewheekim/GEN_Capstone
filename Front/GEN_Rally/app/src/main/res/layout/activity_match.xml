@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/match_001"
+    android:fitsSystemWindows="true"
     >
 
     <include
-        android:id="@+id/include_toolbar"
+        android:id="@+id/toolbar_back"
         layout="@layout/layout_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,9 +23,9 @@
         android:textStyle="bold"
         android:textColor="#AAAAAA"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="34dp"
+        android:layout_marginStart="43dp"
         />
 
     <TextView
@@ -36,9 +37,9 @@
         android:textStyle="bold"
         android:textColor="@color/black_text"
         app:layout_constraintLeft_toRightOf="@id/tv_reserved"
-        app:layout_constraintTop_toBottomOf="@+id/include_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="34dp"
         />
 
     <TextView
@@ -50,9 +51,20 @@
         android:textStyle="bold"
         android:textColor="#AAAAAA"
         app:layout_constraintLeft_toRightOf="@id/tv_searching"
-        app:layout_constraintTop_toBottomOf="@+id/include_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="34dp"
+        />
+
+    <include
+        android:id="@+id/match_card"
+        android:layout_width="364dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="36dp"
+        layout="@layout/item_match_card"
+        app:layout_constraintTop_toBottomOf="@id/tv_searching"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -60,11 +72,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="34dp"
         app:elevation="0dp"
         app:menu="@menu/bottom_nav_bar"
-        app:itemTextColor="#AAAAAA"
         app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

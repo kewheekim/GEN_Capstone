@@ -6,6 +6,8 @@
     android:layout_height="320dp"
     card_view:cardCornerRadius="16dp"
     android:elevation="0dp"
+    card_view:cardBackgroundColor="@color/white"
+    android:background="@android:color/transparent"
     android:layout_gravity="center"
     >
 
@@ -61,7 +63,7 @@
             android:layout_gravity="center">
 
             <android.widget.Button
-                android:id="@+id/back_Btn"
+                android:id="@+id/backBtn"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="돌아가기"
@@ -70,13 +72,14 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_button_inactive" />
 
-            <Button
-                android:id="@+id/go_Btn"
+            <android.widget.Button
+                android:id="@+id/cancelBtn"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="취소"
                 android:textSize="18sp"
                 android:textColor="@color/white"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_next_button_active" />
 
         </LinearLayout>

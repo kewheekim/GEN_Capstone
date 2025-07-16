@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="364dp"
     android:layout_height="280dp"
-    android:layout_margin="16dp"
+    android:layout_marginHorizontal="24dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
@@ -45,6 +45,7 @@
             android:layout_marginStart="16dp"/>
 
         <TextView
+            android:id="@+id/tv_dday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매칭 마감까지 D-5"
@@ -204,7 +205,7 @@
             android:id="@+id/tv_footer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="추천 상대 업데이트까지 47:00 남음"
+            android:text="추천 상대 업데이트까지 59:59 남음"
             android:textSize="12sp"
             android:textColor="#757575"
             android:gravity="center"

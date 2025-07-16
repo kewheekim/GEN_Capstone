@@ -18,12 +18,12 @@ import androidx.fragment.app.Fragment;
 import com.example.rally.R;
 
 
-public class MatApSingleFragment extends Fragment {
+public class MatConditionFragment extends Fragment {
     private static final String ARG_QUESTION = "question";
     private static final String ARG_OPTIONS = "options";
 
-    public static MatApSingleFragment newInstance(String question, String[] options) {
-        MatApSingleFragment fragment = new MatApSingleFragment();
+    public static MatConditionFragment newInstance(String question, String[] options) {
+        MatConditionFragment fragment = new MatConditionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_QUESTION, question);
         args.putStringArray(ARG_OPTIONS, options);
@@ -37,7 +37,7 @@ public class MatApSingleFragment extends Fragment {
 
         TextView questionText = view.findViewById(R.id.text_question);
         RadioGroup radioGroup = view.findViewById(R.id.radio_group);
-        Button nextButton = view.findViewById(R.id.include_next_button).findViewById(R.id.next_button);
+        Button nextBtn = view.findViewById(R.id.btn_next).findViewById(R.id.btn_next);
 
         // 인자 받아오기
         Bundle args = getArguments();
@@ -85,22 +85,22 @@ public class MatApSingleFragment extends Fragment {
                 }
                 radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
                     if (checkedId != -1) {
-                        nextButton.setEnabled(true);
-                        nextButton.setTextColor(Color.parseColor("#FFFFFF"));
-                        nextButton.setBackgroundResource(R.drawable.bg_next_button_active);
+                        nextBtn.setEnabled(true);
+                        nextBtn.setTextColor(Color.parseColor("#FFFFFF"));
+                        nextBtn.setBackgroundResource(R.drawable.bg_next_button_active);
                     } else {
-                        nextButton.setEnabled(false);
-                        nextButton.setBackgroundResource(R.drawable.bg_next_button_inactive);
+                        nextBtn.setEnabled(false);
+                        nextBtn.setBackgroundResource(R.drawable.bg_next_button_inactive);
                     }
                 });
             }
         }
 
-        nextButton.setOnClickListener(v -> {
+        nextBtn.setOnClickListener(v -> {
             int checkedId = radioGroup.getCheckedRadioButtonId();
             if (checkedId != -1) {
                 RadioButton selected = view.findViewById(checkedId);
-                ((MatApSingleActivity) requireActivity()).goToNextQuestion(selected.getText().toString());
+                ((MatConditionActivity) requireActivity()).goToNextQuestion(selected.getText().toString());
             }
         });
 

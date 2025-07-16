@@ -1,26 +1,17 @@
 package com.example.rally.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.rally.R;
@@ -37,46 +28,77 @@ import retrofit2.Response;
 
 public class LoadingActivity extends AppCompatActivity {
     ImageView gifView;
+    private long startTime;
+    private Call<List<CandidateResponseDto>> matchCall;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
         // 로딩 gif 불러오기
-        gifView= findViewById(R.id.loadingGif);
-        Glide.with(this).asGif().load(R.drawable.dot_animation)
+        gifView= findViewById(R.id.iv_loading_gif);
+        Glide.with(this).asGif().load(R.drawable.loading)
                 .into(gifView);
+        // 시작 시간 기록
+        startTime=System.currentTimeMillis();
 
         // 취소 버튼 텍스트 수정
-        View includeView = findViewById(R.id.include_next_button);
-        Button cancelButton = includeView.findViewById(R.id.next_button);
+        Button cancelButton =findViewById(R.id.btn_cancel);
+        cancelButton.setEnabled(true);
         cancelButton.setText("매칭 취소하기");
+        cancelButton.setOnClickListener(r -> {
+            showCancelDialog();
+        });
 
         // api/match/request 요청
         Intent prev= getIntent();
         MatchRequestDto matchRequest = (MatchRequestDto) prev.getSerializableExtra("matchRequest");
 
-        MatchService service = RetrofitClient.getClient("http://172.19.7.224:8080/")
+        MatchService service = RetrofitClient.getClient("http://172.19.70.220:8080/")
                 .create(MatchService.class);
+        matchCall=service.requestMatch(matchRequest);    // Call 저장
 
-        service.requestMatch(matchRequest).enqueue(new retrofit2.Callback<List<CandidateResponseDto>>() {
+
+        matchCall.enqueue(new retrofit2.Callback<List<CandidateResponseDto>>() {
             @Override
             public void onResponse(Call<List<CandidateResponseDto>> call, Response<List<CandidateResponseDto>> response) {
-                if (response.body() != null && !response.body().isEmpty()) {
-                    // 후보 있는 경우
-                    List<CandidateResponseDto> candidates = response.body();
-                    Intent intent = new Intent(LoadingActivity.this, PartnerActivity.class);
-                    intent.putExtra("userInput", matchRequest);
-                    intent.putExtra("candidates", new ArrayList<>(candidates));
-                    startActivity(intent);
-                    finish();
-                } else {
-                    // 후보 없음 또는 응답 body null
-                    Intent intent = new Intent(LoadingActivity.this, PartnerNullActivity.class);
-                    intent.putExtra("userInput", matchRequest);
-                    startActivity(intent);
-                    finish();
-                }
+                long elapsed=System.currentTimeMillis() - startTime;
+                long delay= Math.max(2000 - elapsed, 0);  // 2초 유지
+
+                new Handler().postDelayed(() -> {
+                    if (response.body() != null && !response.body().isEmpty()) {
+                        // 후보 있는 경우
+                        List<CandidateResponseDto> candidates = response.body();
+                        Intent intent = new Intent(LoadingActivity.this, CandidateActivity.class);
+                        intent.putExtra("userInput", matchRequest);
+                        intent.putExtra("candidates", new ArrayList<>(candidates));
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // 후보 없음 또는 응답 body null
+                        Intent intent = new Intent(LoadingActivity.this, CandidateNullActivity.class);
+                        intent.putExtra("userInput", matchRequest);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, delay);
+
+                // 원본 코드
+//                if (response.body() != null && !response.body().isEmpty()) {
+//                    // 후보 있는 경우
+//                    List<CandidateResponseDto> candidates = response.body();
+//                    Intent intent = new Intent(LoadingActivity.this, PartnerActivity.class);
+//                    intent.putExtra("userInput", matchRequest);
+//                    intent.putExtra("candidates", new ArrayList<>(candidates));
+//                    startActivity(intent);
+//                    finish();
+//                } else {
+//                    // 후보 없음 또는 응답 body null
+//                    Intent intent = new Intent(LoadingActivity.this, PartnerNullActivity.class);
+//                    intent.putExtra("userInput", matchRequest);
+//                    startActivity(intent);
+//                    finish();
+//                }
             }
 
             @Override
@@ -97,17 +119,22 @@ public class LoadingActivity extends AppCompatActivity {
     private void showCancelDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.activity_popup_cancel, null);
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.PopupTheme)
                 .setView(dialogView)
                 .create();
 
-        // 버튼 처리
-        dialogView.findViewById(R.id.back_Btn).setOnClickListener(v -> dialog.dismiss());
+        // 돌아가기 버튼
+        dialogView.findViewById(R.id.backBtn).setOnClickListener(v -> dialog.dismiss());
 
-        dialogView.findViewById(R.id.go_Btn).setOnClickListener(v -> {
+        // 취소 버튼
+        dialogView.findViewById(R.id.cancelBtn).setOnClickListener(v -> {
             dialog.dismiss();
-//            cancelPendingRequest();
-//            goToHome();
+            // 매칭 취소
+            if (matchCall != null && !matchCall.isCanceled()) {
+                matchCall.cancel();
+            }
+            Intent intent = new Intent(LoadingActivity.this, HomeActivity.class);
+            startActivity(intent);
         });
 
         dialog.show();

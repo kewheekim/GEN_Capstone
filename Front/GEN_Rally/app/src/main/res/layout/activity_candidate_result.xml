@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     >
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -125,15 +126,16 @@
                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_candidates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_3"
@@ -143,15 +145,16 @@
                 android:textColor="@color/black_text"
                 android:textSize="16sp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="8dp" />
 
             <android.widget.Button
-                android:id="@+id/next_button"
+                android:id="@+id/btn_next"
                 style="@style/FlatButton"
                 android:layout_width="364dp"
                 android:layout_height="54dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="34dp"
+                android:layout_marginBottom="5dp"
                 android:text="다음에 고르기"
                 android:textSize="16sp"
                 android:textColor="@color/green_active"

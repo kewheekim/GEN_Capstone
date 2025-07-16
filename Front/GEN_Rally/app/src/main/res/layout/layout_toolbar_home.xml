@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/white"
+    app:contentInsetStart="0dp"
+    app:contentInsetLeft="0dp"
+    >
+
+    <ImageView
+        android:id="@+id/tv_toolbar"
+        android:src="@drawable/ic_logo"
+        android:layout_width="94dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <ImageButton
+        android:id="@+id/btn_noti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_notification_color"
+        android:contentDescription=" "
+        android:layout_marginEnd="24dp"
+        android:layout_gravity="center_vertical|end"
+        android:background="@color/white"/>
+
+</androidx.appcompat.widget.Toolbar>
