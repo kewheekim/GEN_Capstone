@@ -81,7 +81,7 @@ public class KakaoService {
         String id = userInfo.getId();
         String name = userInfo.getKakaoAccount().getProfile().getNickname();
 
-        Optional<User> optionalUser = userRepository.findBySocialId(id);
+        Optional<User> optionalUser = userRepository.findBySocialIdAndLoginType(id, LoginType.KAKAO);
 
         User user;
         boolean isNew = false;
@@ -96,8 +96,10 @@ public class KakaoService {
             userRepository.save(user);
             isNew = true;
         }
-        String accessToken = jwtProvider.generateAccessToken(user.getSocialId());
-        String refreshToken = jwtProvider.generateRefreshToken(user.getSocialId());
+
+        String subject = LoginType.KAKAO + ":" + user.getSocialId();
+        String accessToken = jwtProvider.generateAccessToken(subject);
+        String refreshToken = jwtProvider.generateRefreshToken(subject);
 
         TokenResponse token = new TokenResponse(accessToken, refreshToken);
 
