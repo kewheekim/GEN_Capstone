@@ -1,6 +1,5 @@
 package com.gen.rally.config.jwt;
 
-import com.gen.rally.dto.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -16,8 +15,6 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    @Value("${jwt.secret}")
-    private String secret;
     private Key key;
 
     public JwtProvider(@Value("${jwt.secret}") String secretKey) {
@@ -43,7 +40,7 @@ public class JwtProvider {
                 .setSubject(subject)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -72,15 +69,11 @@ public class JwtProvider {
         return false;
     }
 
-    // JWT 만료 여부 확인
-    private boolean isTokenExpired(String token) {
-        return getClaims(token).getExpiration().before(new Date());
-    }
-
     // JWT에서 Claims 추출
     public Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secret)
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
