@@ -1,5 +1,7 @@
 package com.gen.rally.entity;
 
+import com.gen.rally.enums.GameType;
+import com.gen.rally.enums.State;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

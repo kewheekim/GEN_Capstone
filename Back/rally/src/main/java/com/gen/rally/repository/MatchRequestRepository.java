@@ -1,6 +1,5 @@
 package com.gen.rally.repository;
 
-import com.gen.rally.entity.GameType;
 import com.gen.rally.entity.MatchRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
