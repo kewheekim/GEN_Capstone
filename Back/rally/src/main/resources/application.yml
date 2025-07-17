@@ -1,0 +1,25 @@
+kakao:
+  client-secret: W65I5JoQtWrAZ5gavncoIaUJAVvBYFSC
+  redirect-uri: http://localhost:8080/auth/kakao/callback
+  client-id: 2a01cf694dc7a7696e646d1a023baae0
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+  application:
+    name: rally
+  datasource:
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/Rally?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+naver:
+  client-id: 1EIgJuGITTkwIj6Na2Iz
+  client-secret: t8f_c8jd9l
+  redirect-uri: http://localhost:8080/auth/naver/callback
+jwt:
+  secret: Ymx1ZSBrbm90IGlzIGZhbGxpbmcgaSB3YXMgaG9sZGluZyBvbiBmb3IgeW91

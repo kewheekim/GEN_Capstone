@@ -1,13 +1,10 @@
 package com.gen.rally.dto;
 
-import com.gen.rally.entity.GameStyle;
-import com.gen.rally.entity.GameType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 
 // 매칭 신청 시 프론트에서 전달하는 데이터 형식

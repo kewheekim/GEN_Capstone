@@ -3,15 +3,16 @@ package com.gen.rally.service;
 import com.gen.rally.dto.CandidatesResponseDto;
 import com.gen.rally.dto.MatchRequestCreateDto;
 import com.gen.rally.entity.*;
+import com.gen.rally.enums.GameStyle;
+import com.gen.rally.enums.GameType;
+import com.gen.rally.enums.State;
 import com.gen.rally.repository.GameRepository;
 import com.gen.rally.repository.MatchRequestRepository;
 import com.gen.rally.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
