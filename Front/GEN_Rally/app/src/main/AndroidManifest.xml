@@ -23,7 +23,7 @@
             android:value="AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M"/>
 
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +42,6 @@
         <activity android:name=".ui.CandidateActivity"/>
         <activity android:name=".ui.CandidateNullActivity" />
         <activity android:name=".ui.PopupCandidateDetailActivity" android:theme="@style/PopupTheme"/>
-        <activity android:name=".ui.MatchActivity" />
         <activity android:name=".ui.PopupInviteActivity" android:theme="@style/PopupTheme"/>
     </application>
 

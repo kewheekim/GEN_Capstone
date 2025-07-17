@@ -152,6 +152,22 @@
         </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/pretendard_variable"
+        android:text="조건을 다시 설정하거나,\n상대가 생기면 알림으로 알려드릴게요!"
+        android:textAlignment="center"
+        android:textColor="@color/black_text"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_restart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <android.widget.Button
         android:id="@+id/btn_restart"
         style="@style/FlatButton"
@@ -168,22 +184,6 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="10dp" />
-
-    <TextView
-        android:id="@+id/tv_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="30dp"
-        android:fontFamily="@font/pretendard_variable"
-        android:text="조건을 다시 설정하거나,\n상대가 생기면 알림으로 알려드릴게요!"
-        android:textAlignment="center"
-        android:textColor="@color/black_text"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_restart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <android.widget.Button
         android:id="@+id/btn_home"

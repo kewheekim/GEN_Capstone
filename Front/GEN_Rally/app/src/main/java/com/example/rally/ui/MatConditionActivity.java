@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.rally.R;
 
+// MAT_AP_S_001, MAT_AP_S_002, MAT_AP_D_001, MAT_AP_D_002
 public class MatConditionActivity extends AppCompatActivity {
     private static final String[] QUESTIONS = {
             "원하는 경기 스타일을 선택해주세요",
@@ -26,7 +27,7 @@ public class MatConditionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single);
+        setContentView(R.layout.activity_match_condition);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

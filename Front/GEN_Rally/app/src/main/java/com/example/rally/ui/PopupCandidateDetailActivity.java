@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.rally.R;
 import com.example.rally.dto.CandidateResponseDto;
 
+// MAT_AP_S_004
 public class PopupCandidateDetailActivity extends AppCompatActivity {
 
     private CandidateResponseDto user;

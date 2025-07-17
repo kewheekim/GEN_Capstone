@@ -13,6 +13,7 @@ import com.example.rally.R;
 
 import java.util.ArrayList;
 
+// MAT_AP_006
 public class PopupLocationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

@@ -26,6 +26,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
+// MAT_LO_001, MAT_LO_C_001
 public class LoadingActivity extends AppCompatActivity {
     ImageView gifView;
     private long startTime;
@@ -54,7 +55,7 @@ public class LoadingActivity extends AppCompatActivity {
         Intent prev= getIntent();
         MatchRequestDto matchRequest = (MatchRequestDto) prev.getSerializableExtra("matchRequest");
 
-        MatchService service = RetrofitClient.getClient("http://172.19.70.220:8080/")
+        MatchService service = RetrofitClient.getClient("http://192.168.35.44:8080/")
                 .create(MatchService.class);
         matchCall=service.requestMatch(matchRequest);    // Call 저장
 
@@ -82,23 +83,6 @@ public class LoadingActivity extends AppCompatActivity {
                         finish();
                     }
                 }, delay);
-
-                // 원본 코드
-//                if (response.body() != null && !response.body().isEmpty()) {
-//                    // 후보 있는 경우
-//                    List<CandidateResponseDto> candidates = response.body();
-//                    Intent intent = new Intent(LoadingActivity.this, PartnerActivity.class);
-//                    intent.putExtra("userInput", matchRequest);
-//                    intent.putExtra("candidates", new ArrayList<>(candidates));
-//                    startActivity(intent);
-//                    finish();
-//                } else {
-//                    // 후보 없음 또는 응답 body null
-//                    Intent intent = new Intent(LoadingActivity.this, PartnerNullActivity.class);
-//                    intent.putExtra("userInput", matchRequest);
-//                    startActivity(intent);
-//                    finish();
-//                }
             }
 
             @Override
@@ -117,7 +101,7 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     private void showCancelDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup_cancel, null);
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup_match_cancel, null);
 
         AlertDialog dialog = new AlertDialog.Builder(this, R.style.PopupTheme)
                 .setView(dialogView)
@@ -133,7 +117,7 @@ public class LoadingActivity extends AppCompatActivity {
             if (matchCall != null && !matchCall.isCanceled()) {
                 matchCall.cancel();
             }
-            Intent intent = new Intent(LoadingActivity.this, HomeActivity.class);
+            Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
             startActivity(intent);
         });
 

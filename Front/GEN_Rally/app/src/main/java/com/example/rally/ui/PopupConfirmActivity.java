@@ -16,12 +16,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
+// MAT_AP_007
 public class PopupConfirmActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popup_confirm);
+        setContentView(R.layout.activity_popup_match_confirm);
 
         ImageButton xBtn        = findViewById(R.id.x_btn);
         Button backBtn          = findViewById(R.id.back_btn);

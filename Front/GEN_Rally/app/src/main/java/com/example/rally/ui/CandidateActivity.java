@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+// MAT_REC_S_001
 public class CandidateActivity extends AppCompatActivity {
 
     @Override
@@ -104,9 +105,12 @@ public class CandidateActivity extends AppCompatActivity {
         // 다음에 고르기 버튼
         Button nextBtn = findViewById(R.id.btn_next);
         nextBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(CandidateActivity.this, MatchActivity.class);
+            Intent intent = new Intent(CandidateActivity.this, MainActivity.class);
             intent.putExtra("userInput", userInput);
+            intent.putExtra("navigateTo", "matching");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            finish();
         });
     }
 }

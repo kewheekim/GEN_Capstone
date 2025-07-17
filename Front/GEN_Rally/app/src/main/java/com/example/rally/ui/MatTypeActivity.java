@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.rally.R;
 
+// MAT_AP_001
 public class MatTypeActivity extends AppCompatActivity {
     private View singleCard,doubleCard;
     private Button nextBtn;
