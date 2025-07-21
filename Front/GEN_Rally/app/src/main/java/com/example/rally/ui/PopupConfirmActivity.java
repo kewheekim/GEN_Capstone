@@ -32,8 +32,8 @@ public class PopupConfirmActivity extends AppCompatActivity {
         TextView tvTime         = findViewById(R.id.tv_time);
         TextView tvPlaceName    = findViewById(R.id.tv_location);
 
-        TextView tvType = findViewById(R.id.tv_style);
-        TextView tvStyle = findViewById(R.id.tv_style_detail);
+        TextView tvType = findViewById(R.id.tv_type);
+        TextView tvStyle = findViewById(R.id.tv_style);
 
         Intent prev = getIntent();
         LocalDate date= LocalDate.parse(prev.getStringExtra("date"));
