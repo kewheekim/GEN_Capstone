@@ -223,7 +223,7 @@
             />
 
         <TextView
-            android:id="@+id/tv_style"
+            android:id="@+id/tv_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="열심히 경기해요"
@@ -246,7 +246,7 @@
             android:textSize="12sp"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_style"
+            app:layout_constraintTop_toBottomOf="@+id/tv_type"
             android:layout_marginTop="16dp"
             android:layout_marginStart="24dp"
             android:fontFamily="@font/pretendard_variable"

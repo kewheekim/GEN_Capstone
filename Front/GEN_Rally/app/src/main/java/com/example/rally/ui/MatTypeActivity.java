@@ -7,11 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.rally.R;
 
+// MAT_AP_001
 public class MatTypeActivity extends AppCompatActivity {
     private View singleCard,doubleCard;
     private Button nextBtn;
@@ -23,12 +25,22 @@ public class MatTypeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_match_type);
 
         Toolbar toolbar = findViewById(R.id.toolbar_back);
-        Log.d("MatAp", "toolbar is " + toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        String from = getIntent().getStringExtra("from");
         // 뒤로가기
-        findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
+        if ("CandidateNullActivity".equals(from)) {
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    // 아무 동작도 하지 않음 → 뒤로가기 비활성화
+                }
+            });
+        }
+        else {
+            findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
+        }
 
         nextBtn = findViewById(R.id.btn_next);
         singleCard = findViewById(R.id.rectangle_single);

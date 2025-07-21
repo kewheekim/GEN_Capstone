@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+// MAT_REC_S_001
 public class CandidateActivity extends AppCompatActivity {
 
     @Override
@@ -34,19 +35,19 @@ public class CandidateActivity extends AppCompatActivity {
 
         Intent prev = getIntent();
         MatchRequestDto userInput = (MatchRequestDto)getIntent().getSerializableExtra("userInput");
-        LocalDate game_date= LocalDate.parse(userInput.getGameDate());
+        LocalDate gameDate= LocalDate.parse(userInput.getGameDate());
         DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일");
-        String formatted_date = game_date.format(formatter);
+        String formattedDate = gameDate.format(formatter);
 
         @SuppressWarnings("unchecked")
         ArrayList<CandidateResponseDto> candidates = (ArrayList<CandidateResponseDto>) getIntent().getSerializableExtra("candidates");
 
-        TextView date= findViewById(R.id.tv_date);
-        date.setText(formatted_date);
-        TextView time= findViewById(R.id.tv_time);
-        time.setText(userInput.getStartTime()+":00 ~ "+userInput.getEndTime()+":00");
-        TextView location= findViewById(R.id.tv_location);
-        location.setText(userInput.getPlace());
+        TextView tvDate= findViewById(R.id.tv_date);
+        tvDate.setText(formattedDate);
+        TextView tvTime= findViewById(R.id.tv_time);
+        tvTime.setText(userInput.getStartTime()+":00 ~ "+userInput.getEndTime()+":00");
+        TextView tvLocation= findViewById(R.id.tv_location);
+        tvLocation.setText(userInput.getPlace());
 
         // 리사이클러뷰에 전달할 데이터 가공
         List<CandidateItem> displayList = new ArrayList<>();
@@ -86,12 +87,10 @@ public class CandidateActivity extends AppCompatActivity {
             }
         }
 
-
         // RecyclerView에 어댑터 연결
         RecyclerView recyclerView=findViewById(R.id.rv_candidates);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new CandidateAdapter(displayList, isSameTierMap));
-
 
         // 뒤로가기 버튼 동작 막기
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -104,9 +103,12 @@ public class CandidateActivity extends AppCompatActivity {
         // 다음에 고르기 버튼
         Button nextBtn = findViewById(R.id.btn_next);
         nextBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(CandidateActivity.this, MatchActivity.class);
+            Intent intent = new Intent(CandidateActivity.this, MainActivity.class);
             intent.putExtra("userInput", userInput);
+            intent.putExtra("navigateTo", "matching");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            finish();
         });
     }
 }

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rally.R;
 
+// MAT_AP_S_005
 public class PopupInviteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);

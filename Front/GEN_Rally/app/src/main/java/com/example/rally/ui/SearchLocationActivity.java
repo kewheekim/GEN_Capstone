@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+// MAT_AP_004
 public class SearchLocationActivity extends AppCompatActivity {
     private EditText etSearch;
     private RecyclerView rvResults;

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// MAT_AP_002
 public class SetTimeActivity extends AppCompatActivity {
 
     private RecyclerView rvDates;
@@ -39,7 +40,7 @@ public class SetTimeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_time);
+        setContentView(R.layout.activity_set_time);
 
         Toolbar toolbar = findViewById(R.id.toolbar_back);
         setSupportActionBar(toolbar);

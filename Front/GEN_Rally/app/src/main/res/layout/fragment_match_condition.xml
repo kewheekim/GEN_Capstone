@@ -33,7 +33,6 @@
 
     <!-- 하단 버튼 -->
     <include
-        android:id="@+id/btn_next"
         layout="@layout/layout_next_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
