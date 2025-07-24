@@ -2,8 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="bg_default">#FBFAFC </color>
     <color name="green_active">#2ABA72</color>
     <color name="gray_inactive">#EBEBEB</color>
+    <color name="gray_nav_bar">#AAAAAA</color>
     <color name="gray_border">#D9D9D9</color>
     <color name="gray_text">#676769</color>
     <color name="black_text">#343434</color>

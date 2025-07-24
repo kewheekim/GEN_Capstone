@@ -5,7 +5,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="@color/white"
+    android:background="@color/bg_default"
     app:contentInsetStart="0dp"
     app:contentInsetLeft="0dp"
     >
