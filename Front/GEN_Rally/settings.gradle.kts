@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Rally"
 include(":app")
+include(":wear")
