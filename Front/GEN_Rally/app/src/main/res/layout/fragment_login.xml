@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar_back"
+        layout="@layout/layout_toolbar_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_phrase"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="42dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <EditText
+        android:id="@+id/et_enter_id"
+        android:layout_width="364dp"
+        android:layout_height="52dp"
+        android:hint="아이디 입력"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="42dp"
+        android:layout_marginStart="24dp"
+        android:textSize="14sp"
+        />
+    <EditText
+        android:id="@+id/et_enter_pw"
+        android:layout_width="364dp"
+        android:layout_height="52dp"
+        android:hint="비밀번호 입력"
+        app:layout_constraintTop_toBottomOf="@id/et_enter_id"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="24dp"
+        android:textSize="14sp"
+        />
+    
+    <Button
+        android:id="@+id/btn_login"
+        style="@style/FlatButton"
+        android:layout_width="364dp"
+        android:layout_height="54dp"
+        android:text="로그인"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/et_enter_pw"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/bg_next_button_active"
+        />
+
+    <LinearLayout
+        android:layout_width="364dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="24dp"
+        android:paddingHorizontal="50dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+        <TextView
+            android:id="@+id/tv_find_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="아이디 찾기"
+            android:textSize="14sp"
+            android:layout_marginEnd="16dp"
+            />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="14dp"
+            android:background="@color/gray_border"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/tv_find_pw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호 찾기"
+            android:textSize="14sp"
+            android:layout_marginEnd="16dp"
+            />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="14dp"
+            android:background="@color/gray_border"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/tv_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원가입"
+            android:textSize="14sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="364dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="123dp"
+        android:layout_marginStart="24dp"
+        >
+
+        <View
+            android:layout_width="154dp"
+            android:layout_height="1dp"
+            android:background="@color/gray_border"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="또는"
+            android:layout_marginEnd="16dp"
+            android:textSize="14sp"/>
+
+        <View
+            android:layout_width="154dp"
+            android:layout_height="1dp"
+            android:background="@color/gray_border"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_naver"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_naver"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="209dp"
+        android:layout_marginStart="144dp"
+        android:backgroundTint="@android:color/transparent"
+        />
+
+    <ImageButton
+        android:id="@+id/btn_kakao"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_kakao"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="209dp"
+        android:layout_marginStart="219dp"
+        android:backgroundTint="@android:color/transparent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
