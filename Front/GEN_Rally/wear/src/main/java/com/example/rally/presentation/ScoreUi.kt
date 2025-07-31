@@ -206,11 +206,6 @@ fun ScoreScreen(
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-        Image(
-            painter = painterResource(id = R.drawable.ic_dot1),
-            contentDescription = "page1",
-            modifier = Modifier.width(18.dp)
-        )
     }
 }
 

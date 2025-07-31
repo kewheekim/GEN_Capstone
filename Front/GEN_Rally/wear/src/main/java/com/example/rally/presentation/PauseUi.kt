@@ -46,13 +46,6 @@ fun PauseScreen(onPause: () -> Unit) {
         }
 
         Spacer(modifier = Modifier.height(53.dp))
-        Image(
-            painter = painterResource(id = R.drawable.ic_dot2),
-            contentDescription = "page1",
-            modifier = Modifier
-                .width(18.dp)
-                .offset(y = 80.dp)
-        )
     }
 }
 
