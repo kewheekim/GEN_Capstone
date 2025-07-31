@@ -1,0 +1,239 @@
+package com.example.rally.presentation
+
+import com.example.rally.R
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Text
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.rally.viewmodel.ScoreViewModel
+import kotlinx.coroutines.delay
+
+@Composable
+fun ScoreScreen(
+    setNumber: Int,
+    opponentName: String,
+    userName: String,
+    viewModel: ScoreViewModel = viewModel()
+) {
+    val userScore by viewModel.userScore.collectAsState()
+    val userSets by viewModel.userSets.collectAsState()
+    val opponentScore by viewModel.opponentScore.collectAsState()
+    val opponentSets by viewModel.opponentSets.collectAsState()
+    val userServe by viewModel.userServe.collectAsState()
+
+    val haptic = LocalHapticFeedback.current  // 진동 피드백
+    var showToast by remember { mutableStateOf(false) }  // 경기 이벤트 토스트
+    var toastTitle by remember { mutableStateOf("") }
+    var toastMessage by remember { mutableStateOf("") }
+    if (showToast) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            ScoreEventToast(
+                title= toastTitle,
+                message= toastMessage,
+                visible = true, onDismiss = { showToast = false })
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.black_bg)),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "${setNumber}세트",
+            fontSize = 12.sp,
+            color = Color.White,
+            fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+            fontWeight = FontWeight.Medium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.width(58.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "$opponentName",
+                    fontSize = 10.sp,
+                    color = Color.Gray,
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                )
+                Text(
+                    text = "$opponentScore",
+                    fontSize = 46.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    fontWeight = FontWeight.Black
+                )
+            }
+
+            if (!userServe) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_serve),
+                    contentDescription = "User Serve",
+                    modifier = Modifier
+                        .width(8.dp)
+                        .offset(x = 4.dp, y = 18.dp)
+                )
+            } else {
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(
+                text = "$opponentSets",
+                fontSize = 16.sp,
+                color = Color.White,
+                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                fontWeight = FontWeight.SemiBold
+            )
+
+            // 사용자 점수 영역
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = "$userSets",
+                fontSize = 16.sp,
+                color = Color.White,
+                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (userServe) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_serve),
+                        contentDescription = "Opponent Serve",
+                        modifier = Modifier
+                            .width(8.dp)
+                            .offset(x = 2.dp, y = 18.dp)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+            }
+
+            Column(
+                modifier = Modifier.width(58.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "$userName",
+                    fontSize = 10.sp,
+                    color = Color.Gray,
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                )
+                Text(
+                    text = "$userScore",
+                    fontSize = 46.sp,
+                    color = colorResource(id = R.color.green_active),
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    fontWeight = FontWeight.Black
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+        // 득점 버튼
+        Button (
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
+                viewModel.addUserScore()
+                if(checkSetWin(userScore+1, opponentScore)) {
+                    toastTitle = "세트 종료"
+                    toastMessage = "1세트 선취!\n시작이 좋아요!"
+                    showToast = true
+                } else if(checkMatchPoint(userScore+1, opponentScore)) {
+                    toastTitle = "Match Point!"
+                    toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
+                    showToast = true
+                }
+            },
+            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
+            modifier = Modifier
+                .width(100.dp)
+                .height(40.dp),
+            shape = RoundedCornerShape(29.dp)
+        ) {
+            Text(
+                text = "득점",
+                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                fontWeight = FontWeight.Medium
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "점수 되돌리기",
+            fontSize = 10.sp,
+            color = Color.LightGray,
+            modifier = Modifier.clickable(onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
+                viewModel.undoUserScore()
+            }),
+            fontFamily = FontFamily(Font(R.font.pretendard_variable))
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Image(
+            painter = painterResource(id = R.drawable.ic_dot1),
+            contentDescription = "page1",
+            modifier = Modifier.width(18.dp)
+        )
+    }
+}
+
+fun checkMatchPoint(
+    playerScore: Int,
+    opponentScore: Int
+): Boolean {
+    return playerScore >= 20 && playerScore == opponentScore
+}
+
+fun checkSetWin(
+    playerScore: Int,
+    opponentScore: Int
+): Boolean {
+    return playerScore >= 21 && (playerScore - opponentScore) >= 2
+}
+
+@Preview(showBackground = true, widthDp = 192, heightDp = 192)
+@Composable
+fun MatchScoreScreenPreview() {
+    ScoreScreen(
+        setNumber = 1,
+        opponentName = "아어려워요",
+        userName = "안세영이되",
+    )
+}

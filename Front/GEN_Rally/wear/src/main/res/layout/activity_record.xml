@@ -3,7 +3,6 @@
     android:id="@+id/box_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp"
     android:background="@color/black">
 
     <LinearLayout
@@ -23,15 +22,6 @@
             android:textSize="14sp"
             android:fontFamily="@font/pretendard_variable" />
 
-        <TextView
-            android:id="@+id/tv_opponent_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="VS 아어려워요"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/pretendard_variable"/>
 
         <!-- 점수 영역 -->
         <LinearLayout
@@ -44,29 +34,50 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center"
                 android:layout_marginEnd="8dp">
 
                 <TextView
-                    android:id="@+id/tv_opponent_score"
-                    android:layout_width="64dp"
-                    android:layout_height="55dp"
-                    android:gravity="center"
-                    android:text="12"
-                    android:textColor="@color/white"
-                    android:textSize="46sp"
-                    android:textFontWeight="800"
-                    android:fontFamily="@font/pretendard_variable"/>
-
-                <TextView
-                    android:id="@+id/tv_opponent_sets"
+                    android:id="@+id/tv_opponent_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:text="VS 아어려워요"
+                    android:textColor="@color/gray_inactive"
+                    android:textSize="11sp"
+                    android:textFontWeight="400"
+                    android:layout_marginBottom="5dp"
                     android:fontFamily="@font/pretendard_variable"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        android:id="@+id/tv_opponent_score"
+                        android:layout_width="64dp"
+                        android:layout_height="55dp"
+                        android:gravity="center"
+                        android:text="12"
+                        android:textColor="@color/white"
+                        android:textSize="46sp"
+                        android:textFontWeight="800"
+                        android:fontFamily="@font/pretendard_variable"/>
+
+                    <TextView
+                        android:id="@+id/tv_opponent_sets"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textFontWeight="600"
+                        android:fontFamily="@font/pretendard_variable"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
 <!--            &lt;!&ndash; 서브권 아이콘 &ndash;&gt;-->
@@ -82,7 +93,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginStart="8dp">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp">
 
                 <TextView
                     android:id="@+id/tv_user_sets"
@@ -90,7 +102,8 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
+                    android:textFontWeight="600"
                     android:fontFamily="@font/pretendard_variable"/>
 
                 <TextView
@@ -108,9 +121,9 @@
         </LinearLayout>
 
         <!-- 득점 버튼 -->
-        <Button
+        <android.widget.Button
             android:id="@+id/btn_add"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:text="득점"
             android:background="@drawable/bg_next_button_active"
@@ -126,7 +139,7 @@
             android:text="점수 되돌리기"
             android:textColor="#CCCCCC"
             android:textSize="12sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_variable"/>
     </LinearLayout>
 </androidx.wear.widget.BoxInsetLayout>

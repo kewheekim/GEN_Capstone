@@ -23,6 +23,21 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
+        <activity
+            android:name=".presentation.SingleScoreActivity"
+            android:exported="false"
+            android:taskAffinity=""
+            android:theme="@style/ScoreActivityTheme.Starting" />
+
+        <activity
+            android:name=".presentation.ScoreSwipeActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
