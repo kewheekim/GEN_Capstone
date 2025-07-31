@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/toolbar_back"
+        layout="@layout/layout_toolbar_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="성별을\n알려주세요"
+        android:textSize="22sp"
+        android:textColor="@color/black_text"
+        android:textStyle="bold"
+        android:lineSpacingExtra="8dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <ImageButton
+        android:id="@+id/btn_male"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_gender_male_big"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="173dp"
+        android:layout_marginStart="82dp"/>
+
+    <ImageButton
+        android:id="@+id/btn_female"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_gender_female_big"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="165dp"
+        android:layout_marginStart="260dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="남성"
+        android:textSize="20sp"
+        android:textColor="@color/gray_nav_bar"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="289dp"
+        android:layout_marginStart="105dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여성"
+        android:textSize="20sp"
+        android:textColor="@color/gray_nav_bar"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="289dp"
+        android:layout_marginStart="273dp"
+        />
+
+    <include
+        layout="@layout/layout_next_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

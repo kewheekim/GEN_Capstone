@@ -13,6 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+
       <SelectionState runConfigName="wear">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2025-07-24T08:32:25.197994700Z">
@@ -24,6 +25,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+
       <SelectionState runConfigName="TestActivity">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2025-07-30T14:54:12.220297700Z">
@@ -35,6 +37,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+
       <SelectionState runConfigName="ScoreSwipeActivity">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2025-07-31T11:07:02.174650400Z">
