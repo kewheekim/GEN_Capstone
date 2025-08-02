@@ -24,9 +24,13 @@ import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rally.viewmodel.ScoreViewModel
 import kotlinx.coroutines.delay
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 
 @Composable
 fun ScoreScreen(
@@ -45,167 +49,183 @@ fun ScoreScreen(
     var showToast by remember { mutableStateOf(false) }  // 경기 이벤트 토스트
     var toastTitle by remember { mutableStateOf("") }
     var toastMessage by remember { mutableStateOf("") }
-    if (showToast) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            ScoreEventToast(
-                title= toastTitle,
-                message= toastMessage,
-                visible = true, onDismiss = { showToast = false })
-        }
-    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.black_bg)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "${setNumber}세트",
-            fontSize = 12.sp,
-            color = Color.White,
-            fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-            fontWeight = FontWeight.Medium
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.black_bg)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.width(58.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "$opponentName",
-                    fontSize = 10.sp,
-                    color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable))
-                )
-                Text(
-                    text = "$opponentScore",
-                    fontSize = 46.sp,
-                    color = Color.White,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.Black
-                )
-            }
-
-            if (!userServe) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_serve),
-                    contentDescription = "User Serve",
-                    modifier = Modifier
-                        .width(8.dp)
-                        .offset(x = 4.dp, y = 18.dp)
-                )
-            } else {
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-
-            Spacer(modifier = Modifier.width(5.dp))
             Text(
-                text = "$opponentSets",
-                fontSize = 16.sp,
+                text = "${setNumber}세트",
+                fontSize = 12.sp,
                 color = Color.White,
                 fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.Medium
             )
 
-            // 사용자 점수 영역
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "$userSets",
-                fontSize = 16.sp,
-                color = Color.White,
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (userServe) {
+                Column(
+                    modifier = Modifier.width(58.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "$opponentName",
+                        fontSize = 10.sp,
+                        color = Color.Gray,
+                        fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                    )
+                    Text(
+                        text = "$opponentScore",
+                        fontSize = 46.sp,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        fontWeight = FontWeight.Black
+                    )
+                }
+
+                if (!userServe) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_serve),
-                        contentDescription = "Opponent Serve",
+                        contentDescription = "User Serve",
                         modifier = Modifier
                             .width(8.dp)
-                            .offset(x = 2.dp, y = 18.dp)
+                            .offset(x = 4.dp, y = 18.dp)
                     )
                 } else {
                     Spacer(modifier = Modifier.width(8.dp))
                 }
+
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = "$opponentSets",
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                // 사용자 점수 영역
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = "$userSets",
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (userServe) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_serve),
+                            contentDescription = "Opponent Serve",
+                            modifier = Modifier
+                                .width(8.dp)
+                                .offset(x = 2.dp, y = 18.dp)
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.width(58.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "$userName",
+                        fontSize = 10.sp,
+                        color = Color.Gray,
+                        fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                    )
+                    Text(
+                        text = "$userScore",
+                        fontSize = 46.sp,
+                        color = colorResource(id = R.color.green_active),
+                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        fontWeight = FontWeight.Black
+                    )
+                }
             }
 
-            Column(
-                modifier = Modifier.width(58.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Spacer(modifier = Modifier.height(4.dp))
+            // 득점 버튼
+            Button(
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
+                    viewModel.addUserScore()
+                    if (checkSetWin(userScore + 1, opponentScore)) {
+                        toastTitle = "세트 종료"
+                        toastMessage = "1세트 선취!\n시작이 좋아요!"
+                        showToast = true
+                    } else if (checkMatchPoint(userScore + 1, opponentScore)) {
+                        toastTitle = "Match Point!"
+                        toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
+                        showToast = true
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(40.dp),
+                shape = RoundedCornerShape(29.dp)
             ) {
                 Text(
-                    text = "$userName",
-                    fontSize = 10.sp,
-                    color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable))
-                )
-                Text(
-                    text = "$userScore",
-                    fontSize = 46.sp,
-                    color = colorResource(id = R.color.green_active),
+                    text = "득점",
+                    fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.Black
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "점수 되돌리기",
+                fontSize = 10.sp,
+                color = Color.LightGray,
+                modifier = Modifier.clickable(onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
+                    viewModel.undoUserScore()
+                }),
+                fontFamily = FontFamily(Font(R.font.pretendard_variable))
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        // 경기 이벤트 토스트 (매치포인트, 세트 종료)
+        AnimatedVisibility(
+            visible = showToast,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(1f),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                ScoreEventToast(
+                    title = toastTitle,
+                    message = toastMessage,
+                    visible = true,
+                    onDismiss = { showToast = false },
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(4.dp))
-        // 득점 버튼
-        Button (
-            onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
-                viewModel.addUserScore()
-                if(checkSetWin(userScore+1, opponentScore)) {
-                    toastTitle = "세트 종료"
-                    toastMessage = "1세트 선취!\n시작이 좋아요!"
-                    showToast = true
-                } else if(checkMatchPoint(userScore+1, opponentScore)) {
-                    toastTitle = "Match Point!"
-                    toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
-                    showToast = true
-                }
-            },
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
-            modifier = Modifier
-                .width(100.dp)
-                .height(40.dp),
-            shape = RoundedCornerShape(29.dp)
-        ) {
-            Text(
-                text = "득점",
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.Medium
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "점수 되돌리기",
-            fontSize = 10.sp,
-            color = Color.LightGray,
-            modifier = Modifier.clickable(onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
-                viewModel.undoUserScore()
-            }),
-            fontFamily = FontFamily(Font(R.font.pretendard_variable))
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 

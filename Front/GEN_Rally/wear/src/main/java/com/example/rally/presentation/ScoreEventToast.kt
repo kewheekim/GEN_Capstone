@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.wear.compose.material.Text
 import com.example.rally.R
 import kotlinx.coroutines.delay
@@ -42,14 +42,13 @@ fun ScoreEventToast(
         }
 
         Box(
-            modifier = Modifier .width(138.dp)
-                .height(48.dp),
+            modifier = Modifier .fillMaxSize().zIndex(999f).offset(y=32.dp),
             contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
                     .background(
-                        color = Color(0x99000000),
+                        color = Color(0xE6525252),
                         shape = RoundedCornerShape(50.dp),
                     )
                     .width(138.dp)

@@ -9,8 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -22,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rally.viewmodel.ScoreViewModel
+import kotlinx.coroutines.delay
 
 class ScoreSwipeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +36,20 @@ class ScoreSwipeActivity : ComponentActivity() {
 fun SwipeScreen() {
     val pagerState = rememberPagerState(pageCount = { 2 })
     val viewModel: ScoreViewModel = viewModel()
+
+    // 타이머
+    var elapsedSeconds by remember {mutableStateOf(0L)}
+    var isPaused by remember {mutableStateOf(false)}
+    var pausedAt by remember {mutableStateOf(0L)}
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1000)
+            if (!isPaused) {
+                //elapsedSeconds = ((System.currentTimeMillis() - startTime - pausedAt) / 1000)
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -69,7 +83,7 @@ fun SwipeScreen() {
                 contentDescription = "Page Indicator",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .width(18.dp)
+                    .width(18.dp).offset(y=-12.dp)
             )
         }
     }

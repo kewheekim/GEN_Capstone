@@ -81,7 +81,7 @@ fun StartScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.width(5.dp))
+            Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = "$opponentSets",
                 fontSize = 16.sp,
@@ -100,7 +100,7 @@ fun StartScreen(
                 fontFamily = FontFamily(Font(R.font.pretendard_variable)),
                 fontWeight = FontWeight.SemiBold
             )
-
+            Spacer(modifier = Modifier.width(10.dp))
             Column(
                 modifier = Modifier.width(58.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -121,7 +121,7 @@ fun StartScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // 득점 버튼
         Button (
