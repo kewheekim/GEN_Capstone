@@ -1,6 +1,5 @@
 package com.gen.rally.controller;
 
-import com.gen.rally.dto.*;
 import com.gen.rally.dto.auth.*;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.exception.CustomException;
@@ -12,19 +11,17 @@ import com.gen.rally.service.NaverService;
 import com.gen.rally.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -38,10 +35,19 @@ public class UserController {
         if(userRepository.findByUserId(request.getUserId()).isPresent()) {
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorCode.USER_ALREADY_EXISTS));
         }
-        if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorCode.PASSWORD_MISMATCH));
+        SignupResponse res = userService.generalSignup(request);
+        return ResponseEntity.ok(res);
+    }
+
+    // 아이디 중복 체크
+    @PostMapping("/api/users/check-id")
+    public ResponseEntity<?> checkId(@RequestBody CheckIdRequest request) throws IOException {
+        String id = request.getUserId();
+        if(userRepository.findByUserId(id).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ErrorResponse.from(ErrorCode.USER_ALREADY_EXISTS));
         }
-        return userService.generalSignup(request);
+        return ResponseEntity.ok("사용 가능한 아이디입니다.");
     }
 
     // kakao 로그인 & 회원가입

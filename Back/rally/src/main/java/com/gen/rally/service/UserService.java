@@ -1,6 +1,8 @@
 package com.gen.rally.service;
 
-import com.gen.rally.dto.GeneralSignupRequest;
+import com.gen.rally.config.jwt.JwtProvider;
+import com.gen.rally.dto.auth.GeneralSignupRequest;
+import com.gen.rally.dto.auth.SignupResponse;
 import com.gen.rally.dto.auth.SocialSignupRequest;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.entity.User;
@@ -19,8 +21,9 @@ import java.util.Base64;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
-    public ResponseEntity<?> generalSignup(GeneralSignupRequest request){
+    public SignupResponse generalSignup(GeneralSignupRequest request){
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         User user = new User();
@@ -29,10 +32,19 @@ public class UserService {
         user.setName(request.getName());
         user.setProfileImage(request.getProfileImage());
         user.setGender(request.getGender());
+        user.setPrimaryThing(request.getPrimaryThing());
         user.setLoginType(LoginType.NORMAL);
-
         userRepository.save(user);
-        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+
+        String accessToken  = jwtProvider.generateAccessToken(user.getUserId());
+        String refreshToken = jwtProvider.generateRefreshToken(user.getUserId());
+
+        return new SignupResponse(
+                user.getUserId(),
+                user.getName(),
+                accessToken,
+                refreshToken
+        );
     }
 
     public ResponseEntity<?> socialSignup(SocialSignupRequest request, String socialId, LoginType loginType){
@@ -41,6 +53,7 @@ public class UserService {
 
         user.setName(request.getName());
         user.setGender(request.getGender());
+        user.setPrimaryThing(request.getPrimaryThing());
 
         if (request.getProfileImage() != null) {
             byte[] decodedImage = Base64.getDecoder().decode(request.getProfileImage());
