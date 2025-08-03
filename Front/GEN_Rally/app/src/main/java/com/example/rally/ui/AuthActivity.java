@@ -25,7 +25,7 @@ public class AuthActivity extends AppCompatActivity {
         }
     }
 
-    // LoginFragment → SignupFragment
+    // LoginFragment -> SignupFragment
     public void showSignup() {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -34,18 +34,82 @@ public class AuthActivity extends AppCompatActivity {
                 .commit();
     }
 
-    // SignupFragment → LoginFragment 전환
-    public void showLogin() {
+    // SignupFragment -> LoginFragment  (뒤로가기)
+    public void backToLogin() {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
         }
     }
 
-    public void showSignupInfo(String id, String pw) {
-        // 예: 기본 정보 입력 Fragment 로 전환
+    // SignupFragment -> SetNicknameFragment
+    public void showSetNickname(String id, String pw) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.auth_fragment_container, SetNicknameFragment.newInstance(id, pw))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    // SetNicknameFragment -> SignupFragment (뒤로가기)
+    public void backToSignup(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+    }
+
+    // SetNicknameFragment -> SetProfileImageFragment
+    public void showSetProfile(String id, String pw, String name){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_fragment_container, SetProfileImageFragment.newInstance(id, pw, name))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    // SetProfileImageFragment -> SetNicknameFragment (뒤로가기)
+    public void backToNickname(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+    }
+
+    // SetProfileImageFragment -> SetGenderFragment
+    public void showSetGender(String id, String pw, String name, byte[] image){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_fragment_container, SetGenderFragment.newInstance(id, pw, name, image))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    // SetGenderFragment -> SetProfileImageFragment (뒤로가기)
+    public void backToImage(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+    }
+
+    // SetGenderFragment -> SetPrimaryFragment
+    public void showSetPrimary(String id, String pw, String name, byte[] image, String gender){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_fragment_container, SetPrimaryFragment.newInstance(id, pw, name, image, gender))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    // SetPrimaryFragment -> SetGenderFragment (뒤로가기)
+    public void backToGender(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+    }
+
+    // SignupCompleteFragment
+    public void showComplete(String name, byte[] image){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_fragment_container, SignupCompleteFragment.newInstance(name, image))
                 .addToBackStack(null)
                 .commit();
     }
