@@ -46,9 +46,50 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="174dp"
         android:layout_marginHorizontal="24dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:orientation="vertical" />
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/rb_skill"
+            style="@style/MyCustomRadioButton"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_width="364dp"
+            android:layout_height="78dp"
+            android:layout_marginBottom="8dp"
+            android:text="비슷한 실력"
+            />
+        <RadioButton
+            android:id="@+id/rb_location"
+            style="@style/MyCustomRadioButton"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_width="364dp"
+            android:layout_height="78dp"
+            android:layout_marginBottom="8dp"
+            android:text="가까운 위치"
+            />
+        <RadioButton
+            android:id="@+id/rb_time"
+            style="@style/MyCustomRadioButton"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_width="364dp"
+            android:layout_height="78dp"
+            android:layout_marginBottom="8dp"
+            android:text="시간대"
+            />
+        <RadioButton
+            android:id="@+id/rb_style"
+            style="@style/MyCustomRadioButton"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_width="364dp"
+            android:layout_height="78dp"
+            android:layout_marginBottom="8dp"
+            android:text="스타일"
+            />
+
+    </RadioGroup>
 
     <include
         layout="@layout/layout_next_button"

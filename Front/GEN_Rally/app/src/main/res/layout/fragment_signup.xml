@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <include
         android:id="@+id/toolbar_back"
         layout="@layout/layout_toolbar_back"
@@ -74,20 +75,21 @@
         />
 
     <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="비밀번호"
-    android:textSize="16sp"
-    android:textColor="@color/black_text"
-    android:textStyle="bold"
-    app:layout_constraintTop_toBottomOf="@id/et_set_id"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_marginTop="52dp"
-    android:layout_marginStart="24dp"
-    />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호"
+        android:textSize="16sp"
+        android:textColor="@color/black_text"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/et_set_id"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="52dp"
+        android:layout_marginStart="24dp"
+        />
 
     <EditText
         android:id="@+id/et_set_pw"
+        android:inputType="textPassword"
         android:layout_width="256dp"
         android:layout_height="52dp"
         android:hint="비밀번호 입력"
@@ -124,6 +126,7 @@
 
     <EditText
         android:id="@+id/et_confirm_pw"
+        android:inputType="textPassword"
         android:layout_width="256dp"
         android:layout_height="52dp"
         android:hint="비밀번호 입력"
