@@ -1,6 +1,5 @@
 package com.gen.rally.dto.auth;
 
-import com.gen.rally.dto.TokenResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -4,7 +4,7 @@ import com.gen.rally.config.jwt.JwtProvider;
 import com.gen.rally.dto.auth.KakaoLoginResponse;
 import com.gen.rally.dto.auth.KakaoTokenResponse;
 import com.gen.rally.dto.auth.KakaoUserInfoDto;
-import com.gen.rally.dto.TokenResponse;
+import com.gen.rally.dto.auth.TokenResponse;
 import com.gen.rally.entity.User;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.exception.CustomException;

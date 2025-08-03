@@ -1,7 +1,7 @@
 package com.gen.rally.service;
 
 import com.gen.rally.config.jwt.JwtProvider;
-import com.gen.rally.dto.TokenResponse;
+import com.gen.rally.dto.auth.TokenResponse;
 import com.gen.rally.dto.auth.NaverLoginResponse;
 import com.gen.rally.dto.auth.NaverTokenResponse;
 import com.gen.rally.dto.auth.NaverUserInfoDto;
