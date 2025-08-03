@@ -16,6 +16,13 @@ wearToolingPreview = "1.0.0"
 activityCompose = "1.10.1"
 coreSplashscreen = "1.0.1"
 coreKtx = "1.16.0"
+tiles = "1.4.0"
+tilesMaterial = "1.4.0"
+tilesTooling = "1.4.0"
+tilesToolingPreview = "1.4.0"
+horologistComposeTools = "0.6.17"
+horologistTiles = "0.6.17"
+watchfaceComplicationsDataSourceKtx = "1.2.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -39,6 +46,13 @@ wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview",
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+tiles = { group = "androidx.wear.tiles", name = "tiles", version.ref = "tiles" }
+tiles-material = { group = "androidx.wear.tiles", name = "tiles-material", version.ref = "tilesMaterial" }
+tiles-tooling = { group = "androidx.wear.tiles", name = "tiles-tooling", version.ref = "tilesTooling" }
+tiles-tooling-preview = { group = "androidx.wear.tiles", name = "tiles-tooling-preview", version.ref = "tilesToolingPreview" }
+horologist-compose-tools = { group = "com.google.android.horologist", name = "horologist-compose-tools", version.ref = "horologistComposeTools" }
+horologist-tiles = { group = "com.google.android.horologist", name = "horologist-tiles", version.ref = "horologistTiles" }
+watchface-complications-data-source-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version.ref = "watchfaceComplicationsDataSourceKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
