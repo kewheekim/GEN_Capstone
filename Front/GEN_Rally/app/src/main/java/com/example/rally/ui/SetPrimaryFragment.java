@@ -1,0 +1,159 @@
+package com.example.rally.ui;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.example.rally.R;
+import com.example.rally.api.ApiService;
+import com.example.rally.api.RetrofitClient;
+import com.example.rally.dto.GeneralSignupRequest;
+import com.example.rally.dto.SignupResponse;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+// SIG_005
+public class SetPrimaryFragment extends Fragment {
+
+    private static final String ARG_ID = "id";
+    private static final String ARG_PW = "pw";
+    private static final String ARG_NAME = "name";
+    private static final String ARG_IMAGE_BYTES = "imageBytes";
+    private static final String ARG_GENDER = "gender";
+    private String userId, userPw, name, gender;
+    private byte[] imageBytes;
+    private ImageButton btnBack;
+    private Button btnNext;
+    private RadioGroup radioGroup;
+    private RadioButton rbSkill, rbLocation, rbTime, rbStyle;
+
+    public SetPrimaryFragment(){
+        super(R.layout.fragment_signup_primary);
+    }
+
+    public static SetPrimaryFragment newInstance(String id, String pw, String name, byte[] selectedImg, String gender) {
+        SetPrimaryFragment fragment = new SetPrimaryFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_ID, id);
+        args.putString(ARG_PW, pw);
+        args.putString(ARG_NAME, name);
+        args.putByteArray(ARG_IMAGE_BYTES, selectedImg);
+        args.putString(ARG_GENDER, gender);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userId = getArguments().getString(ARG_ID);
+            userPw = getArguments().getString(ARG_PW);
+            name = getArguments().getString(ARG_NAME);
+            imageBytes = getArguments().getByteArray(ARG_IMAGE_BYTES);
+            gender = getArguments().getString(ARG_GENDER);
+        }
+    }
+
+    @Override
+    public void onViewCreated (@NonNull View view, @Nullable Bundle savedInstanceState) {
+        btnBack = view.findViewById(R.id.btn_back);
+        btnNext = view.findViewById(R.id.btn_next);
+        radioGroup = view.findViewById(R.id.radio_group);
+        rbSkill = view.findViewById(R.id.rb_skill);
+        rbLocation = view.findViewById(R.id.rb_location);
+        rbTime = view.findViewById(R.id.rb_time);
+        rbStyle = view.findViewById(R.id.rb_style);
+        btnNext.setEnabled(false);
+
+        btnBack.setOnClickListener(v -> {
+            if (getActivity() instanceof AuthActivity) {
+                ((AuthActivity) getActivity()).backToGender();
+            }
+        });
+
+        ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
+
+        // TODO: radiobtn이 아닌 nextbtn 클릭했을 때 api 호출
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            btnNext.setEnabled(checkedId != -1);
+            btnNext.setTextColor(Color.parseColor("#FFFFFF"));
+
+            int checkedIndex = radioGroup.indexOfChild(
+                    view.findViewById(checkedId)
+            );
+
+            GeneralSignupRequest request = new GeneralSignupRequest();
+            request.setUserId(userId);
+            request.setPassword(userPw);
+            request.setNickname(name);
+            request.setProfileImage(imageBytes);
+            request.setGender(gender);
+            request.setPrimaryThing(String.valueOf(checkedIndex));
+
+            apiService.signup(request)
+                    .enqueue(new Callback<SignupResponse>() {
+                        @Override
+                        public void onResponse(Call<SignupResponse> call, Response<SignupResponse> response) {
+                            // 로그 확인용
+                            Log.e("SignUp", "HTTP code: " + response.code());
+                            if (response.errorBody() != null) {
+                                Log.e("SignUp", "Error contentType: " + response.errorBody().contentType());
+                                Log.e("SignUp", "Error contentLength: " + response.errorBody().contentLength());
+                                try {
+                                    String rawJson = response.errorBody().string();
+                                    Log.e("SignUp", "서버 에러 응답: " + rawJson);
+                                } catch (IOException e) {
+                                    Log.e("SignUp", "errorBody 읽기 실패", e);
+                                }
+                            } else {
+                                Log.e("SignUp", "response.errorBody() == null");
+                            }
+
+                            if (response.isSuccessful() && response.body() != null) {
+                                Log.e("SignUp", "body: " + response.body());
+                                // TODO: sharedPreferences 에 토큰 저장
+                                if (getActivity() instanceof AuthActivity) {
+                                    ((AuthActivity) getActivity()).showComplete(name, imageBytes);
+                                }
+                            } else {
+                                try {
+                                    String rawJson = response.errorBody().string();
+
+                                    Log.e("SignUp", "서버 에러 응답: " + rawJson);
+                                    Toast.makeText(
+                                            getContext(),
+                                            rawJson,
+                                            Toast.LENGTH_LONG
+                                    ).show();
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SignupResponse> call, Throwable t) {
+                            Log.e("SignUp", t.getMessage());
+                            Toast.makeText(getContext(),
+                                    "네트워크 오류: " + t.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+        });
+    }
+}
