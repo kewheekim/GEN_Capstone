@@ -23,7 +23,7 @@
             android:value="AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M"/>
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +31,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.MainActivity"/>
         <activity android:name=".ui.MatConditionActivity"/>
         <activity android:name=".ui.MatTypeActivity"/>
         <activity android:name=".ui.SetTimeActivity"/>
@@ -43,7 +44,6 @@
         <activity android:name=".ui.CandidateNullActivity" />
         <activity android:name=".ui.PopupCandidateDetailActivity" android:theme="@style/PopupTheme"/>
         <activity android:name=".ui.PopupInviteActivity" android:theme="@style/PopupTheme"/>
-        <activity android:name=".ui.SplashActivity"/>
         <activity android:name=".ui.AuthActivity"/>
     </application>
 
