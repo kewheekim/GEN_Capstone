@@ -1,4 +1,4 @@
-package com.gen.rally.dto;
+package com.gen.rally.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
