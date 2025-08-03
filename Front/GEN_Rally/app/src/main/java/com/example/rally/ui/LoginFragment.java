@@ -3,6 +3,7 @@ package com.example.rally.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +18,7 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button btnGoSignup = view.findViewById(R.id.tv_signup);
+        TextView btnGoSignup = view.findViewById(R.id.tv_signup);
         btnGoSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
