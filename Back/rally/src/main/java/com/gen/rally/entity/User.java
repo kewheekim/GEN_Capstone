@@ -2,6 +2,7 @@ package com.gen.rally.entity;
 
 import com.gen.rally.enums.Gender;
 import com.gen.rally.enums.LoginType;
+import com.gen.rally.enums.Primary;
 import com.gen.rally.enums.Tier;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,16 +16,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userId; // TODO: @id를 붙여 사용할 거면 Long 타입 id로 분류하면 좋을 것 같음
+    private String userId;
 
+    // TODO: 사용자 삭제 시 다른 속성 모두 삭제?
     private String socialId; // 소셜 로그인 시 받아오는 id
     private String password;
     private String name;
+    private Primary primaryThing;
     private LoginType loginType;
 
     @Lob
-    @Column(name= "profile_image")
-    private byte[] profileImage;
+    @Column(name= "profile_image", columnDefinition = "MEDIUMBLOB")
+    private byte[] profileImage; // TODO: byte 대신 imageurl 쓰는 게 어떤지...
     private Gender gender;
     private Tier tier;
     private int skill;

@@ -1,6 +1,7 @@
-package com.gen.rally.dto;
+package com.gen.rally.dto.auth;
 
 import com.gen.rally.enums.Gender;
+import com.gen.rally.enums.Primary;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,8 @@ import lombok.Setter;
 public class GeneralSignupRequest {
     private String userId;
     private String password;
-    private String passwordConfirm;
     private String name;
     private byte[] profileImage;
     private Gender gender;
+    private Primary primaryThing;
 }
