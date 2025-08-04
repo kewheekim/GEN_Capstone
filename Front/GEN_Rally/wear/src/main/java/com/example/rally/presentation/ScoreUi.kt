@@ -23,21 +23,23 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rally.viewmodel.ScoreViewModel
-import kotlinx.coroutines.delay
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import com.example.rally.viewmodel.SetResult
 
 @Composable
 fun ScoreScreen(
     setNumber: Int,
+    opponentSets: Int,
+    userSets: Int,
     opponentName: String,
     userName: String,
-    viewModel: ScoreViewModel = viewModel()
+    viewModel: ScoreViewModel = viewModel() ,
+    onSetFinished: (SetResult) -> Unit
 ) {
     val userScore by viewModel.userScore.collectAsState()
     val userSets by viewModel.userSets.collectAsState()
@@ -164,24 +166,31 @@ fun ScoreScreen(
             Spacer(modifier = Modifier.height(4.dp))
             // 득점 버튼
             Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(40.dp),
+                shape = RoundedCornerShape(29.dp),
+
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                     viewModel.addUserScore()
                     if (checkSetWin(userScore + 1, opponentScore)) {
                         toastTitle = "세트 종료"
-                        toastMessage = "1세트 선취!\n시작이 좋아요!"
+                        if(userSets==0)
+                            toastMessage = "1세트 선취!\n시작이 좋아요!"
+                        else if(userSets==1)
+                            toastMessage = "2세트 연속 획득!\n승리했습니다!"
                         showToast = true
+
+                        val result = viewModel.onSetFinished()
+                        onSetFinished(result)
                     } else if (checkMatchPoint(userScore + 1, opponentScore)) {
                         toastTitle = "Match Point!"
                         toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
                         showToast = true
                     }
-                },
-                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(40.dp),
-                shape = RoundedCornerShape(29.dp)
+                }
             ) {
                 Text(
                     text = "득점",
@@ -243,12 +252,12 @@ fun checkSetWin(
     return playerScore >= 21 && (playerScore - opponentScore) >= 2
 }
 
-@Preview(showBackground = true, widthDp = 192, heightDp = 192)
-@Composable
-fun MatchScoreScreenPreview() {
-    ScoreScreen(
-        setNumber = 1,
-        opponentName = "아어려워요",
-        userName = "안세영이되",
-    )
-}
+//@Preview(showBackground = true, widthDp = 192, heightDp = 192)
+//@Composable
+//fun MatchScoreScreenPreview() {
+//    ScoreScreen(
+//        setNumber = 1,
+//        opponentName = "아어려워요",
+//        userName = "안세영이되"
+//    )
+//}
