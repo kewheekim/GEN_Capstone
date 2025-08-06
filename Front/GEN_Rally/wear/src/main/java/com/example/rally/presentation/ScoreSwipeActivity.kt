@@ -1,9 +1,11 @@
 package com.example.rally.presentation
 
-import android.content.Intent
-import com.example.rally.R
-import android.os.Bundle
 import androidx.activity.ComponentActivity
+import com.example.rally.R
+import com.example.rally.viewmodel.ScoreViewModel
+import com.example.rally.viewmodel.SetResult
+import android.content.Intent
+import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,8 +24,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.rally.viewmodel.ScoreViewModel
-import com.example.rally.viewmodel.SetResult
 import kotlinx.coroutines.delay
 
 class ScoreSwipeActivity : ComponentActivity() {
@@ -41,7 +41,7 @@ class ScoreSwipeActivity : ComponentActivity() {
 
 @Composable
 fun SwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int) {
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState (pageCount = { 2 })
 
     val viewModel: ScoreViewModel = viewModel()
     val elapsed by viewModel.elapsed.collectAsState()
@@ -64,6 +64,7 @@ fun SwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int)
                 putExtra("opponentSets", result.opponentSets)
             }
             context.startActivity(intent)
+            (context as? ComponentActivity)?.overridePendingTransition(0, 0)
             (context as? ComponentActivity)?.finish()
         }
     }
@@ -73,7 +74,7 @@ fun SwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int)
             .fillMaxSize()
             .background(colorResource(id = R.color.black_bg))
     ) {
-        Column (modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.weight(1f)

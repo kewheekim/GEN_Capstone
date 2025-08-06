@@ -44,10 +44,17 @@ fun PauseScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = formatTime(elapsedTime),
-                fontSize = 14.sp,
+                text = "경기 시간",
+                fontSize = 12.sp,
                 fontFamily = FontFamily(Font(R.font.pretendard_variable)),
                 fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = formatTime(elapsedTime),
+                fontSize = 18.sp,
+                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -73,9 +80,10 @@ fun PauseScreen(
 }
 
 fun formatTime(seconds: Long): String {
-    val minutes = seconds/60
-    val secs = seconds%60
-    return String.format("%02d:%02d", minutes, secs)
+    val hours = seconds / 3600
+    val minutes = (seconds % 3600) / 60
+    val secs = seconds % 60
+    return String.format("%02d:%02d:%02d", hours, minutes, secs)
 }
 
 @Preview(showBackground = true, widthDp = 192, heightDp = 192)

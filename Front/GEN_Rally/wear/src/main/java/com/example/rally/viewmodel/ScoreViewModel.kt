@@ -1,5 +1,8 @@
 package com.example.rally.viewmodel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -26,6 +29,9 @@ class ScoreViewModel : ViewModel() {
     private val _userServe = MutableStateFlow(true)
     val userServe: StateFlow<Boolean> = _userServe
 
+    private val _isSetFinished = mutableStateOf(false)
+    val isSetFinished: State<Boolean> = _isSetFinished
+
     fun addUserScore() {
         _userScore.value += 1
     }
@@ -41,6 +47,13 @@ class ScoreViewModel : ViewModel() {
 
     fun toggleServe() {
         _userServe.value = !_userServe.value
+    }
+
+    fun setFinished() {
+        _isSetFinished.value = true
+    }
+    fun resetFinished() {
+        _isSetFinished.value = false
     }
 
     // 경기 시간 측정
@@ -114,8 +127,6 @@ class ScoreViewModel : ViewModel() {
 
             else -> "draw"
         }
-        _userScore.value = 0
-        _opponentScore.value = 0
 
         return SetResult(
             //winner = winner,

@@ -38,7 +38,7 @@ fun ScoreScreen(
     userSets: Int,
     opponentName: String,
     userName: String,
-    viewModel: ScoreViewModel = viewModel() ,
+    viewModel: ScoreViewModel = viewModel(),
     onSetFinished: (SetResult) -> Unit
 ) {
     val userScore by viewModel.userScore.collectAsState()
@@ -46,6 +46,9 @@ fun ScoreScreen(
     val opponentScore by viewModel.opponentScore.collectAsState()
     val opponentSets by viewModel.opponentSets.collectAsState()
     val userServe by viewModel.userServe.collectAsState()
+
+    val isPaused by viewModel.isPaused.collectAsState()
+    val isSetFinished by viewModel.isSetFinished
 
     val haptic = LocalHapticFeedback.current  // 진동 피드백
     var showToast by remember { mutableStateOf(false) }  // 경기 이벤트 토스트
@@ -175,6 +178,8 @@ fun ScoreScreen(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                     viewModel.addUserScore()
+
+                    //세트 종료
                     if (checkSetWin(userScore + 1, opponentScore)) {
                         toastTitle = "세트 종료"
                         if(userSets==0)
@@ -183,14 +188,16 @@ fun ScoreScreen(
                             toastMessage = "2세트 연속 획득!\n승리했습니다!"
                         showToast = true
 
-                        val result = viewModel.onSetFinished()
-                        onSetFinished(result)
+                        viewModel.setFinished() // isSetFinished를 true로
+                        viewModel.pause()
+                        onSetFinished(viewModel.onSetFinished())
                     } else if (checkMatchPoint(userScore + 1, opponentScore)) {
                         toastTitle = "Match Point!"
                         toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
                         showToast = true
                     }
-                }
+                },
+                enabled = !isPaused && !isSetFinished
             ) {
                 Text(
                     text = "득점",
@@ -205,7 +212,9 @@ fun ScoreScreen(
                 text = "점수 되돌리기",
                 fontSize = 10.sp,
                 color = Color.LightGray,
-                modifier = Modifier.clickable(onClick = {
+                modifier = Modifier.clickable(
+                    enabled = !isPaused && !isSetFinished,
+                    onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                     viewModel.undoUserScore()
                 }),

@@ -29,6 +29,7 @@ class StartActivity : ComponentActivity() {
                     intent.putExtra("opponentSets", opponentSets)
                     intent.putExtra("userSets", userSets)
                     startActivity(intent)
+                    overridePendingTransition(0, 0)
                 }
             )
         }
