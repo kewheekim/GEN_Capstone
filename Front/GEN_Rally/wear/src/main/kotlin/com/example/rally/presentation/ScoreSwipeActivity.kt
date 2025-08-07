@@ -34,13 +34,13 @@ class ScoreSwipeActivity : ComponentActivity() {
         val opponetSets = intent.getIntExtra("opponentSets", 0)
         val userSets = intent.getIntExtra("userSets", 0)
         setContent {
-            SwipeScreen(startTime, setNumber, opponetSets, userSets)
+            ScoreSwipeScreen(startTime, setNumber, opponetSets, userSets)
         }
     }
 }
 
 @Composable
-fun SwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int) {
+fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int) {
     val pagerState = rememberPagerState (pageCount = { 2 })
 
     val viewModel: ScoreViewModel = viewModel()
@@ -61,7 +61,11 @@ fun SwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int)
             val intent = Intent(context, StartActivity::class.java).apply {
                 putExtra("setNumber", result.nextSetNumber)
                 putExtra("userSets", result.userSets)
+                putExtra("userScore", result.userScore)
                 putExtra("opponentSets", result.opponentSets)
+                putExtra("opponentScore", result.opponentScore)
+                putExtra("isGameFinished", result.isGameFinished)
+
             }
             context.startActivity(intent)
             (context as? ComponentActivity)?.overridePendingTransition(0, 0)
@@ -88,7 +92,7 @@ fun SwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int)
                         userName = "나",
                         viewModel = viewModel,
                         onSetFinished = { result ->
-                           navigateToStartActivity = result
+                            navigateToStartActivity = result
                         }
                     )
                     1 -> PauseScreen(

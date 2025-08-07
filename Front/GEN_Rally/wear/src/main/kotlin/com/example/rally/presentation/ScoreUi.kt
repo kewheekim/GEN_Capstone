@@ -191,6 +191,7 @@ fun ScoreScreen(
                         viewModel.setFinished() // isSetFinished를 true로
                         viewModel.pause()
                         onSetFinished(viewModel.onSetFinished())
+                        viewModel.finishGame()
                     } else if (checkMatchPoint(userScore + 1, opponentScore)) {
                         toastTitle = "Match Point!"
                         toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
@@ -215,9 +216,9 @@ fun ScoreScreen(
                 modifier = Modifier.clickable(
                     enabled = !isPaused && !isSetFinished,
                     onClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
-                    viewModel.undoUserScore()
-                }),
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
+                        viewModel.undoUserScore()
+                    }),
                 fontFamily = FontFamily(Font(R.font.pretendard_variable))
             )
 

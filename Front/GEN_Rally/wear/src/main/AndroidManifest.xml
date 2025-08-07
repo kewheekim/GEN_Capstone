@@ -38,5 +38,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".presentation.ResultSwipeActivity"
+            android:exported="false"
+            android:taskAffinity=""
+            android:theme="@style/ScoreActivityTheme.Starting" />
     </application>
 </manifest>
