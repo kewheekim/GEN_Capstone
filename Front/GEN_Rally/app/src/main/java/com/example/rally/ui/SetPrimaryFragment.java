@@ -40,6 +40,7 @@ public class SetPrimaryFragment extends Fragment {
     private Button btnNext;
     private RadioGroup radioGroup;
     private RadioButton rbSkill, rbLocation, rbTime, rbStyle;
+    private int checkedIndex = -1;
 
     public SetPrimaryFragment(){
         super(R.layout.fragment_signup_primary);
@@ -85,16 +86,24 @@ public class SetPrimaryFragment extends Fragment {
             }
         });
 
-        ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
+        final ApiService apiService = RetrofitClient
+                .getClient("http://10.0.2.2:8080/")
+                .create(ApiService.class);
 
-        // TODO: radiobtn이 아닌 nextbtn 클릭했을 때 api 호출
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            btnNext.setEnabled(checkedId != -1);
+            btnNext.setEnabled(true);
             btnNext.setTextColor(Color.parseColor("#FFFFFF"));
 
-            int checkedIndex = radioGroup.indexOfChild(
+            checkedIndex = radioGroup.indexOfChild(
                     view.findViewById(checkedId)
             );
+        });
+
+        btnNext.setOnClickListener(v -> {
+            if (checkedIndex < 0) {
+                Toast.makeText(getContext(), "하나의 옵션을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             GeneralSignupRequest request = new GeneralSignupRequest();
             request.setUserId(userId);
@@ -108,21 +117,6 @@ public class SetPrimaryFragment extends Fragment {
                     .enqueue(new Callback<SignupResponse>() {
                         @Override
                         public void onResponse(Call<SignupResponse> call, Response<SignupResponse> response) {
-                            // 로그 확인용
-                            Log.e("SignUp", "HTTP code: " + response.code());
-                            if (response.errorBody() != null) {
-                                Log.e("SignUp", "Error contentType: " + response.errorBody().contentType());
-                                Log.e("SignUp", "Error contentLength: " + response.errorBody().contentLength());
-                                try {
-                                    String rawJson = response.errorBody().string();
-                                    Log.e("SignUp", "서버 에러 응답: " + rawJson);
-                                } catch (IOException e) {
-                                    Log.e("SignUp", "errorBody 읽기 실패", e);
-                                }
-                            } else {
-                                Log.e("SignUp", "response.errorBody() == null");
-                            }
-
                             if (response.isSuccessful() && response.body() != null) {
                                 Log.e("SignUp", "body: " + response.body());
                                 // TODO: sharedPreferences 에 토큰 저장

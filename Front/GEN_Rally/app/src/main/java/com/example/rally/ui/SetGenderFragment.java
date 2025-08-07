@@ -66,6 +66,7 @@ public class SetGenderFragment extends Fragment {
 
         int green = ContextCompat.getColor(requireContext(), R.color.green_active);
         int gray  = ContextCompat.getColor(requireContext(), R.color.gray_border);
+        int grayText = ContextCompat.getColor(requireContext(), R.color.gray_nav_bar);
 
         btnBack.setOnClickListener(v -> {
             if (getActivity() instanceof AuthActivity) {
@@ -82,7 +83,7 @@ public class SetGenderFragment extends Fragment {
             btnMale.setImageTintList(ColorStateList.valueOf(green));
             btnFemale.setImageTintList(ColorStateList.valueOf(gray));
             tvMale.setTextColor(ColorStateList.valueOf(green));
-            tvFemale.setTextColor(ColorStateList.valueOf(gray));
+            tvFemale.setTextColor(ColorStateList.valueOf(grayText));
             btnNext.setEnabled(true);
             btnNext.setTextColor(Color.parseColor("#FFFFFF"));
         });
@@ -95,7 +96,7 @@ public class SetGenderFragment extends Fragment {
 
             btnMale.setImageTintList(ColorStateList.valueOf(gray));
             btnFemale.setImageTintList(ColorStateList.valueOf(green));
-            tvMale.setTextColor(ColorStateList.valueOf(gray));
+            tvMale.setTextColor(ColorStateList.valueOf(grayText));
             tvFemale.setTextColor(ColorStateList.valueOf(green));
             btnNext.setEnabled(true);
             btnNext.setTextColor(Color.parseColor("#FFFFFF"));
