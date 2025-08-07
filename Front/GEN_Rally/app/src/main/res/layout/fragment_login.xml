@@ -28,22 +28,26 @@
         android:layout_width="364dp"
         android:layout_height="52dp"
         android:hint="아이디 입력"
+        android:background="@drawable/bg_text_field"
         app:layout_constraintTop_toBottomOf="@id/logo"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="42dp"
         android:layout_marginStart="24dp"
         android:textSize="14sp"
+        android:padding="18dp"
         />
     <EditText
         android:id="@+id/et_enter_pw"
         android:layout_width="364dp"
         android:layout_height="52dp"
         android:hint="비밀번호 입력"
+        android:background="@drawable/bg_text_field"
         app:layout_constraintTop_toBottomOf="@id/et_enter_id"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="10dp"
         android:layout_marginStart="24dp"
         android:textSize="14sp"
+        android:padding="18dp"
         />
     
     <Button

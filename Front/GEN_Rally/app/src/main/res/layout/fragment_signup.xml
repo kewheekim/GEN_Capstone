@@ -44,10 +44,12 @@
         android:layout_height="52dp"
         android:hint="아이디 입력"
         android:textSize="14sp"
+        android:background="@drawable/bg_text_field"
         app:layout_constraintTop_toBottomOf="@id/toolbar_back"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="146dp"
         android:layout_marginStart="24dp"
+        android:padding="18dp"
         />
     
     <android.widget.Button
@@ -63,6 +65,7 @@
         android:background="@drawable/bg_button_inactive"
         />
     <TextView
+        android:id="@+id/tv_set_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="6~20자 영문, 숫자로 입력해 주세요"
@@ -90,21 +93,25 @@
     <EditText
         android:id="@+id/et_set_pw"
         android:inputType="textPassword"
-        android:layout_width="256dp"
+        android:layout_width="364dp"
         android:layout_height="52dp"
         android:hint="비밀번호 입력"
         android:textSize="14sp"
+        android:background="@drawable/bg_text_field"
         app:layout_constraintTop_toBottomOf="@id/et_set_id"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="84dp"
         android:layout_marginStart="24dp"
+        android:padding="18dp"
         />
 
     <TextView
+        android:id="@+id/tv_set_pw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="8~16자의 영문 대소문자, 숫자, 특수문자(.!@#~)로 입력해 주세요"
         android:textSize="12sp"
+        android:textColor="@color/gray_nav_bar"
         app:layout_constraintTop_toBottomOf="@id/et_set_pw"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="6dp"
@@ -127,15 +134,31 @@
     <EditText
         android:id="@+id/et_confirm_pw"
         android:inputType="textPassword"
-        android:layout_width="256dp"
+        android:layout_width="364dp"
         android:layout_height="52dp"
         android:hint="비밀번호 입력"
         android:textSize="14sp"
+        android:background="@drawable/bg_text_field"
         app:layout_constraintTop_toBottomOf="@id/et_set_pw"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="84dp"
         android:layout_marginStart="24dp"
+        android:padding="18dp"
         />
+
+    <TextView
+        android:id="@+id/tv_confirm_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:textSize="12sp"
+        android:textColor="@color/gray_nav_bar"
+        app:layout_constraintTop_toBottomOf="@id/et_confirm_pw"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="28dp"
+        />
+
 
     <include
         layout="@layout/layout_next_button"

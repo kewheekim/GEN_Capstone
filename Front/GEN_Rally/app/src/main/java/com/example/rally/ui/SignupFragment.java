@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import retrofit2.Response;
 
 public class SignupFragment extends Fragment {
     private EditText etSetId, etSetPw, etConfirmPw;
+    private TextView tvSetId, tvSetPw, tvConfirmPw;
     private Button btnDouble, btnNext;
     private ImageButton btnBack;
     private RetrofitClient retrofitClient;
@@ -39,6 +41,7 @@ public class SignupFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final int defaultLabel = Color.parseColor("#AAAAAA");
 
         etSetId     = view.findViewById(R.id.et_set_id);
         btnDouble   = view.findViewById(R.id.btn_double);
@@ -46,6 +49,9 @@ public class SignupFragment extends Fragment {
         etConfirmPw = view.findViewById(R.id.et_confirm_pw);
         btnNext     = view.findViewById(R.id.btn_next);
         btnBack = view.findViewById(R.id.btn_back);
+        tvSetId     = view.findViewById(R.id.tv_set_id);
+        tvSetPw     = view.findViewById(R.id.tv_set_pw);
+        tvConfirmPw = view.findViewById(R.id.tv_confirm_pw);
 
         btnNext.setEnabled(false);
 
@@ -55,15 +61,63 @@ public class SignupFragment extends Fragment {
             }
         });
 
+        // 포커스 변경 시 유효성 검사 & 에러 표시
+        etSetId.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String id = etSetId.getText().toString().trim();
+                boolean valid = isValidId(id);
+                etSetId.setActivated(!valid);
+                tvSetId.setTextColor(valid ? defaultLabel : Color.RED);
+            }
+        });
+
+        etSetPw.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String pw = etSetPw.getText().toString().trim();
+                boolean valid = isValidPassword(pw);
+                etSetPw.setActivated(!valid);
+                tvSetPw.setTextColor(valid ? defaultLabel : Color.RED);
+            }
+        });
+
+        etConfirmPw.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String pw        = etSetPw.getText().toString().trim();
+                String confirmPw = etConfirmPw.getText().toString().trim();
+                boolean match = pw.equals(confirmPw);
+                etConfirmPw.setActivated(!match);
+                tvConfirmPw.setTextColor(match ? defaultLabel : Color.RED);
+            }
+        });
+
+        // 비밀번호 확인 필드만 실시간 검사
+        etConfirmPw.addTextChangedListener(new TextWatcher() {
+            @Override public void afterTextChanged(Editable s) {
+                String pw        = etSetPw.getText().toString().trim();
+                String confirmPw = s.toString().trim();
+                boolean match    = pw.equals(confirmPw);
+
+                etConfirmPw.setActivated(!match);
+                if (match) {
+                    tvConfirmPw.setText(" ");
+                    tvConfirmPw.setTextColor(defaultLabel);
+                } else {
+                    tvConfirmPw.setText("비밀번호가 일치하지 않습니다.");
+                    tvConfirmPw.setTextColor(Color.RED);
+                }
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
         // 중복확인 임시 메서드
         btnDouble.setOnClickListener(v -> {
             String id = etSetId.getText().toString().trim();
             CheckIdRequest request = new CheckIdRequest(id);
 
             if (!isValidId(id)) {
-                Toast.makeText(getContext(),
-                        "6~20자 영문, 숫자로 입력해 주세요",
-                        Toast.LENGTH_SHORT).show();
+                etSetId.setActivated(true);
+                tvSetId.setTextColor(Color.parseColor("red"));
                 return;
             }
             checkIdDuplicate(request);
@@ -96,21 +150,18 @@ public class SignupFragment extends Fragment {
             String confirmPw = etConfirmPw.getText().toString().trim();
 
             if (!isValidId(id)) {
-                Toast.makeText(getContext(),
-                        "6~20자 영문, 숫자로 입력해 주세요",
-                        Toast.LENGTH_SHORT).show();
+                etSetId.setActivated(true);
+                tvSetId.setTextColor(Color.parseColor("red"));
                 return;
             }
             if (!isValidPassword(pw)) {
-                Toast.makeText(getContext(),
-                        "8~16자 영문 대소문자, 숫자, 특수문자(.!@#~)로 입력해 주세요",
-                        Toast.LENGTH_SHORT).show();
+                etSetPw.setActivated(true);
+                tvSetPw.setTextColor(Color.parseColor("red"));
                 return;
             }
             if (!pw.equals(confirmPw)) {
-                Toast.makeText(getContext(),
-                        "비밀번호가 일치하지 않습니다",
-                        Toast.LENGTH_SHORT).show();
+                etConfirmPw.setActivated(true);
+                tvConfirmPw.setTextColor(Color.parseColor("red"));
                 return;
             }
 
@@ -131,7 +182,7 @@ public class SignupFragment extends Fragment {
         return pw.matches("^[A-Za-z0-9.!@#~]{8,16}$");
     }
 
-    // 서버에 ID 중복 체크 요청
+    // 서버에 ID 중복 체크 요청 TODO: 토스트 대신 텍스트필드로, 중복된 아이디일 때 빨강 / 통과 시 회색으로 응답 구분
     private void checkIdDuplicate(CheckIdRequest request) {
         ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
 
