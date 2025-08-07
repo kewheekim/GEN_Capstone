@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -60,6 +61,12 @@ public class SignupCompleteFragment extends Fragment {
                     imageBytes, 0, imageBytes.length);
             ivProfile.setImageBitmap(bitmap);
         }
+
+        btnNext.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), SurveyActivity.class);
+
+            startActivity(intent);
+        });
 
     }
 }
