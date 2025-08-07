@@ -27,7 +27,11 @@ import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 
 @Composable
-fun PauseScreen(onPause: () -> Unit) {
+fun PauseScreen(
+    elapsedTime: Long,
+    isPaused: Boolean,
+    onPause: () -> Unit
+) {
     val haptic = LocalHapticFeedback.current  // 진동 피드백
     Box(
         modifier = Modifier
@@ -40,16 +44,23 @@ fun PauseScreen(onPause: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "00:00",
-                fontSize = 14.sp,
+                text = "경기 시간",
+                fontSize = 12.sp,
                 fontFamily = FontFamily(Font(R.font.pretendard_variable)),
                 fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = formatTime(elapsedTime),
+                fontSize = 18.sp,
+                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
-                    onPause
+                    onPause()
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
@@ -57,7 +68,7 @@ fun PauseScreen(onPause: () -> Unit) {
                 shape = RoundedCornerShape(29.dp)
             ) {
                 Text(
-                    text = "경기 일시정지",
+                    text = if (isPaused) "경기 재개" else "경기 일시정지",
                     fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.pretendard_variable)),
                     fontWeight = FontWeight.Medium
@@ -68,8 +79,18 @@ fun PauseScreen(onPause: () -> Unit) {
     }
 }
 
+fun formatTime(seconds: Long): String {
+    val hours = seconds / 3600
+    val minutes = (seconds % 3600) / 60
+    val secs = seconds % 60
+    return String.format("%02d:%02d:%02d", hours, minutes, secs)
+}
+
 @Preview(showBackground = true, widthDp = 192, heightDp = 192)
 @Composable
 fun PauseScreenPreview() {
-    PauseScreen(onPause = {})
+    PauseScreen(
+        elapsedTime = 2000L,
+        isPaused = true,
+        onPause = {})
 }

@@ -24,13 +24,13 @@
             android:value="true" />
 
         <activity
-            android:name=".presentation.SingleScoreActivity"
+            android:name=".presentation.ScoreSwipeActivity"
             android:exported="false"
             android:taskAffinity=""
             android:theme="@style/ScoreActivityTheme.Starting" />
 
         <activity
-            android:name=".presentation.ScoreSwipeActivity"
+            android:name=".presentation.StartActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,5 +39,4 @@
         </activity>
 
     </application>
-
 </manifest>

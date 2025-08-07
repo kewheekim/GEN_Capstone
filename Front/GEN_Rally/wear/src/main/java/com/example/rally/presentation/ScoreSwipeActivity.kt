@@ -1,8 +1,11 @@
 package com.example.rally.presentation
 
-import com.example.rally.R
-import android.os.Bundle
 import androidx.activity.ComponentActivity
+import com.example.rally.R
+import com.example.rally.viewmodel.ScoreViewModel
+import com.example.rally.viewmodel.SetResult
+import android.content.Intent
+import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,38 +19,53 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.rally.viewmodel.ScoreViewModel
 import kotlinx.coroutines.delay
 
 class ScoreSwipeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val startTime = intent.getLongExtra("startTime", System.currentTimeMillis())
+        val setNumber = intent.getIntExtra("setNumber", 1)
+        val opponetSets = intent.getIntExtra("opponentSets", 0)
+        val userSets = intent.getIntExtra("userSets", 0)
         setContent {
-            SwipeScreen()
+            SwipeScreen(startTime, setNumber, opponetSets, userSets)
         }
     }
 }
 
 @Composable
-fun SwipeScreen() {
-    val pagerState = rememberPagerState(pageCount = { 2 })
-    val viewModel: ScoreViewModel = viewModel()
+fun SwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int) {
+    val pagerState = rememberPagerState (pageCount = { 2 })
 
-    // 타이머
-    var elapsedSeconds by remember {mutableStateOf(0L)}
-    var isPaused by remember {mutableStateOf(false)}
-    var pausedAt by remember {mutableStateOf(0L)}
+    val viewModel: ScoreViewModel = viewModel()
+    val elapsed by viewModel.elapsed.collectAsState()
+    val isPaused by viewModel.isPaused.collectAsState()
+    val context = LocalContext.current
+
+    var navigateToStartActivity by remember { mutableStateOf<SetResult?>(null) }
 
     LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            if (!isPaused) {
-                //elapsedSeconds = ((System.currentTimeMillis() - startTime - pausedAt) / 1000)
+        viewModel.initSets(userSets, opponentSets)
+        viewModel.startStopwatch()
+    }
+
+    LaunchedEffect(navigateToStartActivity) {
+        navigateToStartActivity?.let { result ->
+            delay(2500)
+            val intent = Intent(context, StartActivity::class.java).apply {
+                putExtra("setNumber", result.nextSetNumber)
+                putExtra("userSets", result.userSets)
+                putExtra("opponentSets", result.opponentSets)
             }
+            context.startActivity(intent)
+            (context as? ComponentActivity)?.overridePendingTransition(0, 0)
+            (context as? ComponentActivity)?.finish()
         }
     }
 
@@ -56,19 +74,31 @@ fun SwipeScreen() {
             .fillMaxSize()
             .background(colorResource(id = R.color.black_bg))
     ) {
-        Column (modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
             ) { page ->
                 when (page) {
                     0 -> ScoreScreen(
-                        setNumber = 1,
+                        setNumber = setNumber,
+                        opponentSets = opponentSets,
+                        userSets = userSets,
                         opponentName = "상대",
                         userName = "나",
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        onSetFinished = { result ->
+                           navigateToStartActivity = result
+                        }
                     )
-                    1 -> PauseScreen(onPause = {})
+                    1 -> PauseScreen(
+                        elapsedTime = elapsed,
+                        isPaused = isPaused,
+                        onPause = {
+                            if (isPaused) viewModel.resume()
+                            else viewModel.pause()
+                        }
+                    )
                 }
             }
 

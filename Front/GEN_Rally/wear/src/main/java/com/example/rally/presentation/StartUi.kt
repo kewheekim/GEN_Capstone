@@ -121,9 +121,9 @@ fun StartScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
-        // 득점 버튼
+        // 시작 버튼
         Button (
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
