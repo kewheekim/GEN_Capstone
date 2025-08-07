@@ -45,6 +45,7 @@
         <activity android:name=".ui.PopupCandidateDetailActivity" android:theme="@style/PopupTheme"/>
         <activity android:name=".ui.PopupInviteActivity" android:theme="@style/PopupTheme"/>
         <activity android:name=".ui.AuthActivity"/>
+        <activity android:name=".ui.SurveyActivity"/>
     </application>
 
 </manifest>
