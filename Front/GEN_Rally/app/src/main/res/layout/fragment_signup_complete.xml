@@ -26,8 +26,8 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/iv_profile"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="22dp"
-        android:layout_marginStart="96dp"
         />
 
     <TextView
@@ -43,7 +43,7 @@
         />
 
     <android.widget.Button
-        android:id="@+id/btn_cancel"
+        android:id="@+id/btn_next"
         style="@style/FlatButton"
         android:layout_width="364dp"
         android:layout_height="54dp"
@@ -54,6 +54,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

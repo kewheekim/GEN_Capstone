@@ -8,18 +8,19 @@
     android:layout_marginTop="787dp"
     android:paddingTop="30dp"
     android:paddingLeft="24dp"
-    android:paddingRight="24dp">
+    android:paddingRight="24dp"
+    android:paddingBottom="32dp">
 
     <Button
         android:id="@+id/btn_next"
         style="@style/FlatButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="54dp"
         android:text="다음"
         android:enabled="false"
         android:textColor="#AAAAAA"
         android:background="@drawable/bg_next_button_inactive"
         android:textSize="16sp"
         android:fontFamily="@font/pretendard_variable"
-        android:layout_marginBottom="5dp"/>
+        />
 </LinearLayout>
