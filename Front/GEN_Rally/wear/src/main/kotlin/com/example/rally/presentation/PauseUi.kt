@@ -49,7 +49,7 @@ fun PauseScreen(
                 fontFamily = FontFamily(Font(R.font.pretendard_variable)),
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = formatTime(elapsedTime),
                 fontSize = 18.sp,

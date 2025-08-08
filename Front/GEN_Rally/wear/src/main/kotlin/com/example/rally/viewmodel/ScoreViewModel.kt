@@ -1,6 +1,5 @@
 package com.example.rally.viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -29,9 +28,6 @@ class ScoreViewModel : ViewModel() {
     private val _userServe = MutableStateFlow(true)
     val userServe: StateFlow<Boolean> = _userServe
 
-    private val _isSetFinished = mutableStateOf(false)
-    val isSetFinished: State<Boolean> = _isSetFinished
-
     fun addUserScore() {
         _userScore.value += 1
     }
@@ -49,11 +45,50 @@ class ScoreViewModel : ViewModel() {
         _userServe.value = !_userServe.value
     }
 
+    // 세트 종료
+    private val _isSetFinished = mutableStateOf(false)
+    val isSetFinished: State<Boolean> = _isSetFinished
+
     fun setFinished() {
         _isSetFinished.value = true
     }
     fun resetFinished() {
         _isSetFinished.value = false
+    }
+    // 게임 종료
+    private val _isGameFinished = MutableStateFlow(false)
+    val isMatchFinished: StateFlow<Boolean> = _isGameFinished
+
+    // 세트 종료 처리
+    fun onSetFinished(): SetResult {
+        val user = _userScore.value
+        val opponent = _opponentScore.value
+
+        val winner = when {
+            user > opponent -> {
+                _userSets.value += 1
+                "user"
+            }
+            opponent > user -> {
+                _opponentSets.value += 1
+                "opponent"
+            }
+            else -> "draw"
+        }
+
+        // 게임 종료 판정
+        if (_userSets.value >= 2 || _opponentSets.value >= 2) {
+            _isGameFinished.value = true
+        }
+
+        return SetResult(
+            nextSetNumber = _userSets.value + _opponentSets.value + 1,
+            userSets = _userSets.value,
+            userScore=_userScore.value,
+            opponentSets = _opponentSets.value,
+            opponentScore = _opponentScore.value,
+            isGameFinished = _isGameFinished.value
+        )
     }
 
     // 경기 시간 측정
@@ -108,38 +143,15 @@ class ScoreViewModel : ViewModel() {
             _isPaused.value = false
         }
     }
-
-    // 경기 종료 처리
-    fun onSetFinished(): SetResult {
-        val user = _userScore.value
-        val opponent = _opponentScore.value
-
-        val winner = when {
-            user > opponent -> {
-                _userSets.value += 1
-                "user"
-            }
-
-            opponent > user -> {
-                _opponentSets.value += 1
-                "opponent"
-            }
-
-            else -> "draw"
-        }
-
-        return SetResult(
-            //winner = winner,
-            nextSetNumber = _userSets.value + _opponentSets.value + 1,
-            userSets = _userSets.value,
-            opponentSets = _opponentSets.value
-        )
-    }
 }
 
+// 세트 종료 결과 데이터
 data class SetResult(
     //val winner: String,
     val nextSetNumber: Int,
+    val userScore: Int,
     val userSets: Int,            // 사용자가 승리한 세트 수
-    val opponentSets: Int         // 상대가 승리한 세트 수
+    val opponentSets: Int,         // 상대가 승리한 세트 수
+    val opponentScore: Int,
+    val isGameFinished: Boolean
 )

@@ -30,12 +30,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import com.example.rally.viewmodel.SetResult
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScoreScreen(
     setNumber: Int,
-    opponentSets: Int,
-    userSets: Int,
     opponentName: String,
     userName: String,
     viewModel: ScoreViewModel = viewModel(),
@@ -49,6 +48,8 @@ fun ScoreScreen(
 
     val isPaused by viewModel.isPaused.collectAsState()
     val isSetFinished by viewModel.isSetFinished
+    val scope = rememberCoroutineScope()
+    var isPressed by remember { mutableStateOf(false) }
 
     val haptic = LocalHapticFeedback.current  // 진동 피드백
     var showToast by remember { mutableStateOf(false) }  // 경기 이벤트 토스트
@@ -176,6 +177,8 @@ fun ScoreScreen(
                 shape = RoundedCornerShape(29.dp),
 
                 onClick = {
+                    if (isPressed) return@Button
+                    isPressed=true
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                     viewModel.addUserScore()
 
@@ -188,7 +191,7 @@ fun ScoreScreen(
                             toastMessage = "2세트 연속 획득!\n승리했습니다!"
                         showToast = true
 
-                        viewModel.setFinished() // isSetFinished를 true로
+                        viewModel.setFinished() // 세트 종료 처리
                         viewModel.pause()
                         onSetFinished(viewModel.onSetFinished())
                     } else if (checkMatchPoint(userScore + 1, opponentScore)) {
@@ -196,8 +199,14 @@ fun ScoreScreen(
                         toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
                         showToast = true
                     }
+
+                    // 1초동안 비활성화
+                    scope.launch {
+                        kotlinx.coroutines.delay(1000)
+                        isPressed = false
+                    }
                 },
-                enabled = !isPaused && !isSetFinished
+                enabled = !isPressed && !isPaused && !isSetFinished
             ) {
                 Text(
                     text = "득점",
@@ -213,11 +222,18 @@ fun ScoreScreen(
                 fontSize = 10.sp,
                 color = Color.LightGray,
                 modifier = Modifier.clickable(
-                    enabled = !isPaused && !isSetFinished,
+                    enabled = !isPressed && !isPaused && !isSetFinished,
                     onClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
-                    viewModel.undoUserScore()
-                }),
+                        if (isPressed) return@clickable
+                        isPressed=true
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
+                        viewModel.undoUserScore()
+                        // 1초동안 비활성화
+                        scope.launch {
+                            kotlinx.coroutines.delay(1000)
+                            isPressed = false
+                        }
+                    }),
                 fontFamily = FontFamily(Font(R.font.pretendard_variable))
             )
 

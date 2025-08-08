@@ -37,6 +37,7 @@ fun StartScreen(
     userName: String,
     userScore: Int,
     userSets: Int,
+    isGameFinished: Boolean,
     onStart: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current  // 진동 피드백
@@ -50,14 +51,14 @@ fun StartScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "${setNumber}세트",
+            text = if(!isGameFinished) "${setNumber}세트" else "경기 종료",
             fontSize = 12.sp,
             color = Color.White,
             fontFamily = FontFamily(Font(R.font.pretendard_variable)),
             fontWeight = FontWeight.Medium
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -121,7 +122,7 @@ fun StartScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // 시작 버튼
         Button (
@@ -135,7 +136,7 @@ fun StartScreen(
             shape = RoundedCornerShape(29.dp)
         ) {
             Text(
-                text = "경기 시작",
+                text = if (isGameFinished) "경기 결과 보기" else "경기 시작",
                 fontFamily = FontFamily(Font(R.font.pretendard_variable)),
                 fontWeight = FontWeight.Medium
             )
@@ -148,12 +149,13 @@ fun StartScreen(
 fun StartScreenPreview() {
     StartScreen(
         setNumber = 1,
-        opponentName = "아어려워요",
+        opponentName = "상대",
         opponentScore = 0,
         opponentSets = 0,
-        userName = "안세영이되",
+        userName = "나",
         userScore = 0,
         userSets = 0,
+        isGameFinished = false,
         onStart = {}
     )
 }
