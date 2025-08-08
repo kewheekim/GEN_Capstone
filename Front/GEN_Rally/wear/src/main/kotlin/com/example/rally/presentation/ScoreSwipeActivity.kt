@@ -86,8 +86,6 @@ fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets
                 when (page) {
                     0 -> ScoreScreen(
                         setNumber = setNumber,
-                        opponentSets = opponentSets,
-                        userSets = userSets,
                         opponentName = "상대",
                         userName = "나",
                         viewModel = viewModel,

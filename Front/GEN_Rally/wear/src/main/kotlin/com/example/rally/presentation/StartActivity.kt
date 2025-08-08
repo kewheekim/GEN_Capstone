@@ -10,10 +10,10 @@ class StartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val setNumber = intent.getIntExtra("setNumber", 1)
-        val userSets = intent.getIntExtra("userSets", 0)
-        val userScore =  intent.getIntExtra("userScore", 0)
         val opponentSets = intent.getIntExtra("opponentSets", 0)
         val opponentScore =  intent.getIntExtra("opponentScore", 0)
+        val userSets = intent.getIntExtra("userSets", 0)
+        val userScore =  intent.getIntExtra("userScore", 0)
         val isGameFinished = intent.getBooleanExtra("isGameFinished", false)
 
         setContent {

@@ -45,6 +45,7 @@ class ScoreViewModel : ViewModel() {
         _userServe.value = !_userServe.value
     }
 
+    // 세트 종료
     private val _isSetFinished = mutableStateOf(false)
     val isSetFinished: State<Boolean> = _isSetFinished
 
@@ -54,6 +55,10 @@ class ScoreViewModel : ViewModel() {
     fun resetFinished() {
         _isSetFinished.value = false
     }
+    // 게임 종료
+    private val _isGameFinished = MutableStateFlow(false)
+    val isMatchFinished: StateFlow<Boolean> = _isGameFinished
+
     // 세트 종료 처리
     fun onSetFinished(): SetResult {
         val user = _userScore.value
@@ -84,14 +89,6 @@ class ScoreViewModel : ViewModel() {
             opponentScore = _opponentScore.value,
             isGameFinished = _isGameFinished.value
         )
-    }
-
-    // 경기 종료
-    private val _isGameFinished = MutableStateFlow(false)
-    val isMatchFinished: StateFlow<Boolean> = _isGameFinished
-
-    fun finishGame() {
-        _isGameFinished.value = true
     }
 
     // 경기 시간 측정

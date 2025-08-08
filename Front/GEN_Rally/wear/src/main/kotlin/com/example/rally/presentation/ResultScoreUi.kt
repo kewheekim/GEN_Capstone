@@ -1,5 +1,6 @@
 package com.example.rally.presentation
 
+import com.example.rally.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,11 +15,9 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Text
-import com.example.rally.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rally.viewmodel.ScoreViewModel
-import com.example.rally.viewmodel.SetResult
 
 @Composable
 fun ResultScoreScreen(

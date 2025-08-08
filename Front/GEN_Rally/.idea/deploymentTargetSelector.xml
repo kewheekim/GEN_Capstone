@@ -13,10 +13,9 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-
       <SelectionState runConfigName="wear">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-07-24T08:32:25.197994700Z">
+        <DropdownSelection timestamp="2025-08-08T01:47:04.776863200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\coals\.android\avd\Wear_OS_Small_Round_API_36.avd" />
@@ -25,7 +24,6 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-
       <SelectionState runConfigName="TestActivity">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2025-07-30T14:54:12.220297700Z">
@@ -37,7 +35,6 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-
       <SelectionState runConfigName="ScoreSwipeActivity">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2025-07-31T11:07:02.174650400Z">
