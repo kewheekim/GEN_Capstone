@@ -45,7 +45,7 @@ public class SurveyActivity extends AppCompatActivity {
             {
                     "셔틀콕 방향이 바뀌면 <green>발이 잘 움직이지 않아,</green>\n몸이 따라가기 전에 손만 뻗게 되는 경우가 많아요",
                     "셔틀콕이 오면 이동하려 하지만,\n발이 느려서 <green>항상 한 박자 늦게</green> 반응해요",
-                    "<green>방향 전환과 이동은 되지만,</green> 발의 움직임이 매끄럽지\n않아서 치기 전 자세가 <green>불안정할 때가 있어요</green>", // TODO: 글자 수정 필요, 넘침
+                    "<green>방향 전환과 이동은 되지만,</green> 발의 움직임이 \n매끄럽지 않아서 자세가 <green>불안정할 때가 있어요</green>", // TODO: 글자 수정 필요, 넘침
                     "대부분의 상황에서 셔틀콕 <green>방향에 빠르게 반응하고</green>,\n코트 안에서 부드럽고 안정적으로 움직일 수 있어요",
                     "셔틀콕의 방향을 미리 예측하고 자연스럽게 <green>발이</green>\n<green>먼저 움직이며, 경기 흐름을 주도</green>할 수 있어요"
             },
