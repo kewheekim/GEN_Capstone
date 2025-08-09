@@ -33,6 +33,8 @@ public class SignupFragment extends Fragment {
     private Button btnDouble, btnNext;
     private ImageButton btnBack;
     private RetrofitClient retrofitClient;
+    private boolean doubleCheck = false;
+    private String lastCheckedId = null;
 
     public SignupFragment() {
         super(R.layout.fragment_signup);
@@ -70,6 +72,31 @@ public class SignupFragment extends Fragment {
                 tvSetId.setTextColor(valid ? defaultLabel : Color.RED);
             }
         });
+
+        // id 중복확인 필수
+        etSetId.addTextChangedListener(new TextWatcher() {
+            @Override public void afterTextChanged(Editable s) {
+                String current = s.toString().trim();
+
+                // 아이디가 바뀌면 중복확인 무효화
+                if (!current.equals(lastCheckedId)) {
+                    doubleCheck = false;
+
+                    tvSetId.setTextColor(Color.parseColor("red"));
+                    tvSetId.setText("아이디 중복확인을 해주세요.");
+
+                    // Next 버튼 즉시 반영되도록 다시 계산
+                    String pw = etSetPw.getText().toString().trim();
+                    String confirmPw = etConfirmPw.getText().toString().trim();
+                    boolean valid = isValidId(current) && isValidPassword(pw) && pw.equals(confirmPw) && doubleCheck;
+                    btnNext.setEnabled(valid);
+                    btnNext.setTextColor(valid ? Color.WHITE : Color.parseColor("#AAAAAA"));
+                }
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
 
         etSetPw.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
@@ -130,9 +157,9 @@ public class SignupFragment extends Fragment {
                 String pw        = etSetPw.getText().toString().trim();
                 String confirmPw = etConfirmPw.getText().toString().trim();
 
-                boolean valid = isValidId(id) && isValidPassword(pw) && pw.equals(confirmPw);
+                boolean valid = isValidId(id) && isValidPassword(pw) && pw.equals(confirmPw) && doubleCheck;
                 btnNext.setEnabled(valid); // 조건 만족 시 버튼 활성화
-                btnNext.setTextColor(valid ? Color.parseColor("#FFFFFF") : Color.parseColor("#AAAAAA"));
+                btnNext.setTextColor(valid ? Color.WHITE : Color.parseColor("#AAAAAA"));
             }
 
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -145,30 +172,31 @@ public class SignupFragment extends Fragment {
 
         // 다음 단계
         btnNext.setOnClickListener(v -> {
-            String id        = etSetId.getText().toString().trim();
-            String pw        = etSetPw.getText().toString().trim();
-            String confirmPw = etConfirmPw.getText().toString().trim();
 
-            if (!isValidId(id)) {
-                etSetId.setActivated(true);
-                tvSetId.setTextColor(Color.parseColor("red"));
-                return;
-            }
-            if (!isValidPassword(pw)) {
-                etSetPw.setActivated(true);
-                tvSetPw.setTextColor(Color.parseColor("red"));
-                return;
-            }
-            if (!pw.equals(confirmPw)) {
-                etConfirmPw.setActivated(true);
-                tvConfirmPw.setTextColor(Color.parseColor("red"));
-                return;
-            }
+                String id = etSetId.getText().toString().trim();
+                String pw = etSetPw.getText().toString().trim();
+                String confirmPw = etConfirmPw.getText().toString().trim();
 
-           if (getActivity() instanceof AuthActivity) {
-                ((AuthActivity) getActivity())
-                        .showSetNickname(id, pw); // id, pw 담아서 다음 setNicknameFragment로
-            }
+                if (!isValidId(id)) {
+                    etSetId.setActivated(true);
+                    tvSetId.setTextColor(Color.parseColor("red"));
+                    return;
+                }
+                if (!isValidPassword(pw)) {
+                    etSetPw.setActivated(true);
+                    tvSetPw.setTextColor(Color.parseColor("red"));
+                    return;
+                }
+                if (!pw.equals(confirmPw)) {
+                    etConfirmPw.setActivated(true);
+                    tvConfirmPw.setTextColor(Color.parseColor("red"));
+                    return;
+                }
+
+                if (getActivity() instanceof AuthActivity) {
+                    ((AuthActivity) getActivity())
+                            .showSetNickname(id, pw); // id, pw 담아서 다음 setNicknameFragment로
+                }
         });
     }
 
@@ -185,20 +213,39 @@ public class SignupFragment extends Fragment {
     // 서버에 ID 중복 체크 요청 TODO: 토스트 대신 텍스트필드로, 중복된 아이디일 때 빨강 / 통과 시 회색으로 응답 구분
     private void checkIdDuplicate(CheckIdRequest request) {
         ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
+        final String requestedId = request.getUserId();
 
         apiService.checkUserId(request).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    String responseBody = response.body() != null ? response.body().string() : null;
+                    String currentId = etSetId.getText().toString().trim();
+
                     if (response.isSuccessful()) {
-                        Toast.makeText(getContext(), responseBody, Toast.LENGTH_SHORT).show();
+                        // 현재 입력이 요청 때의 아이디와 동일할 때만 통과 처리
+                        if (currentId.equals(requestedId)) {
+                            doubleCheck = true;
+                            lastCheckedId = requestedId;
+                            String body = (response.body() != null) ? response.body().string() : "사용 가능한 아이디입니다.";
+                            Toast.makeText(getContext(), body, Toast.LENGTH_SHORT).show();
+                        } else {
+                            doubleCheck = false;
+                        }
                     } else {
-                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "에러 없음";
-                        JSONObject obj = new JSONObject(errorBody);
-                        String message = obj.optString("message", "에러 발생");
+                        doubleCheck = false;
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "";
+                        String message = "에러 발생";
+                        try { message = new JSONObject(errorBody).optString("message", message); } catch (Exception ignore) {}
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                     }
+
+                    // 버튼 상태 갱신
+                    String pw = etSetPw.getText().toString().trim();
+                    String confirmPw = etConfirmPw.getText().toString().trim();
+                    boolean valid = isValidId(currentId) && isValidPassword(pw) && pw.equals(confirmPw) && doubleCheck;
+                    btnNext.setEnabled(valid);
+                    btnNext.setTextColor(valid ? Color.WHITE : Color.parseColor("#AAAAAA"));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(), "응답 처리 중 오류 발생", Toast.LENGTH_SHORT).show();
@@ -207,6 +254,7 @@ public class SignupFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                doubleCheck = false;
                 t.printStackTrace();
                 Toast.makeText(getContext(), "네트워크 오류", Toast.LENGTH_SHORT).show();
             }
