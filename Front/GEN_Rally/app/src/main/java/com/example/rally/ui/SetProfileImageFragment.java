@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -70,7 +71,7 @@ public class SetProfileImageFragment extends Fragment {
         btnBack = view.findViewById(R.id.btn_back);
         btnNext.setEnabled(false);
 
-        imgBtn.setOnClickListener(v -> openGallery());
+        imgBtn.setOnClickListener(v -> showProfileMenu(v));
 
         btnBack.setOnClickListener(v -> {
             if (getActivity() instanceof AuthActivity) {
@@ -113,6 +114,34 @@ public class SetProfileImageFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void showProfileMenu(View anchor){
+        PopupMenu menu = new PopupMenu(getContext(),anchor);
+        menu.getMenuInflater().inflate(R.menu.profile_option_menu, menu.getMenu());
+
+        menu.setOnMenuItemClickListener(item ->{
+            int id = item.getItemId();
+            if(id == R.id.normal_profile){
+                // 기본 프로필 설정
+                imgView.setImageResource(R.drawable.ic_user);
+
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_user_profile);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                selectedImage = baos.toByteArray();
+
+                btnNext.setEnabled(true);
+                btnNext.setTextColor(Color.parseColor("#FFFFFF"));
+                return true;
+
+            } else if(id == R.id.personal_profile){
+                openGallery();
+                return true;
+            }
+            return false;
+        });
+        menu.show();
     }
 
     private void openGallery() {
