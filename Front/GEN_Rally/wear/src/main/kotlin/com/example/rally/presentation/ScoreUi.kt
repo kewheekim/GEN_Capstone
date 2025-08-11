@@ -29,6 +29,7 @@ import com.example.rally.viewmodel.ScoreViewModel
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import com.example.rally.viewmodel.Player
 import com.example.rally.viewmodel.SetResult
 import kotlinx.coroutines.launch
 
@@ -44,7 +45,9 @@ fun ScoreScreen(
     val userSets by viewModel.userSets.collectAsState()
     val opponentScore by viewModel.opponentScore.collectAsState()
     val opponentSets by viewModel.opponentSets.collectAsState()
-    val userServe by viewModel.userServe.collectAsState()
+    val isUser1 by viewModel.isUser1.collectAsState()
+    val currentServer by viewModel.currentServer.collectAsState()
+    val serveOnRight = (currentServer == Player.USER1 && isUser1) || (currentServer == Player.USER2 && !isUser1)
 
     val isPaused by viewModel.isPaused.collectAsState()
     val isSetFinished by viewModel.isSetFinished
@@ -99,7 +102,7 @@ fun ScoreScreen(
                     )
                 }
 
-                if (!userServe) {
+                if (!serveOnRight) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_serve),
                         contentDescription = "User Serve",
@@ -134,7 +137,7 @@ fun ScoreScreen(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (userServe) {
+                    if (serveOnRight) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_serve),
                             contentDescription = "Opponent Serve",
