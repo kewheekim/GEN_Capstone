@@ -227,7 +227,7 @@ public class SignupFragment extends Fragment {
                             doubleCheck = true;
                             lastCheckedId = requestedId;
                             String body = (response.body() != null) ? response.body().string() : "사용 가능한 아이디입니다.";
-                            Toast.makeText(getContext(), body, Toast.LENGTH_SHORT).show();
+                            tvSetId.setText(body);
                         } else {
                             doubleCheck = false;
                         }
