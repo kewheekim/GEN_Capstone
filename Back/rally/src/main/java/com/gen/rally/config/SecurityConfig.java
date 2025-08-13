@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/kakao/**","auth/naver/**", "/api/users/login","/api/users/signup","/api/users/check-id").permitAll()
+                        .requestMatchers("/auth/kakao/**","/auth/naver/**", "/api/users/login","/api/users/signup","/api/users/check-id", "/api/users/check-nickname").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(login -> login.disable())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);// 폼 로그인 비활성화

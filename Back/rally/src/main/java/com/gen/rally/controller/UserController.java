@@ -11,6 +11,7 @@ import com.gen.rally.service.NaverService;
 import com.gen.rally.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Check;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -48,6 +49,20 @@ public class UserController {
                     .body(ErrorResponse.from(ErrorCode.USER_ALREADY_EXISTS));
         }
         return ResponseEntity.ok("사용 가능한 아이디입니다.");
+    }
+
+    // 닉네임 중복 체크
+    @GetMapping("/api/users/check-nickname")
+    public ResponseEntity<CheckNicknameResponse> checkNickname(@RequestParam String nickname) {
+        String name = nickname.trim();
+        if (!name.matches("^[a-zA-Z0-9가-힣]{2,12}$")) {
+            return ResponseEntity.ok(new CheckNicknameResponse(false, "형식 오류"));
+        }
+        boolean exists = userRepository.existsByNameIgnoreCase(name);
+        if (exists) {
+            return ResponseEntity.ok(new CheckNicknameResponse(false, "이미 사용 중인 닉네임입니다"));
+        }
+        return ResponseEntity.ok(new CheckNicknameResponse(true, "사용 가능한 닉네임입니다"));
     }
 
     // kakao 로그인 & 회원가입

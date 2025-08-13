@@ -63,4 +63,8 @@ public class UserService {
         userRepository.save(user);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
+
+    public ResponseEntity<?> getFirstTier(){
+        return ResponseEntity.ok("티어 측정이 완료되었습니다.");
+    }
 }
