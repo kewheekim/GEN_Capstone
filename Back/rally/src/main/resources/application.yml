@@ -12,7 +12,7 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    url: jdbc:mysql://localhost:3306/Rally?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/rally?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 
 kakao:
   client-secret: W65I5JoQtWrAZ5gavncoIaUJAVvBYFSC
@@ -26,3 +26,9 @@ naver:
 
 jwt:
   secret: Ymx1ZSBrbm90IGlzIGZhbGxpbmcgaSB3YXMgaG9sZGluZyBvbiBmb3IgeW91
+
+logging:
+  level:
+    org.apache.catalina: DEBUG
+    org.apache.coyote: DEBUG
+    org.springframework.boot.web.embedded.tomcat: DEBUG
