@@ -4,10 +4,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.rally.R;
+import com.example.rally.api.ApiService;
+import com.example.rally.api.RetrofitClient;
+import com.example.rally.dto.CheckNicknameResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 // SIG_002
 public class SetNicknameFragment extends Fragment {
@@ -28,6 +37,8 @@ public class SetNicknameFragment extends Fragment {
     private View nameBox;
     private Button btnNext;
     private ImageButton btnBack;
+    private TextView tvError;
+    private RetrofitClient retrofitClient;
 
     public SetNicknameFragment() {
         super(R.layout.fragment_signup_nickname);
@@ -57,7 +68,9 @@ public class SetNicknameFragment extends Fragment {
         etNickname = view.findViewById(R.id.et_nickname);
         btnNext = view.findViewById(R.id.btn_next);
         nameBox = view.findViewById(R.id.et_box);
+        tvError = view.findViewById(R.id.tv_error);
         btnNext.setEnabled(false);
+        btnNext.setTextColor(Color.WHITE);
         btnBack = view.findViewById(R.id.btn_back);
 
         btnBack.setOnClickListener(v -> {
@@ -70,11 +83,20 @@ public class SetNicknameFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String nickname = etNickname.getText().toString().trim();
-
                 boolean valid = isValidName(nickname);
-                btnNext.setEnabled(valid); // 조건 만족 시 버튼 활성화
-                btnNext.setTextColor(valid ? Color.parseColor("#FFFFFF") : Color.parseColor("#AAAAAA"));
-                nameBox.setBackgroundResource(valid ? R.drawable.bg_view_active : R.drawable.bg_button_inactive);
+
+                if (valid) {
+                    nameBox.setBackgroundResource(R.drawable.bg_view_active); // 초록색 박스
+                    tvError.setVisibility(View.GONE);
+                } else {
+                    nameBox.setBackgroundResource(R.drawable.bg_button_inactive);
+                    tvError.setVisibility(View.VISIBLE);
+                    tvError.setText("닉네임은 2~12자의 한글, 영문, 숫자로 설정해 주세요");
+                    tvError.setTextColor(Color.parseColor("red"));
+                }
+
+                btnNext.setEnabled(valid);
+                btnNext.setTextColor(valid ? Color.WHITE : Color.parseColor("#AAAAAA"));
             }
 
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -84,14 +106,43 @@ public class SetNicknameFragment extends Fragment {
         etNickname.addTextChangedListener(watcher);
 
         btnNext.setOnClickListener(v -> {
+            ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
             String nickname = etNickname.getText().toString().trim();
+
             if (!isValidName(nickname)) {
-                Toast.makeText(getContext(), "닉네임은 2~12자 이내로 입력해 주세요", Toast.LENGTH_SHORT).show();
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText("닉네임은 2~12자 이내로 입력해 주세요");
+                tvError.setTextColor(Color.parseColor("red"));
                 return;
             }
-            if (getActivity() instanceof AuthActivity) {
-                ((AuthActivity) getActivity()).showSetProfile(userId, userPw, nickname);
-            }
+
+            apiService.checkNickname(nickname).enqueue(new Callback<CheckNicknameResponse>() {
+                @Override
+                public void onResponse(Call<CheckNicknameResponse> call, Response<CheckNicknameResponse> response) {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        Toast.makeText(getContext(), "네트워크 오류", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    CheckNicknameResponse body = response.body();
+                    if (body.available) {
+                        if (getActivity() instanceof AuthActivity) {
+                            ((AuthActivity) getActivity()).showSetProfile(userId, userPw, nickname);
+                        }
+                    } else {
+                        nameBox.setBackgroundResource(R.drawable.bg_button_inactive);
+                        tvError.setVisibility(View.VISIBLE);
+                        tvError.setText(body.message);
+                        tvError.setTextColor(Color.parseColor("red"));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CheckNicknameResponse> call, Throwable t) {
+                    Log.e("NickCheck", "failed", t);
+                    Toast.makeText(getContext(), "네트워크 오류: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
     public boolean isValidName(String name){
