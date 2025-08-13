@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <TextView
+        android:id="@+id/tvSetNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textFontWeight="600"
+        android:fontFamily="@font/pretendard_variable"
+        android:text="1세트"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvOpponentName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상대"
+                android:textColor="@color/gray_nav_bar"
+                android:fontFamily="@font/pretendard_variable"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/tvOpponentScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:fontFamily="@font/pretendard_variable"
+                android:textFontWeight="800"
+                android:textSize="46sp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivServeLeft"
+            android:layout_width="12dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_serve"
+            android:layout_margin="8dp" />
+
+        <TextView
+            android:id="@+id/tvOpponentSets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <Space
+            android:layout_width="24dp"
+            android:layout_height="1dp"/>
+
+        <TextView
+            android:id="@+id/tvUserSets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/ivServeRight"
+            android:layout_width="12dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_serve"
+            android:layout_margin="8dp"
+            android:visibility="invisible"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="나"
+                android:textColor="@color/gray_nav_bar"
+                android:fontFamily="@font/pretendard_variable"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/tvUserScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/green_active"
+                android:fontFamily="@font/pretendard_variable"
+                android:textFontWeight="800"
+                android:textStyle="bold"
+                android:textSize="46sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:fontFamily="@font/pretendard_variable"
+        android:textFontWeight="600"
+        android:textSize="18sp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="12dp"/>
+
+    <Button
+        android:id="@+id/btnScore"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="득점"
+        android:fontFamily="@font/pretendard_variable"
+        android:textSize="16dp"
+        android:textFontWeight="400"
+        android:textAllCaps="false"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnUndo"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/pretendard_variable"
+            android:textSize="16dp"
+            android:textFontWeight="400"
+            android:text="되돌리기"
+            android:textAllCaps="false"/>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="1dp"/>
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/pretendard_variable"
+            android:textSize="16dp"
+            android:textFontWeight="400"
+            android:text="일시정지"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+</LinearLayout>

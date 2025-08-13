@@ -11,8 +11,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class ScoreViewModel : ViewModel() {
+enum class Player { USER1, USER2 }
 
+class ScoreViewModel : ViewModel() {
     private val _userScore = MutableStateFlow(0)
     val userScore: StateFlow<Int> = _userScore
 
@@ -25,44 +26,75 @@ class ScoreViewModel : ViewModel() {
     private val _opponentSets = MutableStateFlow(0)
     val opponentSets: StateFlow<Int> = _opponentSets
 
-    private val _userServe = MutableStateFlow(true)
-    val userServe: StateFlow<Boolean> = _userServe
+    private val _isUser1 = MutableStateFlow(false)   // 로컬 유저가 user1인지 (테스트는 user2로 진행)
+    val isUser1: StateFlow<Boolean> = _isUser1
 
+    private val _currentServer = MutableStateFlow(Player.USER1)
+    val currentServer: StateFlow<Player> = _currentServer
+
+    private fun localPlayer(): Player =
+        if (_isUser1.value) Player.USER1 else Player.USER2
+    private fun opponentPlayer(): Player =
+        if (_isUser1.value) Player.USER2 else Player.USER1
+
+    // 직전 상태 복원위한 내역 저장
+    private data class Action (val preServer: Player, val scorer: Player)
+    private val history = ArrayDeque<Action>()
+    // 득점
     fun addUserScore() {
         _userScore.value += 1
+        history.addLast(Action(preServer = _currentServer.value, scorer = localPlayer()))
+        _currentServer.value =localPlayer()
     }
-
+    // 점수 되돌리기
     fun undoUserScore() {
-        if (_userScore.value > 0) _userScore.value -= 1
+        if (_userScore.value <= 0 || history.isEmpty()) return
+        val last = history.removeLast()
+        if (last.scorer == localPlayer()) {
+            _userScore.value -= 1
+            _currentServer.value = last.preServer  // 서브권 직전 상태로 복원
+        } else {
+            // 마지막 기록이 상대 득점이면 되돌리지 않음
+            history.addLast(last)
+        }
     }
+//    // 상대 점수 반영 (dataLayer)
+//    fun applyOpponentScore(newScore: Int) {
+//        _opponentScore.value = newScore
+//    }
 
+    // 세트 시작
     fun initSets(user:Int, opponent: Int) {
         _userSets.value = user
         _opponentSets.value = opponent
     }
-
-    fun toggleServe() {
-        _userServe.value = !_userServe.value
+    fun initPlayer (isUser1: Boolean) {
+        _isUser1.value= isUser1
+    }
+    fun startSet(setNumber: Int, firstServer: Player) {
+        _currentServer.value = firstServer
+        _userScore.value = 0
+        _opponentScore.value = 0
+        _isSetFinished.value = false
+        history.clear()  // 세트 시작시 내역 초기화
     }
 
     // 세트 종료
     private val _isSetFinished = mutableStateOf(false)
     val isSetFinished: State<Boolean> = _isSetFinished
-
     fun setFinished() {
         _isSetFinished.value = true
     }
-    fun resetFinished() {
-        _isSetFinished.value = false
-    }
+
     // 게임 종료
     private val _isGameFinished = MutableStateFlow(false)
-    val isMatchFinished: StateFlow<Boolean> = _isGameFinished
+    val isGameFinished: StateFlow<Boolean> = _isGameFinished
 
     // 세트 종료 처리
     fun onSetFinished(): SetResult {
         val user = _userScore.value
         val opponent = _opponentScore.value
+        history.clear()   // 세트 종료 시 히스토리 초기화
 
         val winner = when {
             user > opponent -> {
@@ -76,6 +108,13 @@ class ScoreViewModel : ViewModel() {
             else -> "draw"
         }
 
+        // 다음 세트 첫 서브
+        _currentServer.value = if (winner.equals("user")) {
+            if (_isUser1.value) Player.USER1 else Player.USER2
+        } else {
+            if (_isUser1.value) Player.USER2 else Player.USER1
+        }
+
         // 게임 종료 판정
         if (_userSets.value >= 2 || _opponentSets.value >= 2) {
             _isGameFinished.value = true
@@ -87,6 +126,7 @@ class ScoreViewModel : ViewModel() {
             userScore=_userScore.value,
             opponentSets = _opponentSets.value,
             opponentScore = _opponentScore.value,
+            currentServer = _currentServer.value,
             isGameFinished = _isGameFinished.value
         )
     }
@@ -147,11 +187,11 @@ class ScoreViewModel : ViewModel() {
 
 // 세트 종료 결과 데이터
 data class SetResult(
-    //val winner: String,
     val nextSetNumber: Int,
     val userScore: Int,
     val userSets: Int,            // 사용자가 승리한 세트 수
     val opponentSets: Int,         // 상대가 승리한 세트 수
     val opponentScore: Int,
+    val currentServer: Player,
     val isGameFinished: Boolean
 )

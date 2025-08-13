@@ -24,6 +24,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.rally.viewmodel.Player
 import kotlinx.coroutines.delay
 
 class ScoreSwipeActivity : ComponentActivity() {
@@ -31,16 +32,20 @@ class ScoreSwipeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val startTime = intent.getLongExtra("startTime", System.currentTimeMillis())
         val setNumber = intent.getIntExtra("setNumber", 1)
-        val opponetSets = intent.getIntExtra("opponentSets", 0)
+        val opponentSets = intent.getIntExtra("opponentSets", 0)
         val userSets = intent.getIntExtra("userSets", 0)
+
+        val nextFirstServerStr = intent.getStringExtra("nextFirstServer")
+        val nextFirstServer = nextFirstServerStr?.let { com.example.rally.viewmodel.Player.valueOf(it) }
+            ?: com.example.rally.viewmodel.Player.USER1
         setContent {
-            ScoreSwipeScreen(startTime, setNumber, opponetSets, userSets)
+            ScoreSwipeScreen(startTime, setNumber, opponentSets, userSets, nextFirstServer)
         }
     }
 }
 
 @Composable
-fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int) {
+fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int, nextFirstServer: Player) {
     val pagerState = rememberPagerState (pageCount = { 2 })
 
     val viewModel: ScoreViewModel = viewModel()
@@ -52,6 +57,10 @@ fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets
 
     LaunchedEffect(Unit) {
         viewModel.initSets(userSets, opponentSets)
+        viewModel.initPlayer(isUser1 = false)
+        val firstServer =
+            if (setNumber == 1) Player.USER1 else nextFirstServer
+        viewModel.startSet(setNumber, firstServer)
         viewModel.startStopwatch()
     }
 
@@ -64,8 +73,8 @@ fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets
                 putExtra("userScore", result.userScore)
                 putExtra("opponentSets", result.opponentSets)
                 putExtra("opponentScore", result.opponentScore)
+                putExtra("nextFirstServer", result.currentServer.name)
                 putExtra("isGameFinished", result.isGameFinished)
-
             }
             context.startActivity(intent)
             (context as? ComponentActivity)?.overridePendingTransition(0, 0)
