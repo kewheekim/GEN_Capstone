@@ -22,13 +22,21 @@ public class User {
     private String socialId; // 소셜 로그인 시 받아오는 id
     private String password;
     private String name;
+
+    @Enumerated(EnumType.STRING)
     private Primary primaryThing;
+
+    @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
     @Lob
     @Column(name= "profile_image", columnDefinition = "MEDIUMBLOB")
     private byte[] profileImage; // TODO: byte 대신 imageurl 쓰는 게 어떤지...
+
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Enumerated(EnumType.STRING)
     private Tier tier;
     private int skill;
     private double manner;
