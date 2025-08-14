@@ -2,7 +2,10 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,8 +25,12 @@ public class ScoreRecordActivity extends AppCompatActivity {
     private TextView tvSetNumber, tvOpponentName, tvUserName,
             tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer;
     private ImageView ivServeLeft, ivServeRight;
+    private Button btnScore, btnUndo, btnPause;
 
-    private int setNumber; // 현재 세트 번호
+    private int setNumber;
+    private boolean isSetFinished = false;
+    private final Handler uiHandler = new Handler(Looper.getMainLooper()); // 일시정지
+    private Player nextFirstServer = Player.USER1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,31 +49,35 @@ public class ScoreRecordActivity extends AppCompatActivity {
         int opponentSets = intent.getIntExtra("opponentSets", 0);
         int userSets = intent.getIntExtra("userSets", 0);
         String nextFirst = intent.getStringExtra("nextFirstServer");
-        Player nextFirstServer = nextFirst != null ? Player.valueOf(nextFirst) : Player.USER1;
-        boolean localIsUser1 = intent.getBooleanExtra("localIsUser1", true);
+        this.nextFirstServer = nextFirst != null ? Player.valueOf(nextFirst) : Player.USER1;
+        boolean isUser1 = intent.getBooleanExtra("localIsUser1", false);
 
         viewModel.initSets(userSets, opponentSets);
-        viewModel.initPlayer(localIsUser1);
-        Player firstServer = (setNumber == 1) ? Player.USER1 : nextFirstServer; // 1세트는 항상 USER1
+        viewModel.initPlayer(isUser1);
+        Player firstServer = (setNumber == 1) ? Player.USER1 : nextFirstServer; // 1세트 서브 시작은 user1
         viewModel.startSet(setNumber, firstServer);
         viewModel.startStopwatch();
 
         tvSetNumber.setText(setNumber + "세트");
         tvOpponentName.setText("상대");
         tvUserName.setText("나");
+        updateButtonsForState();
     }
 
     private void bindViews() {
-        tvSetNumber = findViewById(R.id.tvSetNumber);
-        tvOpponentName = findViewById(R.id.tvOpponentName);
-        tvUserName = findViewById(R.id.tvUserName);
-        tvOpponentScore = findViewById(R.id.tvOpponentScore);
-        tvUserScore = findViewById(R.id.tvUserScore);
-        tvOpponentSets = findViewById(R.id.tvOpponentSets);
-        tvUserSets = findViewById(R.id.tvUserSets);
-        tvTimer = findViewById(R.id.tvTimer);
-        ivServeLeft = findViewById(R.id.ivServeLeft);
-        ivServeRight = findViewById(R.id.ivServeRight);
+        tvSetNumber = findViewById(R.id.tv_set_number);
+        tvOpponentName = findViewById(R.id.tv_opponent_name);
+        tvUserName = findViewById(R.id.tv_user_name);
+        tvOpponentScore = findViewById(R.id.tv_opponent_score);
+        tvUserScore = findViewById(R.id.tv_user_score);
+        tvOpponentSets = findViewById(R.id.tv_opponent_sets);
+        tvUserSets = findViewById(R.id.tv_user_sets);
+        tvTimer = findViewById(R.id.tv_timer);
+        ivServeLeft = findViewById(R.id.iv_opponent_serve);
+        ivServeRight = findViewById(R.id.iv_user_serve);
+        btnScore = findViewById(R.id.btn_score);
+        btnUndo = findViewById(R.id.btn_undo);
+        btnPause = findViewById(R.id.btn_pause);
     }
 
     private void setupObservers() {
@@ -83,54 +94,126 @@ public class ScoreRecordActivity extends AppCompatActivity {
         androidx.lifecycle.Observer<Object> serveObserver = o -> updateServeIcons();
         viewModel.getCurrentServer().observe(this, s -> serveObserver.onChanged(null));
         viewModel.getIsUser1().observe(this, isU1 -> serveObserver.onChanged(null));
+
+        // 일시정지 버튼 텍스트 갱신
+        viewModel.getIsPaused().observe(this, paused -> {
+            boolean p = paused != null && paused;
+            btnPause.setText(p ? "경기 재개" : "경기 일시정지");
+            updateButtonsForState();
+        });
     }
 
+    // 버튼 비활성화
+    private void updateButtonsForState() {
+        // 세트 시작 전
+        if (isSetFinished) {
+            btnScore.setEnabled(true);
+            btnUndo.setEnabled(false);
+            btnPause.setEnabled(false);
+        } else {
+            // 세트 진행 중 pause 시 득점, 되돌리기 버튼 비활성화
+            boolean isPaused = viewModel.getIsPaused().getValue();
+            btnPause.setEnabled(true);
+            btnScore.setEnabled(!isPaused);
+            btnUndo.setEnabled(!isPaused);
+        }
+    }
+
+    // 버튼 클릭 이벤트 처리
     private void setupClicks() {
-        findViewById(R.id.btnScore).setOnClickListener(v -> viewModel.addUserScore());
-        findViewById(R.id.btnUndo).setOnClickListener(v -> viewModel.undoUserScore());
-        findViewById(R.id.btnPause).setOnClickListener(v -> viewModel.pause());
+        // 득점 <-> 세트 시작 버튼
+        btnScore.setOnClickListener(v -> {
+            if (isSetFinished) {
+                //  다음 세트 시작
+                viewModel.startSet(setNumber, nextFirstServer);
+                viewModel.startStopwatch();
+                isSetFinished = false;
+                btnScore.setText("득점");
+                updateServeIcons();  // 서브 아이콘
+                updateButtonsForState();
+            } else {
+                //  득점
+                viewModel.addUserScore();
+            }
+        });
+        // 점수 되돌리기 버튼
+        btnUndo.setOnClickListener(v -> viewModel.undoUserScore());
+        // 일시정지 <-> 경기 재개 버튼
+        btnPause.setOnClickListener(v -> {
+            Boolean paused = viewModel.getIsPaused().getValue();
+            if (paused != null && paused) {
+                viewModel.resume();   // 현재 일시정지 상태면 재개
+            } else {
+                viewModel.pause();    // 진행 중이면 일시정지
+            }
+            updateButtonsForState();
+        });
     }
 
     private void updateServeIcons() {
-        Player s = viewModel.getCurrentServer().getValue();
-        Boolean isU1 = viewModel.getIsUser1().getValue();
-        if (s == null) s = Player.USER1;
-        if (isU1 == null) isU1 = true;
-        boolean serveOnRight = (s == Player.USER1 && isU1) || (s == Player.USER2 && !isU1);
+        Player currentServe = viewModel.getCurrentServer().getValue();
+        Boolean isUser1 = viewModel.getIsUser1().getValue();
+        if (currentServe == null) currentServe = Player.USER1;
+        if (isUser1 == null) isUser1 = true;
+        boolean serveOnRight = (currentServe == Player.USER1 && isUser1) || (currentServe == Player.USER2 && !isUser1);
         ivServeRight.setVisibility(serveOnRight ? View.VISIBLE : View.INVISIBLE);
         ivServeLeft.setVisibility(serveOnRight ? View.INVISIBLE : View.VISIBLE);
     }
 
     private String formatTime(long seconds) {
-        long m = seconds / 60L;
+        long h = seconds / 3600L;
+        long m = (seconds % 3600L) / 60L;
         long s = seconds % 60L;
-        return String.format("%02d:%02d", m, s);
+        return String.format("%02d:%02d:%02d", h, m, s);
     }
 
     private void checkMatchStates() {
-        int u = viewModel.getUserScore().getValue() == null ? 0 : viewModel.getUserScore().getValue();
-        int o = viewModel.getOpponentScore().getValue() == null ? 0 : viewModel.getOpponentScore().getValue();
+        int user = viewModel.getUserScore().getValue() == null ? 0 : viewModel.getUserScore().getValue();
+        int opponent = viewModel.getOpponentScore().getValue() == null ? 0 : viewModel.getOpponentScore().getValue();
 
-        if (checkSetWin(u, o)) {
+        // 세트 종료
+        if (checkSetWin(opponent, user)) {
             Toast.makeText(this, "세트 종료", Toast.LENGTH_SHORT).show();
             viewModel.setFinished();
             viewModel.pause();
-            SetResult result = viewModel.onSetFinished();
 
-            // 결과화면 넘어가는 로직 작성
-            // Intent intent = new Intent(this, StartActivity.class);
-            // startActivity(intent);
-            // finish();
-        } else if (checkMatchPoint(u, o)) {
+            // 2초 동안 최종 스코어를 그대로 보여줌
+            uiHandler.postDelayed(() -> {
+                // 2초 후 세트 마무리
+                SetResult result = viewModel.onSetFinished();
+
+                // 다음 세트 대기 화면으로
+                setNumber = result.nextSetNumber;                 // 다음 세트 번호
+                tvSetNumber.setText(setNumber + "세트");
+                tvUserScore.setText("0");
+                tvOpponentScore.setText("0");
+                tvTimer.setText("00:00:00");
+                ivServeLeft.setVisibility(View.INVISIBLE);
+                ivServeRight.setVisibility(View.INVISIBLE);
+
+                nextFirstServer = result.currentServer;           // 다음 세트 선서브
+                isSetFinished = true;                             // 대기 진입
+                btnScore.setText("경기 시작");
+                updateButtonsForState();
+            }, 2000);
+            return;
+        }
+
+        //  매치포인트
+        if (checkMatchPoint(opponent, user)) {
+            int mySets = viewModel.getUserSets().getValue() == null ? 0 : viewModel.getUserSets().getValue();
+            //  2선승제
+            boolean isMatchPoint = (mySets == 1);
             Toast.makeText(this, "Match Point!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean checkMatchPoint(int playerScore, int opponentScore) {
-        return playerScore >= 20 && playerScore == opponentScore; // 20-20 상황
+    private boolean checkMatchPoint(int opponentScore, int playerScore) {
+        return checkSetWin(opponentScore, playerScore+1);
     }
 
-    private boolean checkSetWin(int playerScore, int opponentScore) {
-        return playerScore >= 21 && (playerScore - opponentScore) >= 2;
+    private boolean checkSetWin( int opponentScore, int playerScore) {
+        // 20점 이상 + 2점 선취 또는 30점 먼저 도달
+        return (playerScore >= 21 && (playerScore - opponentScore) >= 2) || (playerScore == 30);
     }
 }

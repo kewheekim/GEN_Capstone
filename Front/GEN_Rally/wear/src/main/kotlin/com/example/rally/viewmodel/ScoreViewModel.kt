@@ -109,7 +109,7 @@ class ScoreViewModel : ViewModel() {
         }
 
         // 다음 세트 첫 서브
-        _currentServer.value = if (winner.equals("user")) {
+        _currentServer.value = if (winner == "user") {
             if (_isUser1.value) Player.USER1 else Player.USER2
         } else {
             if (_isUser1.value) Player.USER2 else Player.USER1

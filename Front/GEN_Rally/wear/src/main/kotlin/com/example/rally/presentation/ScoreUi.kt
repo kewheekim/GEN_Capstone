@@ -1,6 +1,8 @@
 package com.example.rally.presentation
 
-import com.example.rally.R
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,25 +13,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.rally.viewmodel.ScoreViewModel
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import com.example.rally.R
 import com.example.rally.viewmodel.Player
+import com.example.rally.viewmodel.ScoreViewModel
 import com.example.rally.viewmodel.SetResult
 import kotlinx.coroutines.launch
 
@@ -123,9 +124,21 @@ fun ScoreScreen(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                // 사용자 점수 영역
-                Spacer(modifier = Modifier.width(16.dp))
+                if (checkMatchPoint(userScore, opponentScore)) {
+                    Text(
+                        text = "Match\nPoint!",
+                        fontSize = 8.sp,
+                        color = colorResource(id = R.color.green_active),
+                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        fontWeight = FontWeight.Black,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.offset(y=16.dp)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
 
+                // 사용자 점수 영역
                 Text(
                     text = "$userSets",
                     fontSize = 16.sp,
@@ -270,22 +283,24 @@ fun checkMatchPoint(
     playerScore: Int,
     opponentScore: Int
 ): Boolean {
-    return playerScore >= 20 && playerScore == opponentScore
+    return checkSetWin(playerScore+1, opponentScore)
 }
 
 fun checkSetWin(
     playerScore: Int,
     opponentScore: Int
 ): Boolean {
-    return playerScore >= 21 && (playerScore - opponentScore) >= 2
+    return (playerScore >= 21 && (playerScore - opponentScore) >= 2) || (playerScore == 30)
 }
 
-//@Preview(showBackground = true, widthDp = 192, heightDp = 192)
-//@Composable
-//fun MatchScoreScreenPreview() {
-//    ScoreScreen(
-//        setNumber = 1,
-//        opponentName = "아어려워요",
-//        userName = "안세영이되"
-//    )
-//}
+@Preview(showBackground = true, widthDp = 192, heightDp = 192)
+@Composable
+fun MatchScoreScreenPreview() {
+    ScoreScreen(
+        setNumber = 1,
+        opponentName = "아어려워요",
+        userName = "안세영이되",
+        viewModel = viewModel(),
+        onSetFinished = {}
+    )
+}

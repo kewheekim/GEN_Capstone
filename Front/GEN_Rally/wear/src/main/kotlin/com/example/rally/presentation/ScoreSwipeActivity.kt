@@ -35,9 +35,14 @@ class ScoreSwipeActivity : ComponentActivity() {
         val opponentSets = intent.getIntExtra("opponentSets", 0)
         val userSets = intent.getIntExtra("userSets", 0)
 
-        val nextFirstServerStr = intent.getStringExtra("nextFirstServer")
-        val nextFirstServer = nextFirstServerStr?.let { com.example.rally.viewmodel.Player.valueOf(it) }
-            ?: com.example.rally.viewmodel.Player.USER1
+        val nextFirstServer: Player =
+            if (setNumber == 1) {
+                Player.USER1
+            } else {
+                intent.getStringExtra("nextFirstServer")
+                    ?.let { runCatching { Player.valueOf(it) }.getOrDefault(Player.USER1) }
+                    ?: Player.USER1
+            }
         setContent {
             ScoreSwipeScreen(startTime, setNumber, opponentSets, userSets, nextFirstServer)
         }

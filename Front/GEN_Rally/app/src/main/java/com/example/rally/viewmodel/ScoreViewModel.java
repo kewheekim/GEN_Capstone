@@ -1,5 +1,7 @@
 package com.example.rally.viewmodel;
 
+import android.os.Looper;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -24,7 +26,7 @@ public class ScoreViewModel extends ViewModel {
     private long totalPaused = 0L;
     private Long pauseStartedAt = null;
 
-    private final android.os.Handler handler = new android.os.Handler();
+    private final android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
     private final Runnable ticker = new Runnable() {
         @Override public void run() {
             Boolean paused = isPaused.getValue();
@@ -40,9 +42,9 @@ public class ScoreViewModel extends ViewModel {
 
     // 점수 동작 내역
     private static class Action {
-        final Player prevServer;
+        final Player preServer;
         final Player scorer;
-        Action(Player prevServer, Player scorer) { this.prevServer = prevServer; this.scorer = scorer; }
+        Action(Player preServer, Player scorer) { this.preServer = preServer; this.scorer = scorer; }
     }
     private final Deque<Action> history = new ArrayDeque<>();
 
@@ -59,8 +61,8 @@ public class ScoreViewModel extends ViewModel {
     public LiveData<Boolean> getIsPaused() { return isPaused; }
     public LiveData<Long> getElapsed() { return elapsed; }
 
-    // ===== 비즈니스 로직 =====
-    public void initPlayer(boolean localIsUser1) { isUser1.setValue(localIsUser1); }
+    // user1인지 판단
+    public void initPlayer(boolean localisUser1) { isUser1.setValue(localisUser1); }
 
     public void initSets(int user, int opponent) {
         userSets.setValue(user);
@@ -89,19 +91,11 @@ public class ScoreViewModel extends ViewModel {
         Action last = history.removeLast();
         if (last.scorer == localPlayer()) {
             userScore.setValue(u - 1);
-            currentServer.setValue(last.prevServer);
+            currentServer.setValue(last.preServer); // 서브권 직전 상태로 복원
         } else {
-            // 상대 득점이 마지막이었다면 되돌리지 않음
+            // 마지막 기록이 상대 득점이면 되돌리지 않음
             history.addLast(last);
         }
-    }
-
-    public void addOpponentScore() {
-        Player before = currentServer.getValue();
-        if (before == null) before = Player.USER1;
-        history.addLast(new Action(before, opponentPlayer()));
-        opponentScore.setValue((opponentScore.getValue() == null ? 0 : opponentScore.getValue()) + 1);
-        currentServer.setValue(opponentPlayer());
     }
 
     private final MutableLiveData<Boolean> isSetFinished = new MutableLiveData<>(false);
@@ -121,7 +115,7 @@ public class ScoreViewModel extends ViewModel {
         else if (opp > user) { opponentSets.setValue((opponentSets.getValue()==null?0:opponentSets.getValue()) + 1); winner = "opponent"; }
         else { winner = "draw"; }
 
-        // 다음 세트 첫 서브 = 세트 승자 (룰상 듀스 해결로 draw는 발생 X)
+        // 다음 세트 첫 서브 = 세트 승자
         if ("user".equals(winner)) {
             currentServer.setValue(localPlayer());
         } else {
@@ -146,7 +140,7 @@ public class ScoreViewModel extends ViewModel {
         );
     }
 
-    // ===== 스톱워치 =====
+    // 스톱워치
     public void startStopwatch() {
         startTime = System.currentTimeMillis();
         totalPaused = 0L;
@@ -155,14 +149,12 @@ public class ScoreViewModel extends ViewModel {
         handler.removeCallbacks(ticker);
         handler.postDelayed(ticker, 1000L);
     }
-
     public void pause() {
         if (!Boolean.TRUE.equals(isPaused.getValue())) {
             isPaused.setValue(true);
             pauseStartedAt = System.currentTimeMillis();
         }
     }
-
     public void resume() {
         if (Boolean.TRUE.equals(isPaused.getValue())) {
             long now = System.currentTimeMillis();
@@ -170,5 +162,10 @@ public class ScoreViewModel extends ViewModel {
             pauseStartedAt = null;
             isPaused.setValue(false);
         }
+    }
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        handler.removeCallbacks(ticker);         // 타이머 정리
     }
 }

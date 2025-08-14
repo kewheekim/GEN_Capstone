@@ -22,7 +22,7 @@
         android:text="예약된 매칭"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#AAAAAA"
+        android:textColor="@color/gray_nav_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
         android:layout_marginTop="8dp"
@@ -40,7 +40,7 @@
         app:layout_constraintLeft_toRightOf="@id/tv_reserved"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="34dp"
+        android:layout_marginStart="39dp"
         />
 
     <TextView
@@ -50,11 +50,11 @@
         android:text="받은/보낸 요청"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#AAAAAA"
+        android:textColor="@color/gray_nav_bar"
         app:layout_constraintLeft_toRightOf="@id/tv_searching"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="34dp"
+        android:layout_marginStart="29dp"
         />
 
     <include
@@ -66,4 +66,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

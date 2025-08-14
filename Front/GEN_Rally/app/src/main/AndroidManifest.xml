@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.MainActivity"/>
+        <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.MatConditionActivity"/>
         <activity android:name=".ui.MatTypeActivity"/>
         <activity android:name=".ui.SetTimeActivity"/>
@@ -46,7 +46,12 @@
         <activity android:name=".ui.PopupInviteActivity" android:theme="@style/PopupTheme"/>
         <activity android:name=".ui.AuthActivity"/>
         <activity android:name=".ui.SurveyActivity"/>
-        <activity android:name=".ui.ScoreRecordActivity"/>
+        <activity android:name=".ui.ScoreRecordActivity" android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

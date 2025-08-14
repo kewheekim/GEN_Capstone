@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.rally.viewmodel.Player
 
 class StartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +15,7 @@ class StartActivity : ComponentActivity() {
         val opponentScore =  intent.getIntExtra("opponentScore", 0)
         val userSets = intent.getIntExtra("userSets", 0)
         val userScore =  intent.getIntExtra("userScore", 0)
+        val nextFirstServer = intent.getStringExtra("nextFirstServer") ?: Player.USER1.name
         val isGameFinished = intent.getBooleanExtra("isGameFinished", false)
 
         setContent {
@@ -28,11 +30,14 @@ class StartActivity : ComponentActivity() {
                 isGameFinished = isGameFinished,
                 onStart = {
                     if(!isGameFinished) {
-                        val intent = Intent(this, ScoreSwipeActivity::class.java)
-                        intent.putExtra("startTime", System.currentTimeMillis())  // 시작 시간 전달
-                        intent.putExtra("setNumber", setNumber)
-                        intent.putExtra("opponentSets", opponentSets)
-                        intent.putExtra("userSets", userSets)
+                        val intent = Intent(this, ScoreSwipeActivity::class.java). apply {
+                            putExtra("startTime", System.currentTimeMillis())  // 시작 시간 전달
+                            putExtra("setNumber", setNumber)
+                            putExtra("opponentSets", opponentSets)
+                            putExtra("userSets", userSets)
+                            putExtra("nextFirstServer", nextFirstServer)
+                        }
+
                         startActivity(intent)
                         overridePendingTransition(0, 0)
                     }
