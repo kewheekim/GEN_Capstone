@@ -67,4 +67,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
+    <android.widget.Button
+        android:id="@+id/btn_start"
+        style="@style/FlatButton"
+        android:layout_width="364dp"
+        android:layout_height="54dp"
+        android:text="경기 시작"
+        android:background="@drawable/bg_next_button_active"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="5dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

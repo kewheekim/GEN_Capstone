@@ -51,4 +51,5 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     compileOnly("org.projectlombok:lombok:1.18.30")       // lombok
     annotationProcessor("org.projectlombok:lombok:1.18.30")
+    implementation ("com.google.android.gms:play-services-wearable:18.2.0")
 }

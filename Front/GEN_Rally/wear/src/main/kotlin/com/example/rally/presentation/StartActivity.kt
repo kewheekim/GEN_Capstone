@@ -11,8 +11,10 @@ class StartActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val setNumber = intent.getIntExtra("setNumber", 1)
+        val opponentName = intent.getStringExtra("opponentName") ?: "상대"
         val opponentSets = intent.getIntExtra("opponentSets", 0)
         val opponentScore =  intent.getIntExtra("opponentScore", 0)
+        val userName = intent.getStringExtra("userName") ?: "나"
         val userSets = intent.getIntExtra("userSets", 0)
         val userScore =  intent.getIntExtra("userScore", 0)
         val nextFirstServer = intent.getStringExtra("nextFirstServer") ?: Player.USER1.name
@@ -21,10 +23,10 @@ class StartActivity : ComponentActivity() {
         setContent {
             StartScreen(
                 setNumber = setNumber,
-                opponentName = "상대",
+                opponentName = opponentName,
                 opponentSets= opponentSets,
                 opponentScore =  if(!isGameFinished) 0 else opponentScore,
-                userName = "나",
+                userName = userName,
                 userSets = userSets,
                 userScore =  if(!isGameFinished) 0 else userScore,
                 isGameFinished = isGameFinished,

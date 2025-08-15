@@ -31,7 +31,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.MainActivity" android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.MatConditionActivity"/>
         <activity android:name=".ui.MatTypeActivity"/>
         <activity android:name=".ui.SetTimeActivity"/>
@@ -46,12 +51,28 @@
         <activity android:name=".ui.PopupInviteActivity" android:theme="@style/PopupTheme"/>
         <activity android:name=".ui.AuthActivity"/>
         <activity android:name=".ui.SurveyActivity"/>
-        <activity android:name=".ui.ScoreRecordActivity" android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+        <activity android:name=".ui.ScoreRecordActivity"/>
 
+        <service
+            android:name=".wear.PhoneDataLayerListener"
+            android:exported="true">
+            <!-- 워치 -> 폰 -->
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/rally/event"/>
+            </intent-filter>
+            <!-- 폰 -> 워치 (/rally/snapshot) 수신 -->
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
+                <data android:scheme="wear" android:host="*" android:path="/rally/snapshot"/>
+            </intent-filter>
+            <!-- Capability 변경 감지 -->
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED"/>
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.android.wearable.capability"
+            android:resource="@xml/wear_capabilities_phone" />
+    </application>
 </manifest>
