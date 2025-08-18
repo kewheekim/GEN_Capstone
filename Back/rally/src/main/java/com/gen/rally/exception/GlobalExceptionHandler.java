@@ -13,7 +13,7 @@ public class GlobalExceptionHandler{
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         ErrorResponse body = ErrorResponse.from(e.getErrorCode());
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(e.getErrorCode().getStatus())
                 .body(body);
     }
 
