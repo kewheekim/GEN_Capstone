@@ -1,5 +1,7 @@
 package com.gen.rally.controller;
 
+import com.gen.rally.dto.TierAssessRequest;
+import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.dto.auth.*;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.exception.CustomException;
@@ -98,4 +100,9 @@ public class UserController {
     }
 
     // 실력 자가진단
+    @PostMapping("/api/users/tier") public ResponseEntity<?> getTier(@RequestBody TierAssessRequest request){
+        // String userId = userDetails.getUsername();
+        TierAssessResponse response = userService.getFirstTier(request);
+        return ResponseEntity.ok(response);
+    }
 }

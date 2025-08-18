@@ -1,11 +1,14 @@
 package com.gen.rally.service;
 
 import com.gen.rally.config.jwt.JwtProvider;
+import com.gen.rally.dto.TierAssessRequest;
+import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.dto.auth.GeneralSignupRequest;
 import com.gen.rally.dto.auth.SignupResponse;
 import com.gen.rally.dto.auth.SocialSignupRequest;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.entity.User;
+import com.gen.rally.enums.Tier;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.UserRepository;
@@ -64,7 +67,30 @@ public class UserService {
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
-    public ResponseEntity<?> getFirstTier(){
-        return ResponseEntity.ok("티어 측정이 완료되었습니다.");
+    public TierAssessResponse getFirstTier(TierAssessRequest request) {
+        /*User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));*/
+
+        int selfQ = request.getQ1() + request.getQ2() + request.getQ3();
+        int expQ = request.getQ4();
+        int careerQ = request.getQ5();
+        double totalScore = (selfQ / 15.0) * 40 + (expQ / 5.0) * 40 + (careerQ / 7.0) * 20;
+        TierAssessResponse response = new TierAssessResponse();
+
+        response.setScore(totalScore);
+        if (totalScore >= 80.0) {
+            response.setTier(Tier.valueOf("상급자1"));
+            // user.setTier(Tier.valueOf("상급자1"));
+        } else if (totalScore >= 60.0) {
+            response.setTier(Tier.valueOf("중급자1"));
+            // user.setTier(Tier.valueOf("중급자1"));
+        } else if (totalScore >= 40.0) {
+            response.setTier(Tier.valueOf("초급자1"));
+            // user.setTier(Tier.valueOf("초급자1"));
+        } else {
+            response.setTier(Tier.valueOf("입문자1"));
+            // user.setTier(Tier.valueOf("입문자1"));
+        }
+        return response;
     }
 }
