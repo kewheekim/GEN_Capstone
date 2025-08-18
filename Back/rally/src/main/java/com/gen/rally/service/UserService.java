@@ -67,9 +67,9 @@ public class UserService {
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
-    public TierAssessResponse getFirstTier(TierAssessRequest request) {
-        /*User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));*/
+    public TierAssessResponse getFirstTier(TierAssessRequest request, String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         int selfQ = request.getQ1() + request.getQ2() + request.getQ3();
         int expQ = request.getQ4();
@@ -80,16 +80,16 @@ public class UserService {
         response.setScore(totalScore);
         if (totalScore >= 80.0) {
             response.setTier(Tier.valueOf("상급자1"));
-            // user.setTier(Tier.valueOf("상급자1"));
+            user.setTier(Tier.valueOf("상급자1"));
         } else if (totalScore >= 60.0) {
             response.setTier(Tier.valueOf("중급자1"));
-            // user.setTier(Tier.valueOf("중급자1"));
+            user.setTier(Tier.valueOf("중급자1"));
         } else if (totalScore >= 40.0) {
             response.setTier(Tier.valueOf("초급자1"));
-            // user.setTier(Tier.valueOf("초급자1"));
+            user.setTier(Tier.valueOf("초급자1"));
         } else {
             response.setTier(Tier.valueOf("입문자1"));
-            // user.setTier(Tier.valueOf("입문자1"));
+            user.setTier(Tier.valueOf("입문자1"));
         }
         return response;
     }

@@ -100,9 +100,9 @@ public class UserController {
     }
 
     // 실력 자가진단
-    @PostMapping("/api/users/tier") public ResponseEntity<?> getTier(@RequestBody TierAssessRequest request){
-        // String userId = userDetails.getUsername();
-        TierAssessResponse response = userService.getFirstTier(request);
+    @PostMapping("/api/users/tier") public ResponseEntity<?> getTier(@RequestBody TierAssessRequest request, @AuthenticationPrincipal UserDetails userDetails){
+        String userId = userDetails.getUsername();
+        TierAssessResponse response = userService.getFirstTier(request, userId);
         return ResponseEntity.ok(response);
     }
 }
