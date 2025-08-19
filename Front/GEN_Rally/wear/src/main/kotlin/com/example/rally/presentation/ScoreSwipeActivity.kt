@@ -24,6 +24,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.rally.datalayer.WatchDataLayerClient
 import com.example.rally.viewmodel.Player
 import kotlinx.coroutines.delay
 
@@ -32,7 +33,9 @@ class ScoreSwipeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val startTime = intent.getLongExtra("startTime", System.currentTimeMillis())
         val setNumber = intent.getIntExtra("setNumber", 1)
+        val opponentName = intent.getStringExtra("opponentName") ?: "상대"
         val opponentSets = intent.getIntExtra("opponentSets", 0)
+        val userName = intent.getStringExtra("userName") ?: "나"
         val userSets = intent.getIntExtra("userSets", 0)
 
         val nextFirstServer: Player =
@@ -44,13 +47,13 @@ class ScoreSwipeActivity : ComponentActivity() {
                     ?: Player.USER1
             }
         setContent {
-            ScoreSwipeScreen(startTime, setNumber, opponentSets, userSets, nextFirstServer)
+            ScoreSwipeScreen(startTime, setNumber, opponentName, opponentSets, userName, userSets, nextFirstServer)
         }
     }
 }
 
 @Composable
-fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets:Int, nextFirstServer: Player) {
+fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentName:String, opponentSets:Int, userName:String, userSets:Int, nextFirstServer: Player) {
     val pagerState = rememberPagerState (pageCount = { 2 })
 
     val viewModel: ScoreViewModel = viewModel()
@@ -100,8 +103,8 @@ fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets
                 when (page) {
                     0 -> ScoreScreen(
                         setNumber = setNumber,
-                        opponentName = "상대",
-                        userName = "나",
+                        opponentName = opponentName,
+                        userName = userName,
                         viewModel = viewModel,
                         onSetFinished = { result ->
                             navigateToStartActivity = result
@@ -111,8 +114,14 @@ fun ScoreSwipeScreen(startTime: Long, setNumber: Int, opponentSets:Int, userSets
                         elapsedTime = elapsed,
                         isPaused = isPaused,
                         onPause = {
-                            if (isPaused) viewModel.resume()
-                            else viewModel.pause()
+                            if (isPaused) {
+                                viewModel.resume()
+                                // 워치로 이벤트 전송
+                                WatchDataLayerClient.sendResume(context, matchId = "match-123")
+                            } else {
+                                viewModel.pause()
+                                WatchDataLayerClient.sendPause(context, matchId = "match-123")
+                            }
                         }
                     )
                 }

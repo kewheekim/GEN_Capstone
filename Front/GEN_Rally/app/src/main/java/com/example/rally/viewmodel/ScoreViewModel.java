@@ -11,11 +11,10 @@ import java.util.Deque;
 
 public class ScoreViewModel extends ViewModel {
 
-    private final MutableLiveData<Integer> userScore = new MutableLiveData<>(0);
-    private final MutableLiveData<Integer> userSets = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> opponentScore = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> opponentSets = new MutableLiveData<>(0);
-
+    private final MutableLiveData<Integer> userScore = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> userSets = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> isUser1 = new MutableLiveData<>(true); // 로컬이 USER1?
     private final MutableLiveData<Player> currentServer = new MutableLiveData<>(Player.USER1);
 
@@ -162,6 +161,34 @@ public class ScoreViewModel extends ViewModel {
             pauseStartedAt = null;
             isPaused.setValue(false);
         }
+    }
+    // 스톱워치: 원격 타임스탬프 기준으로 시작/일시정지/재개 (딜레이 방지)
+    public void startStopwatchAt(long epochMillisUtc) {
+        startTime = epochMillisUtc;
+        totalPaused = 0L;
+        pauseStartedAt = null;
+        isPaused.setValue(false);
+        handler.removeCallbacks(ticker);
+        handler.postDelayed(ticker, 1000L);
+    }
+    public void pauseAt(long epochMillisUtc) {
+        if (!Boolean.TRUE.equals(isPaused.getValue())) {
+            isPaused.setValue(true);
+            // 원격 기준으로 정렬
+            pauseStartedAt = epochMillisUtc;
+        }
+    }
+    public void resumeAt(long epochMillisUtc) {
+        if (Boolean.TRUE.equals(isPaused.getValue())) {
+            if (pauseStartedAt != null) totalPaused += (epochMillisUtc - pauseStartedAt);
+            pauseStartedAt = null;
+            isPaused.setValue(false);
+        }
+    }
+    // 점수 스냅샷 미러링(절대값 반영)
+    public void applyScoreSnapshot(int user, int opp) {
+        userScore.setValue(user);
+        opponentScore.setValue(opp);
     }
     @Override
     protected void onCleared() {

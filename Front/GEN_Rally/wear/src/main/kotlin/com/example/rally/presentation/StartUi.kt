@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,7 +73,10 @@ fun StartScreen(
                     text = "$opponentName",
                     fontSize = 10.sp,
                     color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    modifier = Modifier.widthIn(max = 50.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "$opponentScore",
@@ -110,7 +115,10 @@ fun StartScreen(
                     text = "$userName",
                     fontSize = 10.sp,
                     color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    modifier = Modifier.widthIn(max = 50.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "$userScore",
@@ -149,7 +157,7 @@ fun StartScreen(
 fun StartScreenPreview() {
     StartScreen(
         setNumber = 1,
-        opponentName = "상대",
+        opponentName = "랠리랠리랠리랠리",
         opponentScore = 0,
         opponentSets = 0,
         userName = "나",

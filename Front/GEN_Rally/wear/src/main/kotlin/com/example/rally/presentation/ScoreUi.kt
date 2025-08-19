@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +31,7 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 import com.example.rally.R
+import com.example.rally.datalayer.WatchDataLayerClient
 import com.example.rally.viewmodel.Player
 import com.example.rally.viewmodel.ScoreViewModel
 import com.example.rally.viewmodel.SetResult
@@ -42,6 +45,7 @@ fun ScoreScreen(
     viewModel: ScoreViewModel = viewModel(),
     onSetFinished: (SetResult) -> Unit
 ) {
+    val context = LocalContext.current
     val userScore by viewModel.userScore.collectAsState()
     val userSets by viewModel.userSets.collectAsState()
     val opponentScore by viewModel.opponentScore.collectAsState()
@@ -92,7 +96,10 @@ fun ScoreScreen(
                         text = "$opponentName",
                         fontSize = 10.sp,
                         color = Color.Gray,
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        modifier = Modifier.widthIn(max = 50.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = "$opponentScore",
@@ -171,7 +178,10 @@ fun ScoreScreen(
                         text = "$userName",
                         fontSize = 10.sp,
                         color = Color.Gray,
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        modifier = Modifier.widthIn(max = 50.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = "$userScore",
@@ -197,6 +207,7 @@ fun ScoreScreen(
                     isPressed=true
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                     viewModel.addUserScore()
+                    WatchDataLayerClient.sendScore(context, matchId = "match-123", userScore = userScore+1, oppScore = opponentScore, setNumber = setNumber) // 폰으로 전송
 
                     //세트 종료
                     if (checkSetWin(userScore + 1, opponentScore)) {
@@ -244,6 +255,8 @@ fun ScoreScreen(
                         isPressed=true
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                         viewModel.undoUserScore()
+                        WatchDataLayerClient.sendUndo(context, matchId = "match-123", setNumber = setNumber)  // 폰으로 전송
+
                         // 1초동안 비활성화
                         scope.launch {
                             kotlinx.coroutines.delay(1000)

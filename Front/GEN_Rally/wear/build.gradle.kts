@@ -9,7 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.rallyWear"
+        applicationId = "com.example.rally"
         minSdk = 28
         targetSdk = 35
         versionCode = 1

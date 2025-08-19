@@ -15,7 +15,7 @@ class WatchDataLayerListener : WearableListenerService() {
         private const val TAG = "WatchDL"
         private const val PATH_ACK = "/rally/ack"
         private const val PATH_SNAPSHOT = "/rally/snapshot"
-        private const val PATH_MATCH_SETUP = "/rally/match_setup"
+        private const val PATH_GAME_SETUP = "/rally/game_setup"
     }
 
     // Message 수신
@@ -25,7 +25,7 @@ class WatchDataLayerListener : WearableListenerService() {
         Log.d(TAG, "onMessageReceived <- $path : $body")
 
         when (path) {
-            PATH_MATCH_SETUP -> {
+            PATH_GAME_SETUP -> {
                 runCatching {
                     val obj = JSONObject(body)
                     val payload = obj.getJSONObject("payload")
@@ -33,20 +33,18 @@ class WatchDataLayerListener : WearableListenerService() {
                     val user2 = payload.optString("user2Name", "나")
                     val isUser1 = payload.optBoolean("localIsUser1", true)
                     val setNumber = payload.optInt("setNumber", 1)
-                    val firstServer = payload.optString("firstServer", "USER1")
 
                     // StartActivity로 진입 (앱이 백그라운드여도 뜰 수 있게 NEW_TASK)
                     val i = Intent(this, com.example.rally.presentation.StartActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         putExtra("setNumber", setNumber)
-                        putExtra("userName", if (isUser1) user1 else user2)     // 로컬 사용자 닉네임
                         putExtra("opponentName", if (isUser1) user2 else user1) // 상대 닉네임
+                        putExtra("userName", if (isUser1) user1 else user2)     // 로컬 사용자 닉네임
                         putExtra("localIsUser1", isUser1)
-                        putExtra("nextFirstServer", firstServer) // "USER1" | "USER2"
                     }
                     startActivity(i)
                 }.onFailure {
-                    Log.e(TAG, "MATCH_SETUP parse/start failed", it)
+                    Log.e(TAG, "GAME_SETUP parse/start failed", it)
                 }
             }
             PATH_ACK -> {

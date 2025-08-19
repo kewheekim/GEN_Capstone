@@ -1,5 +1,6 @@
 package com.example.rally.wear;
 
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,14 +27,18 @@ import java.util.Set;
 public class PhoneDataLayerListener extends WearableListenerService {
     private static final String TAG = "PhoneDL";
 
-    // Capability 상수 정의
-    private static final String PATH_EVENT  = "/rally/event";        // 워치→폰 이벤트
-    private static final String PATH_ACK  = "/rally/ack";          // 폰→워치 ACK
-    private static final String PATH_SNAPSHOT  = "/rally/snapshot";     // 폰→워치 스냅샷(DataItem) 전송
-    private static final String PATH_SNAPSHOT_REQ = "/rally/snapshot_req";  // 워치→폰 스냅샷 요청
-    private static final String CAP_WATCH  = "rally_watch";
+    private static final String PATH_ACK          = "/rally/ack";            // 폰→워치 ACK
+    private static final String PATH_SNAPSHOT     = "/rally/snapshot";       // 폰→워치 스냅샷(DataItem)
+    private static final String PATH_SNAPSHOT_REQ = "/rally/snapshot_req";   // 워치→폰 스냅샷 요청
 
-    // Message 수신
+    // Capability
+    private static final String CAP_WATCH = "rally_watch";
+
+    // App broadcast (액티비티/프래그먼트에서 registerReceiver로 수신)
+    public static final String ACTION_WATCH_EVENT = "rally.EVENT_FROM_WATCH";
+    public static final String EXTRA_PATH = "path";
+    public static final String EXTRA_JSON = "json";
+
     @Override
     public void onMessageReceived(@NonNull MessageEvent ev) {
         final String path = ev.getPath();
@@ -41,23 +46,22 @@ public class PhoneDataLayerListener extends WearableListenerService {
         final String body = new String(ev.getData(), StandardCharsets.UTF_8);
         Log.d(TAG, "onMessageReceived <- " + path + " from " + fromNode + " : " + body);
 
+
         try {
-            if (PATH_EVENT.equals(path)) {
-                // 워치에서 온 이벤트(JSON): eventId가 있으면 그대로 ACK 회신
-                String eventId = safeEventId(body);
-                sendAck(fromNode, eventId);
-
-                // 앱 내부로 브릿지 → ViewModel/Repository에 반영
-                // ex) LocalBroadcast, singleton, or direct repository call
-                // broadcastEventToApp(body);
-
-            } else if (PATH_SNAPSHOT_REQ.equals(path)) {
-                // 워치가 스냅샷 요청 → 현재 상태를 DataItem으로 push
-                pushSnapshotNow();
-
-            } else {
-                super.onMessageReceived(ev);
+            if (path.startsWith("/rally/event/")) {
+                // ACK 비동기 전송(아래 3번)
+                sendAckAsync(fromNode, safeEventId(body));
+                // 액티비티로 브릿지
+                broadcastEventToApp(path, body);
+                return;
             }
+
+            if (PATH_SNAPSHOT_REQ.equals(path)) {
+                pushSnapshotNow();
+                return;
+            }
+
+            super.onMessageReceived(ev);
         } catch (Throwable t) {
             Log.e(TAG, "onMessageReceived error", t);
         }
@@ -77,28 +81,39 @@ public class PhoneDataLayerListener extends WearableListenerService {
         }
     }
 
-    // Capability 선택
+    // Capability 변경 로그
     @Override
     public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
         Log.d(TAG, "onCapabilityChanged: " + capabilityInfo.getName() + " nodes=" + capabilityInfo.getNodes().size());
     }
 
-    // ACK 전송
-    private void sendAck(String toNodeId, String eventId) {
+    private void broadcastEventToApp(String path, String json) {
+        Intent i = new Intent(ACTION_WATCH_EVENT)
+                .putExtra(EXTRA_PATH, path)
+                .putExtra(EXTRA_JSON, json);
+        androidx.localbroadcastmanager.content.LocalBroadcastManager
+                .getInstance(this)
+                .sendBroadcast(i);
+    }
+
+    private void sendAckAsync(String toNodeId, String eventId) {
         try {
-            JSONObject ack = new JSONObject();
-            ack.put("eventId", eventId);
+            JSONObject ack = new JSONObject().put("eventId", eventId);
             byte[] data = ack.toString().getBytes(StandardCharsets.UTF_8);
-            Tasks.await(Wearable.getMessageClient(this).sendMessage(toNodeId, PATH_ACK, data));
-            Log.d(TAG, "ACK -> " + toNodeId + " (" + eventId + ")");
+            Wearable.getMessageClient(this)
+                    .sendMessage(toNodeId, PATH_ACK, data)
+                    .addOnSuccessListener(reqId ->
+                            Log.d(TAG, "ACK -> " + toNodeId + " (" + eventId + ") ok=" + reqId))
+                    .addOnFailureListener(e ->
+                            Log.e(TAG, "ACK failed (" + eventId + ")", e));
         } catch (Exception e) {
-            Log.e(TAG, "sendAck failed", e);
+            Log.e(TAG, "sendAckAsync build failed", e);
         }
     }
 
-    // 스냅샷 전송 JSON
     private void pushSnapshotNow() {
         try {
+            // 현재 상태로 교체 (ViewModel또는 Repo에서 읽어오기)
             JSONObject snap = new JSONObject()
                     .put("type", "SNAPSHOT")
                     .put("state", new JSONObject()
@@ -112,7 +127,6 @@ public class PhoneDataLayerListener extends WearableListenerService {
 
             PutDataMapRequest req = PutDataMapRequest.create(PATH_SNAPSHOT);
             req.getDataMap().putString("json", snap.toString());
-            // DataItem 키 충돌을 피하려면 timestamp를 파라미터로 넣어 경로를 바꾸거나, setUrgent 사용
             PutDataRequest put = req.asPutDataRequest().setUrgent();
             Tasks.await(Wearable.getDataClient(this).putDataItem(put));
             Log.d(TAG, "snapshot -> watch");
@@ -130,7 +144,7 @@ public class PhoneDataLayerListener extends WearableListenerService {
         }
     }
 
-    //  가까운 워치 노드 찾기
+    // 가까운 워치 노드(참고용)
     private String pickWatchNodeOrNull() {
         try {
             CapabilityInfo info = Tasks.await(

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:background="@color/bg_default"
+    android:fitsSystemWindows="true">
+
+    <TextView
+        android:id="@+id/tv_set_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/gray_text"
+        android:textSize="20sp"
+        android:textFontWeight="600"
+        android:fontFamily="@font/pretendard_variable"
+        android:text="1세트"
+        android:layout_marginTop="54dp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_opponent_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상대"
+                android:textColor="@color/gray_text"
+                android:fontFamily="@font/pretendard_variable"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tv_opponent_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/gray_text"
+                android:fontFamily="@font/pretendard_variable"
+                android:textFontWeight="900"
+                android:textSize="54sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_opponent_sets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/gray_text"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <Space
+            android:layout_width="24dp"
+            android:layout_height="1dp"/>
+
+        <TextView
+            android:id="@+id/tv_user_sets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/gray_text"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="나"
+                android:textColor="@color/gray_text"
+                android:fontFamily="@font/pretendard_variable"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tv_user_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/green_active"
+                android:fontFamily="@font/pretendard_variable"
+                android:textFontWeight="900"
+                android:textSize="54sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="24dp"/>
+
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textColor="@color/gray_text"
+        android:layout_gravity="center"
+        android:fontFamily="@font/pretendard_variable"
+        android:textFontWeight="600"
+        android:textSize="22sp"/>
+</LinearLayout>

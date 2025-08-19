@@ -51,17 +51,18 @@
         <activity android:name=".ui.PopupInviteActivity" android:theme="@style/PopupTheme"/>
         <activity android:name=".ui.AuthActivity"/>
         <activity android:name=".ui.SurveyActivity"/>
+        <activity android:name=".ui.RecordActivity"/>
         <activity android:name=".ui.ScoreRecordActivity"/>
 
         <service
             android:name=".wear.PhoneDataLayerListener"
             android:exported="true">
-            <!-- 워치 -> 폰 -->
+            <!-- 이벤트: 워치 -> 폰 -->
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/rally/event"/>
             </intent-filter>
-            <!-- 폰 -> 워치 (/rally/snapshot) 수신 -->
+            <!-- 스냅샷: 폰 -> 워치 (/rally/snapshot) 수신 -->
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
                 <data android:scheme="wear" android:host="*" android:path="/rally/snapshot"/>

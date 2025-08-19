@@ -37,7 +37,7 @@ class ScoreViewModel : ViewModel() {
     private fun opponentPlayer(): Player =
         if (_isUser1.value) Player.USER2 else Player.USER1
 
-    // 직전 상태 복원위한 내역 저장
+    // 직전 상태 복원 위한 내역 저장
     private data class Action (val preServer: Player, val scorer: Player)
     private val history = ArrayDeque<Action>()
     // 득점

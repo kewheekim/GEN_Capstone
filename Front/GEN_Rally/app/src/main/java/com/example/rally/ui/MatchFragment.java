@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.example.rally.R;
 import com.example.rally.dto.MatchRequestDto;
 import com.example.rally.wear.PhoneDataLayerClient;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.Wearable;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -68,7 +70,7 @@ public class MatchFragment extends Fragment {
         tvType.setText(userInput.getGameType() == 0 ? "단식" : "복식");
 
         btnStart.setOnClickListener(v -> {
-            PhoneDataLayerClient.sendMatchSetup(
+            PhoneDataLayerClient.sendGameSetup(
                     requireContext(),
                     "match-123",
                     "너무어려워요",      // user1
@@ -106,14 +108,20 @@ public class MatchFragment extends Fragment {
 
         Button startBtn = view.findViewById(R.id.btn_start);
         startBtn.setEnabled(true);
-        startBtn.setClickable(true);
-        startBtn.bringToFront(); // 혹시나 위에 다른 뷰가 덮고 있으면
+
+        Wearable.getNodeClient(requireContext()).getConnectedNodes()
+                .addOnSuccessListener(nodes -> {
+                    StringBuilder sb = new StringBuilder("connected nodes: ");
+                    for (Node n : nodes) sb.append(n.getDisplayName()).append("(").append(n.getId()).append(") ");
+                    android.util.Log.d("PhoneDL", sb.toString());
+                    android.widget.Toast.makeText(requireContext(),
+                            nodes.isEmpty() ? "연결된 워치 없음" : sb.toString(),
+                            android.widget.Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> android.util.Log.e("PhoneDL","getConnectedNodes failed",e));
 
         startBtn.setOnClickListener(v -> {
-            android.util.Log.d("MatchFragment", "btn_start CLICK");
-            android.widget.Toast.makeText(requireContext(), "시작 버튼 클릭!", android.widget.Toast.LENGTH_SHORT).show();
-
-            PhoneDataLayerClient.sendMatchSetup(
+            PhoneDataLayerClient.sendGameSetup(
                     requireContext(),
                     "match-123",
                     "너무어려워요",
@@ -127,7 +135,7 @@ public class MatchFragment extends Fragment {
                         }
                         @Override public void onNoNode() {
                             requireActivity().runOnUiThread(() ->
-                                    android.widget.Toast.makeText(requireContext(), "연결된 워치가 없어요", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(requireContext(), "연결된 워치 없음", android.widget.Toast.LENGTH_SHORT).show()
                             );
                         }
                         @Override public void onError(Exception e) {
@@ -137,12 +145,8 @@ public class MatchFragment extends Fragment {
                         }
                     }
             );
-        });
-
-        // 터치가 들어오는지 확인용
-        startBtn.setOnTouchListener((v, ev) -> {
-            android.util.Log.d("MatchFragment", "btn_start TOUCH action=" + ev.getAction());
-            return false; // false여야 클릭으로도 전달됨
+            startActivity(new Intent(requireContext(), RecordActivity.class)
+                    .putExtra("opponentName", "너무어려워요"));
         });
     }
 }

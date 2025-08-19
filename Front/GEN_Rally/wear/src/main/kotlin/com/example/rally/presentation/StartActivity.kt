@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
+import com.example.rally.datalayer.WatchDataLayerClient
 import com.example.rally.viewmodel.Player
 
 class StartActivity : ComponentActivity() {
@@ -35,13 +37,16 @@ class StartActivity : ComponentActivity() {
                         val intent = Intent(this, ScoreSwipeActivity::class.java). apply {
                             putExtra("startTime", System.currentTimeMillis())  // 시작 시간 전달
                             putExtra("setNumber", setNumber)
+                            putExtra("opponentName", opponentName)
                             putExtra("opponentSets", opponentSets)
+                            putExtra("userName", userName)
                             putExtra("userSets", userSets)
                             putExtra("nextFirstServer", nextFirstServer)
                         }
 
                         startActivity(intent)
                         overridePendingTransition(0, 0)
+                        WatchDataLayerClient.sendGameStart(context = this@StartActivity , matchId = "match-123", setNumber = 1)
                     }
                     else {
                         val intent = Intent(this, ResultSwipeActivity::class.java)
