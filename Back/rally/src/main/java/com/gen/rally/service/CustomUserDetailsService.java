@@ -17,8 +17,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserId(username)
+        com.gen.rally.entity.User user = userRepository.findByUserId(username)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        return (UserDetails) user;
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUserId())
+                .password(user.getPassword() == null ? "" : user.getPassword())
+                .authorities("ROLE_USER")
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
+                .build();
     }
 }
