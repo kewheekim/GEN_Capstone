@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 
@@ -67,30 +68,32 @@ public class UserService {
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
-    public TierAssessResponse getFirstTier(TierAssessRequest request, String userId) {
+    @Transactional
+    public TierAssessResponse getFirstTier(TierAssessRequest request, String userId){
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         int selfQ = request.getQ1() + request.getQ2() + request.getQ3();
         int expQ = request.getQ4();
         int careerQ = request.getQ5();
-        double totalScore = (selfQ / 15.0) * 40 + (expQ / 5.0) * 40 + (careerQ / 7.0) * 20;
-        TierAssessResponse response = new TierAssessResponse();
 
+        double totalScore = (selfQ/15.0)*40 + (expQ/5.0)*40 + (careerQ/7.0)*20;
+        TierAssessResponse response = new TierAssessResponse();
         response.setScore(totalScore);
-        if (totalScore >= 80.0) {
+
+        if(totalScore>=80.0){
             response.setTier(Tier.valueOf("상급자1"));
             user.setTier(Tier.valueOf("상급자1"));
-        } else if (totalScore >= 60.0) {
+        }else if(totalScore>=60.0){
             response.setTier(Tier.valueOf("중급자1"));
             user.setTier(Tier.valueOf("중급자1"));
-        } else if (totalScore >= 40.0) {
-            response.setTier(Tier.valueOf("초급자1"));
-            user.setTier(Tier.valueOf("초급자1"));
-        } else {
+        }else if(totalScore>=40.0){
+            response.setTier(Tier.valueOf("초보자1"));
+            user.setTier(Tier.valueOf("초보자1"));
+        }else {
             response.setTier(Tier.valueOf("입문자1"));
             user.setTier(Tier.valueOf("입문자1"));
-        }
+        } // TODO: 티어 저장하고, totalScore은 skill에 저장하는 건지
         return response;
     }
 }

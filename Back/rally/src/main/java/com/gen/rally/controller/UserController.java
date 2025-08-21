@@ -101,6 +101,9 @@ public class UserController {
 
     // 실력 자가진단
     @PostMapping("/api/users/tier") public ResponseEntity<?> getTier(@RequestBody TierAssessRequest request, @AuthenticationPrincipal UserDetails userDetails){
+        if(userDetails == null){
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
         String userId = userDetails.getUsername();
         TierAssessResponse response = userService.getFirstTier(request, userId);
         return ResponseEntity.ok(response);
