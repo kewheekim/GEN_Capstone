@@ -21,14 +21,14 @@
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:id="@+id/x_btn"
+            android:id="@+id/btn_x"
             android:src="@drawable/icon_x"
             android:contentDescription=" "
             android:background="@color/white"
             android:layout_gravity="center_vertical|end" />
 
         <TextView
-            android:id="@+id/popText"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -46,7 +46,7 @@
             android:layout_marginTop="29dp"
             android:layout_marginBottom="50dp">
             <TextView
-                android:id="@+id/informText"
+                android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -63,7 +63,7 @@
             android:layout_gravity="center">
 
             <android.widget.Button
-                android:id="@+id/back_btn"
+                android:id="@+id/btn_back"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="돌아가기"
@@ -73,7 +73,7 @@
                 android:background="@drawable/bg_button_inactive" />
 
             <android.widget.Button
-                android:id="@+id/cancel_btn"
+                android:id="@+id/btn_cancel"
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="취소"

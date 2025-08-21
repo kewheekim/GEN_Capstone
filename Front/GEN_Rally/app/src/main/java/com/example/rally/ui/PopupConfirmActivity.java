@@ -24,8 +24,8 @@ public class PopupConfirmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popup_match_confirm);
 
-        ImageButton xBtn        = findViewById(R.id.x_btn);
-        Button backBtn          = findViewById(R.id.back_btn);
+        ImageButton xBtn        = findViewById(R.id.btn_x);
+        Button backBtn          = findViewById(R.id.btn_back);
         Button goBtn            = findViewById(R.id.go_btn);
 
         TextView tvDate         = findViewById(R.id.tv_date);

@@ -20,8 +20,8 @@ public class PopupLocationActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀 바 제거
         setContentView(R.layout.activity_popup_location);
 
-        ImageButton xBtn = (ImageButton) findViewById(R.id.x_btn);
-        Button backBtn = (Button) findViewById(R.id.back_btn);
+        ImageButton xBtn = (ImageButton) findViewById(R.id.btn_x);
+        Button backBtn = (Button) findViewById(R.id.btn_back);
         Button goBtn = (Button) findViewById(R.id.go_btn);
 
         TextView tvPlaceName = findViewById(R.id.tv_place_name);

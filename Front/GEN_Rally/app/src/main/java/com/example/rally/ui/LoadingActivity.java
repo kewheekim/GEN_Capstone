@@ -108,10 +108,10 @@ public class LoadingActivity extends AppCompatActivity {
                 .create();
 
         // 돌아가기 버튼
-        dialogView.findViewById(R.id.back_btn).setOnClickListener(v -> dialog.dismiss());
+        dialogView.findViewById(R.id.btn_back).setOnClickListener(v -> dialog.dismiss());
 
         // 취소 버튼
-        dialogView.findViewById(R.id.cancel_btn).setOnClickListener(v -> {
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> {
             dialog.dismiss();
             // 매칭 취소
             if (matchCall != null && !matchCall.isCanceled()) {

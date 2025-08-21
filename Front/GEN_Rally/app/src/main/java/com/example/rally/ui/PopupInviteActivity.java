@@ -18,9 +18,9 @@ public class PopupInviteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popup_invite);
 
-        TextView info = findViewById(R.id.popText);
-        ImageButton xButton = findViewById(R.id.x_btn);
-        Button backButton = findViewById(R.id.back_btn);
+        TextView info = findViewById(R.id.tv_title);
+        ImageButton xButton = findViewById(R.id.btn_x);
+        Button backButton = findViewById(R.id.btn_back);
         Button goButton = findViewById(R.id.go_btn);
 
         Intent prev = getIntent();

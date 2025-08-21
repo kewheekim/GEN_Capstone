@@ -14,17 +14,26 @@ import kotlinx.coroutines.launch
 enum class Player { USER1, USER2 }
 
 class ScoreViewModel : ViewModel() {
-    private val _userScore = MutableStateFlow(0)
-    val userScore: StateFlow<Int> = _userScore
+    private val _setNumber = MutableStateFlow(1)
+    val setNumber: StateFlow<Int> = _setNumber
 
     private val _userSets = MutableStateFlow(0)
     val userSets: StateFlow<Int> = _userSets
 
-    private val _opponentScore = MutableStateFlow(0)
-    val opponentScore: StateFlow<Int> = _opponentScore
+    private val _userScore = MutableStateFlow(0)
+    val userScore: StateFlow<Int> = _userScore
+
+    private val _userName = MutableStateFlow("나")
+    val userName: StateFlow<String> = _userName
 
     private val _opponentSets = MutableStateFlow(0)
     val opponentSets: StateFlow<Int> = _opponentSets
+
+    private val _opponentScore = MutableStateFlow(0)
+    val opponentScore: StateFlow<Int> = _opponentScore
+
+    private val _opponentName = MutableStateFlow("상대")
+    val opponentName: StateFlow<String> = _opponentName
 
     private val _isUser1 = MutableStateFlow(false)   // 로컬 유저가 user1인지 (테스트는 user2로 진행)
     val isUser1: StateFlow<Boolean> = _isUser1
@@ -36,6 +45,14 @@ class ScoreViewModel : ViewModel() {
         if (_isUser1.value) Player.USER1 else Player.USER2
     private fun opponentPlayer(): Player =
         if (_isUser1.value) Player.USER2 else Player.USER1
+
+    fun setNames(user: String, opponent: String) {
+        _userName.value = user
+        _opponentName.value = opponent
+    }
+    fun updateSetNumber(num: Int) {
+        _setNumber.value = num
+    }
 
     // 직전 상태 복원 위한 내역 저장
     private data class Action (val preServer: Player, val scorer: Player)
@@ -63,7 +80,7 @@ class ScoreViewModel : ViewModel() {
 //        _opponentScore.value = newScore
 //    }
 
-    // 세트 시작
+    // 세트 초기화
     fun initSets(user:Int, opponent: Int) {
         _userSets.value = user
         _opponentSets.value = opponent
@@ -71,7 +88,9 @@ class ScoreViewModel : ViewModel() {
     fun initPlayer (isUser1: Boolean) {
         _isUser1.value= isUser1
     }
+    // 세트 시작
     fun startSet(setNumber: Int, firstServer: Player) {
+        _setNumber.value = setNumber
         _currentServer.value = firstServer
         _userScore.value = 0
         _opponentScore.value = 0
@@ -114,14 +133,14 @@ class ScoreViewModel : ViewModel() {
         } else {
             if (_isUser1.value) Player.USER2 else Player.USER1
         }
-
         // 게임 종료 판정
         if (_userSets.value >= 2 || _opponentSets.value >= 2) {
             _isGameFinished.value = true
         }
+        _setNumber.value = _userSets.value + _opponentSets.value + 1
 
         return SetResult(
-            nextSetNumber = _userSets.value + _opponentSets.value + 1,
+            nextSetNumber = _setNumber.value,
             userSets = _userSets.value,
             userScore=_userScore.value,
             opponentSets = _opponentSets.value,

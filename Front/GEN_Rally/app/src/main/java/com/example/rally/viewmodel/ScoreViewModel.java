@@ -162,7 +162,7 @@ public class ScoreViewModel extends ViewModel {
             isPaused.setValue(false);
         }
     }
-    // 스톱워치: 원격 타임스탬프 기준으로 시작/일시정지/재개 (딜레이 방지)
+    // 스톱워치(시작/일시정지/재개): 원격 타임스탬프 기준 (딜레이 방지)
     public void startStopwatchAt(long epochMillisUtc) {
         startTime = epochMillisUtc;
         totalPaused = 0L;

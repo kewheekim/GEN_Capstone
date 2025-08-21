@@ -34,8 +34,8 @@ class WatchDataLayerListener : WearableListenerService() {
                     val isUser1 = payload.optBoolean("localIsUser1", true)
                     val setNumber = payload.optInt("setNumber", 1)
 
-                    // StartActivity로 진입 (앱이 백그라운드여도 뜰 수 있게 NEW_TASK)
-                    val i = Intent(this, com.example.rally.presentation.StartActivity::class.java).apply {
+                    // ScoreActivity로 진입 (앱이 백그라운드여도 뜰 수 있게 NEW_TASK)
+                    val i = Intent(this, com.example.rally.presentation.ScoreActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         putExtra("setNumber", setNumber)
                         putExtra("opponentName", if (isUser1) user2 else user1) // 상대 닉네임

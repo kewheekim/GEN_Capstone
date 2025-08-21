@@ -29,7 +29,7 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         user = (CandidateResponseDto) getIntent().getSerializableExtra("user");
 
         // ui
-        ImageButton xBtn = findViewById(R.id.x_btn);
+        ImageButton xBtn = findViewById(R.id.btn_x);
         ImageView profileImg = findViewById(R.id.profile_img);
         TextView nickname = findViewById(R.id.tv_nickname);
         ImageView genderIcon = findViewById(R.id.iv_gender); // 성별 이미지

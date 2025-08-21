@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
@@ -45,7 +44,6 @@ public class PhoneDataLayerListener extends WearableListenerService {
         final String fromNode = ev.getSourceNodeId();
         final String body = new String(ev.getData(), StandardCharsets.UTF_8);
         Log.d(TAG, "onMessageReceived <- " + path + " from " + fromNode + " : " + body);
-
 
         try {
             if (path.startsWith("/rally/event/")) {
@@ -113,7 +111,7 @@ public class PhoneDataLayerListener extends WearableListenerService {
 
     private void pushSnapshotNow() {
         try {
-            // 현재 상태로 교체 (ViewModel또는 Repo에서 읽어오기)
+            // TODO: 현재 상태로 교체 (ViewModel또는 Repo에서 읽어오기)
             JSONObject snap = new JSONObject()
                     .put("type", "SNAPSHOT")
                     .put("state", new JSONObject()
