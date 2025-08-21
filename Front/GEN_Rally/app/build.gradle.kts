@@ -48,6 +48,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")  // Retrofit
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")   // JSON 컨버터
     implementation ("com.github.bumptech.glide:glide:4.16.0")    // gif 파일
+    implementation ("androidx.security:security-crypto:1.1.0-alpha03") // EncryptedSharedPreferences
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     compileOnly("org.projectlombok:lombok:1.18.30")       // lombok
     annotationProcessor("org.projectlombok:lombok:1.18.30")
