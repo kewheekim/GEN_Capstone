@@ -101,7 +101,7 @@ class ScoreActivity : ComponentActivity() {
                                 opponentName = initialOpponentName,
                                 userName = initialUserName,
                                 viewModel = viewModel,
-                                onSetFinished = { result ->
+                                onSetFinished = { result, elapsedSec ->
                                     // 세트 종료 결과
                                     lastUserScore = result.userScore
                                     lastOpponentScore = result.opponentScore
@@ -109,6 +109,16 @@ class ScoreActivity : ComponentActivity() {
                                     nextFirstServer = result.currentServer
                                     currentSetNumber = result.nextSetNumber
                                     screen = "start"   // StartUi 화면으로 전환
+
+                                    WatchDataLayerClient.sendSetFinish(
+                                        context = ctx,
+                                        matchId = "match-123",
+                                        setNumber = result.nextSetNumber-1,  // 방금 끝난 세트
+                                        userScore = result.userScore,
+                                        opponentScore = result.opponentScore,
+                                        elapsed =  elapsedSec ,
+                                        isGameFinished = result.isGameFinished
+                                    )
                                 }
                             )
                         }
@@ -125,7 +135,7 @@ private fun ScorePager(
     opponentName: String,
     userName: String,
     viewModel: ScoreViewModel,
-    onSetFinished: (SetResult) -> Unit
+    onSetFinished: (SetResult, Long) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
     val elapsed by viewModel.elapsed.collectAsState()
@@ -137,7 +147,7 @@ private fun ScorePager(
     LaunchedEffect(pendingResult) {
         pendingResult?.let { result ->
             delay(2500)
-            onSetFinished(result)
+            onSetFinished(result, elapsed)
             pendingResult = null
         }
     }
@@ -170,7 +180,7 @@ private fun ScorePager(
                     onPause = {
                         if (isPaused) {
                             viewModel.resume()
-                            // 워치로 이벤트 전송
+                            // 폰으로 이벤트 전송
                             WatchDataLayerClient.sendResume(context, matchId = "match-123")
                         } else {
                             viewModel.pause()

@@ -214,8 +214,10 @@ fun ScoreScreen(
                         toastTitle = "세트 종료"
                         if(userSets==0)
                             toastMessage = "1세트 선취!\n시작이 좋아요!"
-                        else if(userSets==1)
+                        else if(userSets==1 && opponentSets==0)
                             toastMessage = "2세트 연속 획득!\n승리했습니다!"
+                        else if(userSets==1 && opponentSets==1)
+                            toastMessage= "\n승리했습니다!"
                         showToast = true
 
                         viewModel.setFinished() // 세트 종료 처리

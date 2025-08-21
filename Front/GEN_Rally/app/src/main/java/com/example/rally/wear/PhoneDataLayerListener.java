@@ -53,13 +53,12 @@ public class PhoneDataLayerListener extends WearableListenerService {
                 broadcastEventToApp(path, body);
                 return;
             }
-
             if (PATH_SNAPSHOT_REQ.equals(path)) {
                 pushSnapshotNow();
                 return;
             }
-
             super.onMessageReceived(ev);
+
         } catch (Throwable t) {
             Log.e(TAG, "onMessageReceived error", t);
         }
@@ -111,7 +110,6 @@ public class PhoneDataLayerListener extends WearableListenerService {
 
     private void pushSnapshotNow() {
         try {
-            // TODO: 현재 상태로 교체 (ViewModel또는 Repo에서 읽어오기)
             JSONObject snap = new JSONObject()
                     .put("type", "SNAPSHOT")
                     .put("state", new JSONObject()

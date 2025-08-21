@@ -4,16 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.widget.TextView;
 import com.example.rally.R;
 import com.example.rally.viewmodel.ScoreViewModel;
+import com.example.rally.viewmodel.SetResult;
 import com.example.rally.wear.PhoneDataLayerListener;
 
 import org.json.JSONObject;
@@ -27,6 +26,7 @@ public class RecordActivity extends AppCompatActivity {
     private static final String PATH_EVENT_UNDO   = "/rally/event/undo";
     private static final String PATH_EVENT_PAUSE  = "/rally/event/pause";
     private static final String PATH_EVENT_RESUME = "/rally/event/resume";
+    private static final String PATH_EVENT_SET_FINISH = "/rally/event/set_finish";
     private ScoreViewModel viewModel;
     private TextView tvSetNumber, tvOpponentName, tvUserName,
             tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer;
@@ -47,6 +47,7 @@ public class RecordActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         tvOpponentName.setText(intent.getStringExtra("opponentName"));
+        tvUserName.setText(intent.getStringExtra("userName"));
 
         viewModel = new ViewModelProvider(this).get(ScoreViewModel.class);
         viewModel.getUserScore().observe(this, v -> tvUserScore.setText(String.valueOf(v == null ? 0 : v)));
@@ -54,6 +55,9 @@ public class RecordActivity extends AppCompatActivity {
         viewModel.getUserSets().observe(this, v -> tvUserSets.setText(String.valueOf(v == null ? 0 : v)));
         viewModel.getOpponentSets().observe(this, v -> tvOpponentSets.setText(String.valueOf(v == null ? 0 : v)));
         viewModel.getElapsed().observe(this, sec -> tvTimer.setText(formatTime(sec == null ? 0 : sec)));
+        viewModel.getSetNumber().observe(this, num -> {
+            tvSetNumber.setText(String.valueOf(num== null ? "1세트" : num+"세트"));
+        });
     }
 
     private final BroadcastReceiver watchEventReceiver = new BroadcastReceiver() {
@@ -89,6 +93,22 @@ public class RecordActivity extends AppCompatActivity {
                     }
                     case PATH_EVENT_RESUME: {
                         if (timeStamp > 0) viewModel.resumeAt(timeStamp); else viewModel.resume();
+                        break;
+                    }
+                    case PATH_EVENT_SET_FINISH: {
+                        SetResult result = viewModel.onSetFinished();
+                        if (!result.isGameFinished) {
+                            viewModel.setFinished();
+                            viewModel.pause();
+                            viewModel.startSet(result.nextSetNumber, result.currentServer);
+                            viewModel.resetStopwatch();
+                        }
+                        else {
+                            viewModel.pause();
+                            viewModel.startSet(result.nextSetNumber-1, result.currentServer);
+                            viewModel.resetStopwatch();
+                            startActivity(new Intent(RecordActivity.this, EvaluationActivity.class));
+                        }
                         break;
                     }
                 }

@@ -53,6 +53,7 @@
         <activity android:name=".ui.SurveyActivity"/>
         <activity android:name=".ui.RecordActivity"/>
         <activity android:name=".ui.ScoreRecordActivity"/>
+        <activity android:name=".ui.EvaluationActivity"/>
 
         <service
             android:name=".wear.PhoneDataLayerListener"

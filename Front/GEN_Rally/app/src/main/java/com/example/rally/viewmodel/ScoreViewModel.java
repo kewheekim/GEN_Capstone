@@ -10,14 +10,15 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class ScoreViewModel extends ViewModel {
-
+    private final MutableLiveData<Integer> setNumber = new MutableLiveData<>(1);
+    private final MutableLiveData<String> opponentName = new MutableLiveData<>("상대");
     private final MutableLiveData<Integer> opponentScore = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> opponentSets = new MutableLiveData<>(0);
+    private final MutableLiveData<String> userName = new MutableLiveData<>("나");
     private final MutableLiveData<Integer> userScore = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> userSets = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> isUser1 = new MutableLiveData<>(true); // 로컬이 USER1?
     private final MutableLiveData<Player> currentServer = new MutableLiveData<>(Player.USER1);
-
     private final MutableLiveData<Boolean> isPaused = new MutableLiveData<>(false);
     private final MutableLiveData<Long> elapsed = new MutableLiveData<>(0L);
 
@@ -51,6 +52,9 @@ public class ScoreViewModel extends ViewModel {
     private Player opponentPlayer() { return Boolean.TRUE.equals(isUser1.getValue()) ? Player.USER2 : Player.USER1; }
 
     // getter
+    public LiveData<Integer> getSetNumber()      { return setNumber; }
+    public LiveData<String>  getUserName()       { return userName; }
+    public LiveData<String>  getOpponentName()   { return opponentName; }
     public LiveData<Integer> getUserScore() { return userScore; }
     public LiveData<Integer> getUserSets() { return userSets; }
     public LiveData<Integer> getOpponentScore() { return opponentScore; }
@@ -60,15 +64,19 @@ public class ScoreViewModel extends ViewModel {
     public LiveData<Boolean> getIsPaused() { return isPaused; }
     public LiveData<Long> getElapsed() { return elapsed; }
 
-    // user1인지 판단
+    // 초기화
     public void initPlayer(boolean localisUser1) { isUser1.setValue(localisUser1); }
-
     public void initSets(int user, int opponent) {
         userSets.setValue(user);
         opponentSets.setValue(opponent);
     }
+    public void setNames (String localUserName, String oppName) {
+        userName.setValue(localUserName);
+        opponentName.setValue(oppName);
+    }
 
-    public void startSet(int setNumber, Player firstServer) {
+    public void startSet(int setNum, Player firstServer) {
+        setNumber.setValue(setNum);
         currentServer.setValue(firstServer);
         userScore.setValue(0);
         opponentScore.setValue(0);
@@ -128,6 +136,7 @@ public class ScoreViewModel extends ViewModel {
         history.clear();
 
         int nextSetNum = (userSets.getValue()==null?0:userSets.getValue()) + (opponentSets.getValue()==null?0:opponentSets.getValue()) + 1;
+        setNumber.setValue(nextSetNum);
         return new SetResult(
                 nextSetNum,
                 user,
@@ -161,6 +170,16 @@ public class ScoreViewModel extends ViewModel {
             pauseStartedAt = null;
             isPaused.setValue(false);
         }
+    }
+    public void resetStopwatch() {
+        handler.removeCallbacks(ticker);
+
+        startTime = 0L;
+        totalPaused = 0L;
+        pauseStartedAt = null;
+
+        elapsed.setValue(0L);
+        isPaused.setValue(true);
     }
     // 스톱워치(시작/일시정지/재개): 원격 타임스탬프 기준 (딜레이 방지)
     public void startStopwatchAt(long epochMillisUtc) {
