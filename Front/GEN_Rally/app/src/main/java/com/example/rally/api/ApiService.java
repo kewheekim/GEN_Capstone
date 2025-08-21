@@ -4,6 +4,8 @@ import com.example.rally.dto.CheckIdRequest;
 import com.example.rally.dto.CheckNicknameResponse;
 import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.SignupResponse;
+import com.example.rally.dto.TierAssessRequest;
+import com.example.rally.dto.TierAssessResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -21,4 +23,8 @@ public interface ApiService {
 
     @GET("/api/users/check-nickname")
     Call<CheckNicknameResponse> checkNickname(@Query("nickname") String nickname);
+
+    @Headers("Requires-Auth: true")
+    @POST("/api/users/tier")
+    Call<TierAssessResponse> getTier(@Body TierAssessRequest request);
 }

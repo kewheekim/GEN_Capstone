@@ -10,9 +10,10 @@ import java.time.LocalDateTime;
 public class ErrorResponse {
     private String message;
     private String code;
+    private int status;
     private final LocalDateTime timestamp = LocalDateTime.now();
 
     public static ErrorResponse from(ErrorCode errorCode) {
-        return new ErrorResponse(errorCode.getMessage(), errorCode.getCode());
+        return new ErrorResponse(errorCode.getMessage(), errorCode.getCode(), errorCode.getStatus().value());
     }
 }
