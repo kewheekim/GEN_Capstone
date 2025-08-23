@@ -11,4 +11,5 @@ import lombok.Setter;
 public class TierAssessResponse {
     private double score;
     private Tier tier;
+    private String nickname;
 }

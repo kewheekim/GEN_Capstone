@@ -81,6 +81,7 @@ public class UserService {
         int score = (int) totalScore;
         TierAssessResponse response = new TierAssessResponse();
         response.setScore(score);
+        response.setNickname(user.getName());
         user.setSkill(score);
 
         if(totalScore>=80.0){
