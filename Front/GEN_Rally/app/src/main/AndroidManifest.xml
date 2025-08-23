@@ -54,6 +54,7 @@
         <activity android:name=".ui.RecordActivity"/>
         <activity android:name=".ui.ScoreRecordActivity"/>
         <activity android:name=".ui.EvaluationActivity"/>
+        <activity android:name=".ui.TierActivity"/>
 
         <service
             android:name=".wear.PhoneDataLayerListener"
