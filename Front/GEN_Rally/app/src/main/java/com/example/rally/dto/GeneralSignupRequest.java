@@ -6,7 +6,7 @@ import lombok.Setter;
 public class GeneralSignupRequest {
     private String userId;
     private String password;
-    private String nickname;
+    private String name;
     private String gender;
     private byte[] profileImage;
     private String primaryThing;
