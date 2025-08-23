@@ -78,8 +78,10 @@ public class UserService {
         int careerQ = request.getQ5();
 
         double totalScore = (selfQ/15.0)*40 + (expQ/5.0)*40 + (careerQ/7.0)*20;
+        int score = (int) totalScore;
         TierAssessResponse response = new TierAssessResponse();
-        response.setScore(totalScore);
+        response.setScore(score);
+        user.setSkill(score);
 
         if(totalScore>=80.0){
             response.setTier(Tier.valueOf("상급자1"));
@@ -93,7 +95,7 @@ public class UserService {
         }else {
             response.setTier(Tier.valueOf("입문자1"));
             user.setTier(Tier.valueOf("입문자1"));
-        } // TODO: 티어 저장하고, totalScore은 skill에 저장하는 건지
+        }
         return response;
     }
 }
