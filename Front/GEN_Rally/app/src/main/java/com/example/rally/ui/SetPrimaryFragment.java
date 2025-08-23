@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
+import com.example.rally.auth.TokenStore;
 import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.SignupResponse;
 
@@ -108,7 +109,7 @@ public class SetPrimaryFragment extends Fragment {
             GeneralSignupRequest request = new GeneralSignupRequest();
             request.setUserId(userId);
             request.setPassword(userPw);
-            request.setNickname(name);
+            request.setName(name);
             request.setProfileImage(imageBytes);
             request.setGender(gender);
             request.setPrimaryThing(String.valueOf(checkedIndex));
@@ -118,8 +119,15 @@ public class SetPrimaryFragment extends Fragment {
                         @Override
                         public void onResponse(Call<SignupResponse> call, Response<SignupResponse> response) {
                             if (response.isSuccessful() && response.body() != null) {
-                                Log.e("SignUp", "body: " + response.body());
-                                // TODO: sharedPreferences 에 토큰 저장
+                                SignupResponse body = response.body();
+
+                                try{
+                                    TokenStore tokenStore = new TokenStore(requireContext().getApplicationContext());
+                                    tokenStore.saveTokens(body.getAccessToken(), body.getRefreshToken());
+                                }catch(Exception e){
+                                    Log.e("SignUp", "토큰 저장 실패", e);
+                                }
+
                                 if (getActivity() instanceof AuthActivity) {
                                     ((AuthActivity) getActivity()).showComplete(name, imageBytes);
                                 }
