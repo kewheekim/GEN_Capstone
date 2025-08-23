@@ -210,7 +210,7 @@ public class SignupFragment extends Fragment {
         return pw.matches("^[A-Za-z0-9.!@#~]{8,16}$");
     }
 
-    // 서버에 ID 중복 체크 요청 TODO: 토스트 대신 텍스트필드로, 중복된 아이디일 때 빨강 / 통과 시 회색으로 응답 구분
+    // 서버에 ID 중복 체크 요청
     private void checkIdDuplicate(CheckIdRequest request) {
         ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
         final String requestedId = request.getUserId();
@@ -220,23 +220,47 @@ public class SignupFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     String currentId = etSetId.getText().toString().trim();
+                    int code = response.code();
 
-                    if (response.isSuccessful()) {
+                    if (code==200) {
                         // 현재 입력이 요청 때의 아이디와 동일할 때만 통과 처리
                         if (currentId.equals(requestedId)) {
                             doubleCheck = true;
                             lastCheckedId = requestedId;
                             String body = (response.body() != null) ? response.body().string() : "사용 가능한 아이디입니다.";
                             tvSetId.setText(body);
+                            tvSetId.setTextColor(Color.parseColor("#2ABA72"));
+                            etSetId.setActivated(false);
                         } else {
                             doubleCheck = false;
                         }
-                    } else {
+                    } else if (code==409) {
                         doubleCheck = false;
-                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "";
-                        String message = "에러 발생";
-                        try { message = new JSONObject(errorBody).optString("message", message); } catch (Exception ignore) {}
-                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
+                        String message = "이미 사용 중인 아이디입니다.";
+                        if (response.errorBody() != null) {
+                            String raw = response.errorBody().string();
+                            try {
+                                message = new org.json.JSONObject(raw).optString("message", message);
+                            } catch (Exception ignore) {}
+                        }
+                        tvSetId.setText(message);
+                        tvSetId.setTextColor(Color.parseColor("red"));
+                        etSetId.setActivated(true);
+                    } else {
+                        // 그 외 오류
+                        doubleCheck = false;
+                        String errMsg = "중복확인에 실패했습니다. 잠시 후 다시 시도해 주세요.";
+                        if (response.errorBody() != null) {
+                            String raw = response.errorBody().string();
+                            try {
+                                String fromServer = new org.json.JSONObject(raw).optString("message", "");
+                                if (!fromServer.isEmpty()) errMsg = fromServer;
+                            } catch (Exception ignore) {}
+                        }
+                        tvSetId.setText(errMsg);
+                        tvSetId.setTextColor(Color.RED);
+                        etSetId.setActivated(true);
                     }
 
                     // 버튼 상태 갱신
