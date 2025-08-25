@@ -15,12 +15,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.rally.R;
+import com.example.rally.api.websocket.RealtimeClient;
+import com.example.rally.api.websocket.WsRealtimeClient;
 import com.example.rally.viewmodel.Player;
 import com.example.rally.viewmodel.ScoreViewModel;
 import com.example.rally.viewmodel.SetResult;
 
 public class ScoreRecordActivity extends AppCompatActivity {
     private ScoreViewModel viewModel;
+    private RealtimeClient client;
+    private final String matchId = "match-123";
+
 
     private TextView tvSetNumber, tvOpponentName, tvUserName,
             tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer;
@@ -50,17 +55,26 @@ public class ScoreRecordActivity extends AppCompatActivity {
         int userSets = intent.getIntExtra("userSets", 0);
         String nextFirst = intent.getStringExtra("nextFirstServer");
         this.nextFirstServer = nextFirst != null ? Player.valueOf(nextFirst) : Player.USER1;
-        boolean isUser1 = intent.getBooleanExtra("localIsUser1", false);
+        boolean isUser1 = intent.getBooleanExtra("localIsUser1", true);
 
         viewModel.initSets(userSets, opponentSets);
         viewModel.initPlayer(isUser1);
         Player firstServer = (setNumber == 1) ? Player.USER1 : nextFirstServer; // 1세트 서브 시작은 user1
         viewModel.startSet(setNumber, firstServer);
-        viewModel.startStopwatch();
+
+        // web socket
+        String url = "ws://172.19.14.52:8080/ws?matchId=" + matchId;
+        client = new WsRealtimeClient(url);
+        client.subscribe("/topic/match."+matchId, json -> viewModel.applyIncoming(json));
+        client.connect();
 
         tvSetNumber.setText(setNumber + "세트");
         tvOpponentName.setText("상대");
         tvUserName.setText("나");
+        btnScore.setText("경기 시작");
+        btnScore.setEnabled(false);
+        isSetFinished = true;    // 대기
+        tvTimer.setText("00:00:00");
         updateButtonsForState();
     }
 
@@ -133,11 +147,23 @@ public class ScoreRecordActivity extends AppCompatActivity {
                 updateButtonsForState();
             } else {
                 //  득점
-                viewModel.addUserScore();
+                String to = Boolean.TRUE.equals(viewModel.getIsUser1().getValue())? "user1" : "user2";
+                var msg = viewModel.buildScoreAdd(matchId, to);
+                if(msg != null) {
+                    client.send(msg.toString());
+                    viewModel.applyIncoming(msg.toString());
+                }
             }
         });
         // 점수 되돌리기 버튼
-        btnUndo.setOnClickListener(v -> viewModel.undoUserScore());
+        btnUndo.setOnClickListener(v -> {
+            String from = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2"; // 소문자
+            var msg = viewModel.buildScoreUndo(matchId, from);
+            if (msg != null) {
+                client.send(msg.toString());                 // 서버 전송
+                viewModel.applyIncoming(msg.toString());     // ui업데이트
+            }
+        });
         // 일시정지 <-> 경기 재개 버튼
         btnPause.setOnClickListener(v -> {
             Boolean paused = viewModel.getIsPaused().getValue();

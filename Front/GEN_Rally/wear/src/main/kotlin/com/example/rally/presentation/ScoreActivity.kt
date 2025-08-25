@@ -79,6 +79,7 @@ class ScoreActivity : ComponentActivity() {
                                     if (!isGameFinished) {
                                         // 세트 시작
                                         viewModel.startSet(currentSetNumber, nextFirstServer)
+                                        var startTime =  System.currentTimeMillis()
                                         viewModel.startStopwatch()
                                         // 폰으로 경기 시작 이벤트 전송
                                         WatchDataLayerClient.sendGameStart(

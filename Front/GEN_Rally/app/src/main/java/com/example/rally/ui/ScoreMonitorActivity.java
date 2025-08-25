@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
-public class RecordActivity extends AppCompatActivity {
+public class ScoreMonitorActivity extends AppCompatActivity {
 
     private static final String PATH_EVENT_START = "/rally/event/start";
     private static final String PATH_EVENT_SCORE = "/rally/event/score";
@@ -34,7 +34,7 @@ public class RecordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+        setContentView(R.layout.activity_score_monitor);
 
         tvSetNumber = findViewById(R.id.tv_set_number);
         tvOpponentName = findViewById(R.id.tv_opponent_name);
@@ -75,8 +75,7 @@ public class RecordActivity extends AppCompatActivity {
 
                 switch (path) {
                     case PATH_EVENT_START: {
-                        if(timeStamp > 0) viewModel.startStopwatchAt(timeStamp);
-                        else viewModel.startStopwatch();
+                        viewModel.startStopwatch();
                         break;
                     }
                     case PATH_EVENT_SCORE: {
@@ -107,7 +106,7 @@ public class RecordActivity extends AppCompatActivity {
                             viewModel.pause();
                             viewModel.startSet(result.nextSetNumber-1, result.currentServer);
                             viewModel.resetStopwatch();
-                            startActivity(new Intent(RecordActivity.this, EvaluationActivity.class));
+                            startActivity(new Intent(ScoreMonitorActivity.this, EvaluationActivity.class));
                         }
                         break;
                     }
