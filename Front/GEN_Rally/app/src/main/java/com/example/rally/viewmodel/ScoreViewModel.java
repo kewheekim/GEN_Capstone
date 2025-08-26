@@ -92,7 +92,14 @@ public class ScoreViewModel extends ViewModel {
         isSetFinished.setValue(false);
         history.clear();
     }
-
+    public void prepareSet(int setNum, Player firstServer) {
+        setNumber.setValue(setNum);
+        currentServer.setValue(firstServer);
+        userScore.setValue(0);
+        opponentScore.setValue(0);
+        isSetFinished.setValue(true);   // 대기 상태
+        history.clear();
+    }
     public void addUserScore() {
         Player before = currentServer.getValue();
         if (before == null) before = Player.USER1;
@@ -112,6 +119,10 @@ public class ScoreViewModel extends ViewModel {
             // 마지막 기록이 상대 득점이면 되돌리지 않음
             history.addLast(last);
         }
+    }
+    public boolean canUndoMyLastScore() {
+        Action last = history.peekLast();
+        return last != null && last.scorer == localPlayer();
     }
 
     private final MutableLiveData<Boolean> isSetFinished = new MutableLiveData<>(false);
@@ -238,7 +249,28 @@ public class ScoreViewModel extends ViewModel {
                 boolean iAmUser1 = Boolean.TRUE.equals(isUser1.getValue());
                 userScore.setValue(iAmUser1 ? u : o);
                 opponentScore.setValue(iAmUser1 ? o : u);
+                int sn = p.optInt("setNumber", setNumber.getValue()==null?1:setNumber.getValue());
+                setNumber.setValue(sn);
+                String serve = p.optString("serve", "USER1");
+                try { currentServer.setValue(Player.valueOf(serve)); } catch (Exception ignored) {}
                 lastSeq = p.optInt("lastAppliedSeq", lastSeq);
+
+                JSONObject stopWatch  = p.optJSONObject("stopWatch");
+                if( stopWatch != null ) {
+                    long startAt = stopWatch.optLong("startAt", System.currentTimeMillis());
+                    boolean paused = stopWatch.optBoolean("paused", true);
+                    long pauseStartedAt = stopWatch.optLong("pauseStartedAt", 0L);
+                    long totalPaused = stopWatch.optLong("totalPaused", 0L);
+
+                    this.startStopwatchAt(startAt);
+                    this.totalPaused = totalPaused;
+
+                    if (paused) {
+                        this.pauseAt(pauseStartedAt > 0 ? pauseStartedAt : System.currentTimeMillis());
+                    } else {
+                        this.resumeAt(System.currentTimeMillis()); // 이미 false면 무시
+                    }
+                }
                 return;
             }
 
@@ -254,8 +286,22 @@ public class ScoreViewModel extends ViewModel {
             lastSeq = Math.max(lastSeq, seq);
 
             boolean iAmUser1 = Boolean.TRUE.equals(isUser1.getValue());
+            if ("set_start".equals(type)) {
+                JSONObject p = root.optJSONObject("payload");
+                int sn = p.optInt("setNumber", setNumber.getValue()==null?1:setNumber.getValue());
+                String fs = p.optString("firstServer", "USER1");
+                long startAt = p.optLong("startAt", System.currentTimeMillis());
 
-            if ("score_add".equals(type)) {
+                setNumber.setValue(sn);
+                try { currentServer.setValue(Player.valueOf(fs)); } catch (Exception ignored) {}
+
+                userScore.setValue(0);
+                opponentScore.setValue(0);
+                isSetFinished.setValue(false);         // 진행 상태로 전환
+                history.clear();
+                startStopwatchAt(startAt); // 타이머 동기화
+            }
+            else if ("score_add".equals(type)) {
                 String scoreTo = root.optJSONObject("payload").optString("scoreTo", "");
                 boolean myScore = (iAmUser1 && "user1".equals(scoreTo)) || (!iAmUser1 && "user2".equals(scoreTo));
 
@@ -275,8 +321,7 @@ public class ScoreViewModel extends ViewModel {
             else if ("score_undo".equals(type)) {
                 String from = root.optJSONObject("payload").optString("from", "");
                 boolean undoMine = (iAmUser1 && "user1".equals(from)) || (!iAmUser1 && "user2".equals(from));
-
-                // 점수 감소
+                // 점수 되돌리기
                 if (undoMine) {
                     Integer v = userScore.getValue(); if (v != null && v > 0) userScore.setValue(v-1);
                 } else {
@@ -295,6 +340,45 @@ public class ScoreViewModel extends ViewModel {
                     }
                 }
             }
+            else if ("set_pause".equals(type)) {
+                long at = root.optJSONObject("payload").optLong("pausedAt", System.currentTimeMillis());
+                pauseAt(at);
+            }
+            else if ("set_resume".equals(type)) {
+                long at = root.optJSONObject("payload").optLong("resumedAt", System.currentTimeMillis());
+                resumeAt(at); // totalPaused += (at - pauseStartedAt) + isPaused=false
+            }
+            else if ("set_finish".equals(type)) {
+                String winner = root.optJSONObject("payload").optString("winner", "");
+                iAmUser1 = Boolean.TRUE.equals(isUser1.getValue());
+
+                // 세트 수 갱신
+                if ("user1".equals(winner)) {
+                    if (iAmUser1) {
+                        Integer us = userSets.getValue(); userSets.setValue((us==null?0:us)+1);
+                    } else {
+                        Integer os = opponentSets.getValue(); opponentSets.setValue((os==null?0:os)+1);
+                    }
+                    currentServer.setValue(Player.USER1); // 다음 세트 첫 서브 = 세트 승자
+                } else if ("user2".equals(winner)) {
+                    if (iAmUser1) {
+                        Integer os = opponentSets.getValue(); opponentSets.setValue((os==null?0:os)+1);
+                    } else {
+                        Integer us = userSets.getValue(); userSets.setValue((us==null?0:us)+1);
+                    }
+                    currentServer.setValue(Player.USER2);
+                }
+
+                // 점수 리셋, 세트 번호 증가
+                userScore.setValue(0);
+                opponentScore.setValue(0);
+                int curSet = setNumber.getValue()==null?1:setNumber.getValue();
+                setNumber.setValue(curSet + 1);
+                resetStopwatch(); // 경기 시간 초기화
+
+                isSetFinished.setValue(true);
+                history.clear();
+            }
         } catch (Exception ignore) {}
     }
 
@@ -308,8 +392,27 @@ public class ScoreViewModel extends ViewModel {
         Integer v = opponentScore.getValue();
         opponentScore.setValue((v==null?0:v)+1);
     }
+    //  경기 시작 이벤트 JSON 생성 (수신측은 startStopWatchAt(startAt)으로 스톱워치 초기화)
+    public JSONObject buildSetStart(String matchId, int setNum, Player firstServer, long startAt) {
+        try {
+            JSONObject payload = new JSONObject()
+                    .put("setNumber", setNum)
+                    .put("firstServer", firstServer.name())
+                    .put("startAt", startAt);
 
-    // 서버 전송용 득점 이벤트 JSON 생성
+            JSONObject root = new JSONObject();
+            root.put("type", "set_start");
+            root.put("matchId", matchId);
+            root.put("clientMsgId", UUID.randomUUID().toString());
+            int nextSeq = lastSeq + 1;
+            root.put("seq", nextSeq);
+            root.put("eventTime", System.currentTimeMillis());
+            root.put("actor", Boolean.TRUE.equals(isUser1.getValue()) ? "user1" : "user2");
+            root.put("payload", payload);
+            return root;
+        } catch (Exception e) { return null; }
+    }
+    //  득점 이벤트 JSON 생성
     public JSONObject buildScoreAdd(String matchId, String to) {
         try {
             JSONObject payload = new JSONObject().put("scoreTo", to);
@@ -325,7 +428,7 @@ public class ScoreViewModel extends ViewModel {
             return root;
         } catch (Exception e) { return null; }
     }
-    // 서버 전송용 되돌리기 이벤트 JSON 생성
+    //  되돌리기 이벤트 JSON 생성
     public JSONObject buildScoreUndo(String matchId, String from) {
         try {
             JSONObject root = new JSONObject();
@@ -341,5 +444,50 @@ public class ScoreViewModel extends ViewModel {
             return root;
         } catch (Exception e) { return null; }
     }
-
+    // 일시 정지 이벤트 JSON 생성
+    public JSONObject buildSetPause(String matchId, long pausedAt) {
+        try {
+            JSONObject payload = new JSONObject().put("pausedAt", pausedAt);
+            JSONObject root = new JSONObject();
+            root.put("type", "set_pause");
+            root.put("matchId", matchId);
+            root.put("clientMsgId", java.util.UUID.randomUUID().toString());
+            root.put("seq", lastSeq + 1);
+            root.put("eventTime", System.currentTimeMillis());
+            root.put("actor", Boolean.TRUE.equals(isUser1.getValue()) ? "user1" : "user2");
+            root.put("payload", payload);
+            return root;
+        } catch (Exception e) { return null; }
+    }
+    // 경기 재개 이벤트 JSON 생성
+    public JSONObject buildSetResume(String matchId, long resumedAt) {
+        try {
+            JSONObject payload = new JSONObject().put("resumedAt", resumedAt);
+            JSONObject root = new JSONObject();
+            root.put("type", "set_resume");
+            root.put("matchId", matchId);
+            root.put("clientMsgId", java.util.UUID.randomUUID().toString());
+            root.put("seq", lastSeq + 1);
+            root.put("eventTime", System.currentTimeMillis());
+            root.put("actor", Boolean.TRUE.equals(isUser1.getValue()) ? "user1" : "user2");
+            root.put("payload", payload);
+            return root;
+        } catch (Exception e) { return null; }
+    }
+    //  세트 종료 이벤트 JSON 생성
+    public JSONObject buildSetFinish(String matchId, String winner) {
+        try {
+            JSONObject payload = new JSONObject().put("winner", winner);
+            JSONObject root = new JSONObject();
+            root.put("type", "set_finish");
+            root.put("matchId", matchId);
+            root.put("clientMsgId", UUID.randomUUID().toString());
+            int nextSeq = lastSeq + 1;
+            root.put("seq", nextSeq);
+            root.put("eventTime", System.currentTimeMillis());
+            root.put("actor", Boolean.TRUE.equals(isUser1.getValue()) ? "user1" : "user2");
+            root.put("payload", payload);
+            return root;
+        } catch (Exception e) { return null; }
+    }
 }

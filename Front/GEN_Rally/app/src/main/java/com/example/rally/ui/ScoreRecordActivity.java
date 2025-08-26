@@ -26,7 +26,6 @@ public class ScoreRecordActivity extends AppCompatActivity {
     private RealtimeClient client;
     private final String matchId = "match-123";
 
-
     private TextView tvSetNumber, tvOpponentName, tvUserName,
             tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer;
     private ImageView ivServeLeft, ivServeRight;
@@ -49,18 +48,17 @@ public class ScoreRecordActivity extends AppCompatActivity {
         setupClicks();
 
         Intent intent = getIntent();
-        long startTime = intent.getLongExtra("startTime", System.currentTimeMillis());
         setNumber = intent.getIntExtra("setNumber", 1);
         int opponentSets = intent.getIntExtra("opponentSets", 0);
         int userSets = intent.getIntExtra("userSets", 0);
         String nextFirst = intent.getStringExtra("nextFirstServer");
         this.nextFirstServer = nextFirst != null ? Player.valueOf(nextFirst) : Player.USER1;
-        boolean isUser1 = intent.getBooleanExtra("localIsUser1", true);
+        boolean isUser1 = intent.getBooleanExtra("localIsUser1", false);
 
         viewModel.initSets(userSets, opponentSets);
         viewModel.initPlayer(isUser1);
         Player firstServer = (setNumber == 1) ? Player.USER1 : nextFirstServer; // 1세트 서브 시작은 user1
-        viewModel.startSet(setNumber, firstServer);
+        viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
         String url = "ws://172.19.14.52:8080/ws?matchId=" + matchId;
@@ -68,7 +66,6 @@ public class ScoreRecordActivity extends AppCompatActivity {
         client.subscribe("/topic/match."+matchId, json -> viewModel.applyIncoming(json));
         client.connect();
 
-        tvSetNumber.setText(setNumber + "세트");
         tvOpponentName.setText("상대");
         tvUserName.setText("나");
         btnScore.setText("경기 시작");
@@ -95,14 +92,28 @@ public class ScoreRecordActivity extends AppCompatActivity {
     }
 
     private void setupObservers() {
+        viewModel.getSetNumber().observe(this, n -> {
+            int v = (n == null) ? 1 : n;
+            tvSetNumber.setText(v + "세트");
+        });
+        viewModel.getOpponentSets().observe(this, v -> tvOpponentSets.setText(String.valueOf(v == null ? 0 : v)));
+        viewModel.getOpponentScore().observe(this, v -> tvOpponentScore.setText(String.valueOf(v == null ? 0 : v)));
+        viewModel.getUserSets().observe(this, v -> tvUserSets.setText(String.valueOf(v == null ? 0 : v)));
         viewModel.getUserScore().observe(this, v -> {
             tvUserScore.setText(String.valueOf(v == null ? 0 : v));
             checkMatchStates();
         });
-        viewModel.getOpponentScore().observe(this, v -> tvOpponentScore.setText(String.valueOf(v == null ? 0 : v)));
-        viewModel.getUserSets().observe(this, v -> tvUserSets.setText(String.valueOf(v == null ? 0 : v)));
-        viewModel.getOpponentSets().observe(this, v -> tvOpponentSets.setText(String.valueOf(v == null ? 0 : v)));
         viewModel.getElapsed().observe(this, sec -> tvTimer.setText(formatTime(sec==null?0:sec)));
+
+        // 세트 대기/진행 상태
+        viewModel.getIsSetFinished().observe(this, finished -> {
+            boolean fin = finished != null && finished;
+            isSetFinished = fin;
+            btnScore.setText(fin ? "경기 시작" : "득점");
+            viewModel.resetStopwatch();
+//            tvTimer.setText("00:00:00");
+            updateButtonsForState();
+        });
 
         // 서버 아이콘 갱신: currentServer 또는 isUser1 변경 시마다
         androidx.lifecycle.Observer<Object> serveObserver = o -> updateServeIcons();
@@ -139,17 +150,20 @@ public class ScoreRecordActivity extends AppCompatActivity {
         btnScore.setOnClickListener(v -> {
             if (isSetFinished) {
                 //  다음 세트 시작
-                viewModel.startSet(setNumber, nextFirstServer);
-                viewModel.startStopwatch();
-                isSetFinished = false;
-                btnScore.setText("득점");
-                updateServeIcons();  // 서브 아이콘
-                updateButtonsForState();
+                int sn = viewModel.getSetNumber().getValue() == null ? 1 : viewModel.getSetNumber().getValue();
+                Player fs = viewModel.getCurrentServer().getValue() == null ? Player.USER1 : viewModel.getCurrentServer().getValue();
+
+                long now = System.currentTimeMillis();
+                var msg = viewModel.buildSetStart(matchId, sn, fs, now);
+                if (msg != null) {
+                    client.send(msg.toString());
+                    viewModel.applyIncoming(msg.toString());   // ui 반영
+                }
             } else {
-                //  득점
-                String to = Boolean.TRUE.equals(viewModel.getIsUser1().getValue())? "user1" : "user2";
+                // 득점
+                String to = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2";
                 var msg = viewModel.buildScoreAdd(matchId, to);
-                if(msg != null) {
+                if (msg != null) {
                     client.send(msg.toString());
                     viewModel.applyIncoming(msg.toString());
                 }
@@ -157,22 +171,34 @@ public class ScoreRecordActivity extends AppCompatActivity {
         });
         // 점수 되돌리기 버튼
         btnUndo.setOnClickListener(v -> {
-            String from = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2"; // 소문자
+            if (!viewModel.canUndoMyLastScore()) {
+                Toast.makeText(this, "마지막 득점이 내가 아니라서 되돌릴 수 없어요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String from = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2";
             var msg = viewModel.buildScoreUndo(matchId, from);
             if (msg != null) {
-                client.send(msg.toString());                 // 서버 전송
-                viewModel.applyIncoming(msg.toString());     // ui업데이트
+                client.send(msg.toString());      // 서버 전송
+                viewModel.applyIncoming(msg.toString()); // ui업데이트
             }
         });
         // 일시정지 <-> 경기 재개 버튼
         btnPause.setOnClickListener(v -> {
-            Boolean paused = viewModel.getIsPaused().getValue();
-            if (paused != null && paused) {
-                viewModel.resume();   // 현재 일시정지 상태면 재개
+            boolean paused = Boolean.TRUE.equals(viewModel.getIsPaused().getValue());
+            long now = System.currentTimeMillis();
+            if (!paused) {
+                var msg = viewModel.buildSetPause(matchId, now);
+                if (msg != null) {
+                    client.send(msg.toString());
+                    viewModel.applyIncoming(msg.toString()); // ui반영
+                }
             } else {
-                viewModel.pause();    // 진행 중이면 일시정지
+                var msg = viewModel.buildSetResume(matchId, now);
+                if (msg != null) {
+                    client.send(msg.toString());
+                    viewModel.applyIncoming(msg.toString());
+                }
             }
-            updateButtonsForState();
         });
     }
 
@@ -200,35 +226,23 @@ public class ScoreRecordActivity extends AppCompatActivity {
         // 세트 종료
         if (checkSetWin(opponent, user)) {
             Toast.makeText(this, "세트 종료", Toast.LENGTH_SHORT).show();
-            viewModel.setFinished();
-            viewModel.pause();
 
-            // 2초 동안 최종 스코어를 그대로 보여줌
-            uiHandler.postDelayed(() -> {
-                // 2초 후 세트 마무리
-                SetResult result = viewModel.onSetFinished();
+            // 승자
+            boolean iAmUser1 = Boolean.TRUE.equals(viewModel.getIsUser1().getValue());
+            String winner = (user > opponent)
+                    ? (iAmUser1 ? "user1" : "user2")
+                    : (iAmUser1 ? "user2" : "user1");
 
-                // 다음 세트 대기 화면으로
-                setNumber = result.nextSetNumber;                 // 다음 세트 번호
-                tvSetNumber.setText(setNumber + "세트");
-                tvUserScore.setText("0");
-                tvOpponentScore.setText("0");
-                tvTimer.setText("00:00:00");
-                ivServeLeft.setVisibility(View.INVISIBLE);
-                ivServeRight.setVisibility(View.INVISIBLE);
-
-                nextFirstServer = result.currentServer;           // 다음 세트 선서브
-                isSetFinished = true;                             // 대기 진입
-                btnScore.setText("경기 시작");
-                updateButtonsForState();
-            }, 2000);
+            var msg = viewModel.buildSetFinish(matchId, winner);
+            if (msg != null) {
+                client.send(msg.toString());          // 서버 전송
+                viewModel.applyIncoming(msg.toString()); // ui 반영
+            }
             return;
         }
-
-        //  매치포인트
+        // 매치포인트
         if (checkMatchPoint(opponent, user)) {
             int mySets = viewModel.getUserSets().getValue() == null ? 0 : viewModel.getUserSets().getValue();
-            //  2선승제
             boolean isMatchPoint = (mySets == 1);
             Toast.makeText(this, "Match Point!", Toast.LENGTH_SHORT).show();
         }

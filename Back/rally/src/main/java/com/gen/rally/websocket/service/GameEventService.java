@@ -28,6 +28,16 @@ public class GameEventService {
             if (seq != st.lastSeq + 1) return false;                         // 간단 순서 체크
 
             switch (type) {
+                case "set_start" -> {
+                    JsonNode p = root.path("payload");
+                    int setNum = p.path("setNumber").asInt(st.setNumber);
+                    String firstServer = p.path("firstServer").asText("USER1");
+
+                    st.setNumber = setNum;
+                    st.currentServe = firstServer;    // 다음 득점 전까지의 선서브
+                    st.user1Score = 0;
+                    st.user2Score = 0;
+                }
                 case "score_add" -> {
                     String to = root.path("payload").path("scoreTo").asText();
                     if ("user1".equals(to)) st.user1Score++; else if ("user2".equals(to)) st.user2Score++;
@@ -36,6 +46,21 @@ public class GameEventService {
                     String from = root.path("payload").path("from").asText("user1");
                     if ("user1".equals(from) && st.user1Score > 0) st.user1Score--;
                     else if ("user2".equals(from) && st.user2Score > 0) st.user2Score--;
+                }
+                case "set_pause" -> {
+                    if (st.paused) break; // 이미 정지면 무시
+                    long at = root.path("payload").path("pausedAt").asLong(System.currentTimeMillis());
+                    st.paused = true;
+                    st.pauseStartedAt = at;
+                }
+                case "set_resume" -> {
+                    if (!st.paused) break; // 이미 재개면 무시
+                    long at = root.path("payload").path("resumedAt").asLong(System.currentTimeMillis());
+                    if (st.pauseStartedAt > 0L) {
+                        st.totalPaused += Math.max(0L, at - st.pauseStartedAt);
+                    }
+                    st.paused = false;
+                    st.pauseStartedAt = 0L;
                 }
                 case "set_finish" -> {
                     String winner = root.path("payload").path("winner").asText();
@@ -65,6 +90,14 @@ public class GameEventService {
             p.set("user1", u1); p.set("user2", u2);
             p.put("serve", st.currentServe);
             p.put("lastAppliedSeq", st.lastSeq);
+
+            // stopWatch
+            ObjectNode stopWatch = mapper.createObjectNode();
+            stopWatch.put("startAt", st.startAt);
+            stopWatch.put("paused", st.paused);
+            stopWatch.put("pauseStartedAt", st.pauseStartedAt);
+            stopWatch.put("totalPaused", st.totalPaused);
+            p.set("stopWatch", stopWatch);
 
             ObjectNode root = mapper.createObjectNode();
             root.put("type", "snapshot");
