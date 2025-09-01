@@ -18,14 +18,28 @@
         android:layout_marginStart="24dp"
         />
 
-    <ImageButton
-        android:id="@+id/btn_noti"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_notification_color"
-        android:contentDescription=" "
-        android:layout_marginEnd="24dp"
-        android:layout_gravity="center_vertical|end"
-        android:background="@color/white"/>
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_gravity="end">
+
+        <ImageButton
+            android:id="@+id/btn_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chat_color"
+            android:background="@android:color/transparent"
+            android:layout_marginEnd="16dp"/>
+
+        <ImageButton
+            android:id="@+id/btn_noti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_notification_color"
+            android:background="@android:color/transparent"
+            android:layout_marginEnd="24dp"/>
+    </LinearLayout>
 
 </androidx.appcompat.widget.Toolbar>
