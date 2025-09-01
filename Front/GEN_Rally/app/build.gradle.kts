@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("io.freefair.lombok") version "8.4"
+    id("com.google.gms.google-services") version "4.4.3" apply false
 }
 
 android {
@@ -55,4 +56,7 @@ dependencies {
     implementation ("com.google.android.gms:play-services-wearable:18.2.0")
     implementation ("androidx.core:core-ktx:1.13.1")
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation(platform("com.google.firebase:firebase-bom:34.2.0")) // Firebase
+    implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.google.firebase:firebase-auth")
 }
