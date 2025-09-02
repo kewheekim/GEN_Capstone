@@ -18,6 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="24dp"
         android:textSize="24sp"
+        android:lineHeight="36sp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

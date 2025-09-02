@@ -16,8 +16,7 @@
         android:layout_height="60dp"
         android:gravity="center"
         android:text="매칭"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        style="@style/Text.Semibold22"
         android:textColor="@color/black_text"
         android:layout_marginStart="24dp"
         />

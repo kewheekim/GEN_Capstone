@@ -20,7 +20,5 @@
         android:enabled="false"
         android:textColor="#AAAAAA"
         android:background="@drawable/bg_next_button_inactive"
-        android:textSize="16sp"
-        android:fontFamily="@font/pretendard_variable"
         />
 </LinearLayout>

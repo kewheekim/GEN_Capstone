@@ -25,7 +25,7 @@
         android:inputType="text"
         android:drawablePadding="6dp"
         android:padding="14dp"
-        android:textSize="14sp"
+        style="@style/Text.Medium14"
         android:textColor="#AAAAAA"
         android:layout_marginTop="16dp"
         android:layout_marginStart="24dp"

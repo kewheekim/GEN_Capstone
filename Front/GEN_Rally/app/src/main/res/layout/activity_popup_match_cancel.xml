@@ -34,9 +34,8 @@
             android:layout_gravity="center"
             android:text="매칭을 정말 취소하시겠어요?"
             android:textColor="@color/black_text"
-            android:textSize="18sp"
-            android:layout_marginTop="-6dp"
-            android:textStyle="bold" />
+            style="@style/Text.Semibold18"
+            android:layout_marginTop="-6dp" />
     
         <LinearLayout
             android:layout_width="wrap_content"
@@ -52,7 +51,7 @@
                 android:layout_gravity="center"
                 android:text="신청한 매칭 정보는 삭제되고,\n다시 매칭을 원하는 경우\n 재신청해야 해요"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                style="@style/Text.Medium18"
                 />
         </LinearLayout>
 
@@ -67,7 +66,7 @@
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="돌아가기"
-                android:textSize="18sp"
+                style="@style/Text.Medium18"
                 android:textColor="#AAAAAA"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_button_inactive" />
@@ -77,7 +76,7 @@
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="취소"
-                android:textSize="18sp"
+                style="@style/Text.Medium18"
                 android:textColor="@color/white"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_next_button_active" />

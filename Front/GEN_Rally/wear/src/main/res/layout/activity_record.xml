@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="style=&quot;@style/Text.Semibold22&quot;" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,8 +25,7 @@
             android:layout_height="wrap_content"
             android:text="1세트"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:fontFamily="@font/pretendard_variable" />
+            style="@style/Text.Semibold14" />
 
 
         <!-- 점수 영역 -->
@@ -44,8 +49,7 @@
                     android:layout_height="wrap_content"
                     android:text="VS 아어려워요"
                     android:textColor="@color/gray_inactive"
-                    android:textSize="11sp"
-                    android:textFontWeight="400"
+                    style="@style/Text.Regular10"
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/pretendard_variable"/>
 
@@ -62,9 +66,7 @@
                         android:gravity="center"
                         android:text="12"
                         android:textColor="@color/white"
-                        android:textSize="46sp"
-                        android:textFontWeight="800"
-                        android:fontFamily="@font/pretendard_variable"/>
+                        style="@style/Text.Bold46"/>
 
                     <TextView
                         android:id="@+id/tv_opponent_sets"
@@ -72,9 +74,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textFontWeight="600"
-                        android:fontFamily="@font/pretendard_variable"/>
+                        style="@style/Text.Semibold16"/>
 
                 </LinearLayout>
 
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    style="@style/Text.Semibold16"
                     android:textFontWeight="600"
                     android:fontFamily="@font/pretendard_variable"/>
 
@@ -113,9 +113,7 @@
                     android:gravity="center"
                     android:text="11"
                     android:textColor="@color/green_active"
-                    android:textSize="46sp"
-                    android:textFontWeight="800"
-                    android:fontFamily="@font/pretendard_variable" />
+                    style="@style/Text.Bold46" />
 
             </LinearLayout>
         </LinearLayout>
@@ -127,8 +125,7 @@
             android:layout_height="40dp"
             android:text="득점"
             android:background="@drawable/bg_next_button_active"
-            android:fontFamily="@font/pretendard_variable"
-            android:textFontWeight="500"
+            style="@style/Text.Semibold16"
             android:layout_marginTop="16dp" />
 
         <!-- 점수 되돌리기 -->
@@ -138,7 +135,7 @@
             android:layout_height="wrap_content"
             android:text="점수 되돌리기"
             android:textColor="#CCCCCC"
-            android:textSize="12sp"
+            style="@style/Text.Medium12"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_variable"/>
     </LinearLayout>

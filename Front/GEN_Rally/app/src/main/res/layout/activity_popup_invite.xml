@@ -33,10 +33,8 @@
             android:gravity="center"
             android:text="'아어려워요' 님에게\n매칭 요청을 보내시겠어요?"
             android:textColor="@color/black_text"
-            android:fontFamily="@font/pretendard_variable"
-            android:textSize="22sp"
-            android:layout_marginTop="58dp"
-            android:textStyle="bold" />
+            style="@style/Text.Semibold22"
+            android:layout_marginTop="58dp" />
 
 
         <LinearLayout
@@ -51,9 +49,8 @@
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="돌아가기"
-                android:textSize="18sp"
+                style="@style/Text.Medium18"
                 android:textColor="#AAAAAA"
-                android:fontFamily="@font/pretendard_variable"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_button_inactive" />
 
@@ -62,9 +59,8 @@
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="보내기"
-                android:textSize="18sp"
+                style="@style/Text.Medium18"
                 android:textColor="@color/white"
-                android:fontFamily="@font/pretendard_variable"
                 android:background="@drawable/bg_next_button_active" />
 
         </LinearLayout>

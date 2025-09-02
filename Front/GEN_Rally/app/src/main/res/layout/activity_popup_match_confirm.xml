@@ -32,10 +32,8 @@
             android:layout_gravity="center"
             android:text="매칭 신청 내용을 확인해주세요!"
             android:textColor="@color/black_text"
-            android:textSize="18sp"
-            android:fontFamily="@font/pretendard_variable"
-            android:layout_marginTop="-6dp"
-            android:textStyle="bold" />
+            style="@style/Text.Semibold18"
+            android:layout_marginTop="-6dp" />
 
         <LinearLayout
             android:layout_width="304dp"
@@ -70,8 +68,7 @@
                     android:layout_marginStart="16dp"
                     android:text="날짜"
                     android:textColor="@color/black_text"
-                    android:fontFamily="@font/pretendard_variable"
-                    android:textSize="14sp" />
+                    style="@style/Text.Medium14" />
 
                 <View
                     android:layout_width="1dp"
@@ -88,8 +85,7 @@
                     android:layout_gravity="center"
                     android:text="시간"
                     android:textColor="@color/black_text"
-                    android:fontFamily="@font/pretendard_variable"
-                    android:textSize="14sp" />
+                    style="@style/Text.Medium14" />
             </LinearLayout>
 
             <LinearLayout
@@ -114,8 +110,7 @@
                     android:layout_marginStart="16dp"
                     android:text="장소"
                     android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/pretendard_variable"
+                    style="@style/Text.Medium14"
                     />
             </LinearLayout>
 
@@ -141,8 +136,7 @@
                     android:layout_marginStart="16dp"
                     android:text="유형"
                     android:textColor="@color/black_text"
-                    android:fontFamily="@font/pretendard_variable"
-                    android:textSize="14sp" />
+                    style="@style/Text.Medium14" />
 
                 <View
                     android:layout_width="1dp"
@@ -159,8 +153,7 @@
                     android:layout_gravity="center"
                     android:text="스타일"
                     android:textColor="@color/black_text"
-                    android:fontFamily="@font/pretendard_variable"
-                    android:textSize="14sp" />
+                    style="@style/Text.Medium14" />
             </LinearLayout>
         </LinearLayout>
 
@@ -175,9 +168,8 @@
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="다시 선택"
-                android:textSize="18sp"
                 android:textColor="#AAAAAA"
-                android:fontFamily="@font/pretendard_variable"
+                style="@style/Text.Medium18"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_button_inactive" />
 
@@ -186,8 +178,7 @@
                 android:layout_width="148dp"
                 android:layout_height="54dp"
                 android:text="확인"
-                android:textSize="18sp"
-                android:fontFamily="@font/pretendard_variable"
+                style="@style/Text.Medium18"
                 android:textColor="@color/white"
                 android:background="@drawable/bg_next_button_active" />
 

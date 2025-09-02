@@ -54,7 +54,7 @@
                 android:gravity="center"
                 android:text="나와 같은 티어의 상대예요"
                 android:textColor="@color/green_active"
-                android:textSize="14sp" />
+                style="@style/Text.Medium14" />
 
         </com.google.android.material.card.MaterialCardView>
 

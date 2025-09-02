@@ -17,8 +17,8 @@
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         android:text="원하는 경기 스타일을 선택해주세요"
-        android:textAppearance="@style/TextAppearance.Title"
-        android:lineSpacingExtra="6sp"
+        style="@style/Text.Semibold20"
+        android:textColor="@color/black"
         android:gravity="center_vertical" />
 
     <!-- 라디오 그룹 -->

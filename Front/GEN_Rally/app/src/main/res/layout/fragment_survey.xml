@@ -14,8 +14,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
         android:text="서브를 넣을 때,\n원하는 대로 안정적으로 넣을 수 있나요?"
-        android:textAppearance="@style/TextAppearance.Title"
-        android:lineSpacingExtra="6sp"
+        style="@style/Text.Semibold22"
+        android:textColor="@color/black_text"
         android:gravity="center_vertical" />
 
     <RadioGroup

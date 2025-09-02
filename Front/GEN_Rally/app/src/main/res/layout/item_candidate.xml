@@ -47,9 +47,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="닉네임"
-                    android:textSize="16sp"
-                    android:textColor="@color/black_text"
-                    android:textStyle="bold" />
+                    style="@style/Text.Semibold16"
+                    android:textColor="@color/black_text" />
 
                 <ImageView
                     android:id="@+id/iv_gender_icon"
@@ -79,8 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="시간이\n일부 겹쳐요"
-                    android:lineSpacingExtra="6sp"
-                    android:textSize="16sp"
+                    style="@style/Text.Semibold16"
                     android:textColor="@color/black_text"
                     android:gravity="center"/>
         </LinearLayout>
@@ -113,8 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="위치가\n동일해요"
-                    android:lineSpacingExtra="6sp"
-                    android:textSize="16sp"
+                    style="@style/Text.Semibold16"
                     android:textColor="@color/black_text"
                     android:gravity="center"/>
         </LinearLayout>

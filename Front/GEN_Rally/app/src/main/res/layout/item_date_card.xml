@@ -21,15 +21,14 @@
             android:layout_height="27dp"
             android:layout_marginTop="5dp"
             android:id="@+id/tv_day_label"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            style="@style/Text.Semibold16"
             android:textColor="@color/black_text"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="21dp"
             android:layout_marginTop="8dp"
             android:id="@+id/tv_date_label"
-            android:textSize="14sp"
+            style="@style/Text.Medium14"
             android:textColor="@color/gray_text"/>
     </LinearLayout>
 

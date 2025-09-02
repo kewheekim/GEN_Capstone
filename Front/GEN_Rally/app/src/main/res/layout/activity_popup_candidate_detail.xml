@@ -54,11 +54,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:layout_marginStart="10.77dp"
-            android:fontFamily="@font/pretendard_variable"
             android:text="닉네임"
             android:textColor="@color/black_text"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/Text.Bold20"
             app:layout_constraintStart_toEndOf="@+id/iv_tier"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -84,8 +82,7 @@
                 android:gravity="center"
                 android:text="최근 5경기 승률 00%"
                 android:textColor="@color/green_active"
-                android:fontFamily="@font/pretendard_variable"
-                android:textSize="12sp"/>
+                style="@style/Text.Regular12"/>
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -105,13 +102,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="가능한 시간"
-            android:textSize="12sp"
-            android:textColor="@color/black_text"
+            style="@style/Text.Medium12"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_img"
             android:layout_marginTop="24dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <TextView
@@ -119,14 +114,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20:00~21:00"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            style="@style/Text.Semibold16"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_img"
             android:layout_marginTop="46dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <ImageView
@@ -144,14 +137,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="시간이 일부 겹쳐요"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            style="@style/Text.Medium14"
             android:textColor="@color/pink"
             app:layout_constraintLeft_toRightOf="@+id/ic_time"
             app:layout_constraintTop_toBottomOf="@+id/tv_time"
             android:layout_marginTop="4dp"
             android:layout_marginStart="4dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <!-- 선호 위치 -->
@@ -159,13 +150,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="선호 위치"
-            android:textSize="12sp"
+            style="@style/Text.Medium12"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_time_status"
             android:layout_marginTop="16dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <TextView
@@ -173,14 +163,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="망원 다목적 체육관"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            style="@style/Text.Semibold16"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_time_status"
             android:layout_marginTop="38dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <ImageView
@@ -198,14 +186,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="위치가 동일해요"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            style="@style/Text.Medium14"
             android:textColor="@color/green_active"
             app:layout_constraintLeft_toRightOf="@+id/ic_location"
             app:layout_constraintTop_toBottomOf="@+id/tv_location"
             android:layout_marginTop="4dp"
             android:layout_marginStart="4dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <!-- 경기 스타일 -->
@@ -213,13 +199,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="경기 스타일"
-            android:textSize="12sp"
+            style="@style/Text.Medium12"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_location_status"
             android:layout_marginTop="16dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <TextView
@@ -227,14 +212,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="열심히 경기해요"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            style="@style/Text.Semibold16"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_location_status"
             android:layout_marginTop="38dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <!-- 매너 지수 -->
@@ -243,13 +226,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매너 지수"
-            android:textSize="12sp"
+            style="@style/Text.Medium12"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_type"
             android:layout_marginTop="16dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/pretendard_variable"
             />
 
         <RatingBar
@@ -276,7 +258,6 @@
             android:background="@drawable/bg_next_button_active"
             android:text="매칭 요청 보내기"
             android:textSize="20sp"
-            android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="30dp"

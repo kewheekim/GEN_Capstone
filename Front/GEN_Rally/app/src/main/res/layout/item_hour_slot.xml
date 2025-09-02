@@ -12,7 +12,7 @@
         android:id="@+id/tv_hour"
         android:layout_width="60dp"
         android:layout_height="18dp"
-        android:textSize="12sp"
+        style="@style/Text.Regular12"
         android:textColor="#525252"/>
 
     <!-- 선택 가능한 슬롯 -->

@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="요청 보류 중"
-                android:textSize="14sp"
+                style="@style/Text.Medium14"
                 android:textColor="@color/green_active" />
         </LinearLayout>
 
@@ -49,8 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매칭 마감까지 D-5"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            style="@style/Text.Medium14"
             android:textColor="@color/green_active"
             app:layout_constraintLeft_toRightOf="@+id/chip_status"
             app:layout_constraintTop_toTopOf="parent"
@@ -62,8 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="5월 3일(토)"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/Text.Semibold24"
             android:textColor="@android:color/black"
             app:layout_constraintTop_toBottomOf="@id/chip_status"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +99,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:text="희망 시간"
-                    android:textSize="12sp"
+                    style="@style/Text.Medium12"
                     android:textColor="#9F9F9F"/>
 
                 <TextView
@@ -109,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="19:00~21:00"
-                    android:textSize="14sp"
+                    style="@style/Text.Medium14"
                     android:textColor="@color/black_text"
                     android:layout_marginTop="2dp"/>
             </LinearLayout>
@@ -125,7 +123,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:text="희망 장소"
-                    android:textSize="12sp"
+                    style="@style/Text.Medium12"
                     android:textColor="#9F9F9F"/>
 
                 <TextView
@@ -133,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="망원 다목적 체육관"
-                    android:textSize="14sp"
+                    style="@style/Text.Medium14"
                     android:textColor="@color/black_text"
                     android:layout_marginTop="2dp"/>
             </LinearLayout>
@@ -149,7 +147,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:text="경기 형태"
-                    android:textSize="12sp"
+                    style="@style/Text.Medium12"
                     android:textColor="#9F9F9F"/>
 
                 <TextView
@@ -157,7 +155,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="단식"
-                    android:textSize="14sp"
+                    style="@style/Text.Medium14"
                     android:textColor="@color/black_text"
                     android:layout_marginTop="2dp"/>
             </LinearLayout>
@@ -182,7 +180,6 @@
                 android:layout_weight="1"
                 android:text="신청 취소"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:enabled="false"
                 android:background="@drawable/bg_next_button_inactive"/>
 
@@ -194,7 +191,6 @@
                 android:layout_marginStart="8dp"
                 android:text="후보 확인하기"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/bg_next_button_active"
                 />
@@ -206,7 +202,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="추천 상대 업데이트까지 59:59 남음"
-            android:textSize="12sp"
+            style="@style/Text.Medium12"
             android:textColor="#757575"
             android:gravity="center"
             android:layout_marginTop="14dp"
