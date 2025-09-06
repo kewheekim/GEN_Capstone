@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("io.freefair.lombok") version "8.4"
-    id("com.google.gms.google-services") version "4.4.3" apply false
+    id("com.google.gms.google-services") version "4.4.3"
 }
 
 android {
@@ -58,5 +58,4 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(platform("com.google.firebase:firebase-bom:34.2.0")) // Firebase
     implementation ("com.google.firebase:firebase-storage")
-    implementation ("com.google.firebase:firebase-auth")
 }

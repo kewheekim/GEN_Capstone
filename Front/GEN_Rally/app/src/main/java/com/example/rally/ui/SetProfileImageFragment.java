@@ -100,15 +100,10 @@ public class SetProfileImageFragment extends Fragment {
 
             try {
                 selectedImage = compressImage(imageUri);
-
                 btnNext.setEnabled(true);
                 btnNext.setTextColor(Color.parseColor("#FFFFFF"));
-
-                // 크기 로그 찍어보기
-                Log.d(TAG, "압축 후 이미지 크기: " + selectedImage.length / 1024 + "KB");
             } catch (Exception e) {
                 Log.e(TAG, "이미지 압축 중 예외 발생" + e);
-
                 Toast.makeText(getContext(),
                         "이미지를 처리 중 오류가 발생했습니다:\n" + e.getMessage(),
                         Toast.LENGTH_LONG).show();
@@ -128,7 +123,7 @@ public class SetProfileImageFragment extends Fragment {
 
                 Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_user_profile);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 selectedImage = baos.toByteArray();
 
                 btnNext.setEnabled(true);
