@@ -29,9 +29,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private LoginType loginType;
 
-    @Lob
-    @Column(name= "profile_image", columnDefinition = "MEDIUMBLOB")
-    private byte[] profileImage; // TODO: byte 대신 imageurl 쓰는 게 어떤지...
+    @Column(name= "image_url",length = 2048)
+    private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -41,10 +40,5 @@ public class User {
     private int skill;
     private double manner;
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    public String getProfileImageUrl() {
-        if (this.profileImage == null) return null;
-        return Base64.getEncoder().encodeToString(this.profileImage);
-    }
 }
 

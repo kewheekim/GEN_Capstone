@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class SocialSignupRequest {
     private String name;
-    private byte[] profileImage;
+    private String imageUrl;
     private Gender gender;
     private Primary primaryThing;
 }

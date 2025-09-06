@@ -8,6 +8,6 @@ public class GeneralSignupRequest {
     private String password;
     private String name;
     private String gender;
-    private byte[] profileImage;
+    private String imageUrl;
     private String primaryThing;
 }

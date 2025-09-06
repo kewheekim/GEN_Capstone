@@ -34,7 +34,7 @@ public class UserService {
         user.setUserId(request.getUserId());
         user.setPassword(encodedPassword);
         user.setName(request.getName());
-        user.setProfileImage(request.getProfileImage());
+        user.setImageUrl(request.getImageUrl());
         user.setGender(request.getGender());
         user.setPrimaryThing(request.getPrimaryThing());
         user.setLoginType(LoginType.NORMAL);
@@ -58,11 +58,6 @@ public class UserService {
         user.setName(request.getName());
         user.setGender(request.getGender());
         user.setPrimaryThing(request.getPrimaryThing());
-
-        if (request.getProfileImage() != null) {
-            byte[] decodedImage = Base64.getDecoder().decode(request.getProfileImage());
-            user.setProfileImage(decodedImage);
-        }
 
         userRepository.save(user);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");

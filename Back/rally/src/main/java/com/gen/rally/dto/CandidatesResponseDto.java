@@ -34,7 +34,7 @@ public class CandidatesResponseDto {
     public CandidatesResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap, boolean isSameTier) {
         this.userId = request.getUser().getUserId();
         this.name = request.getUser().getName();
-        this.profileImage = request.getUser().getProfileImageUrl();
+        this.profileImage = request.getUser().getImageUrl();
         this.gender= request.getGender();
         this.tier=request.getUser().getTier().getCode();
         this.isSameTier=isSameTier;
