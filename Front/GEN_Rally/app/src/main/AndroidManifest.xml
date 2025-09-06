@@ -52,6 +52,7 @@
         <activity android:name=".ui.AuthActivity"/>
         <activity android:name=".ui.SurveyActivity"/>
         <activity android:name=".ui.ScoreMonitorActivity"/>
+        <activity android:name=".ui.TutorialActivity"/>
         <activity android:name=".ui.ScoreRecordActivity" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
