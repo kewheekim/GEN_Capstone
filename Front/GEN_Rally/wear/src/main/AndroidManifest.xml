@@ -36,22 +36,18 @@
         <service
             android:name=".datalayer.WatchDataLayerListener"
             android:exported="true">
-            <!-- 메시지: 폰 -> 워치 (/rally/ack) -->
+            <!-- 메시지: /rally 이하 모두 -->
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
-                <data android:scheme="wear" android:host="*" android:path="/rally/ack"/>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/rally" />
             </intent-filter>
-            <!-- 메시지: 폰 -> 워치 경기 세팅(/rally/match_setup) -->
+            <!-- DataItem: 스냅샷 -->
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
-                <data android:scheme="wear" android:host="*" android:path="/rally/game_setup"/>
-            </intent-filter>
-            <!-- 폰으로부터 스냅샷(data Item) (/rally/snapshot) 수신 -->
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
-                <data android:scheme="wear" android:host="*" android:path="/rally/snapshot"/>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:scheme="wear" android:host="*" android:path="/rally/snapshot" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.android.wearable.capability"
             android:resource="@xml/wear_capabilities_watch"/>

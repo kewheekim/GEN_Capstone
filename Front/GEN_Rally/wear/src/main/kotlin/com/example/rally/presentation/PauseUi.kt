@@ -46,15 +46,13 @@ fun PauseScreen(
             Text(
                 text = "경기 시간",
                 fontSize = 12.sp,
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.Medium
+                fontFamily = FontFamily(Font(R.font.pretendard_medium))
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = formatTime(elapsedTime),
                 fontSize = 18.sp,
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.SemiBold
+                fontFamily = FontFamily(Font(R.font.pretendard_semibold))
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -70,8 +68,7 @@ fun PauseScreen(
                 Text(
                     text = if (isPaused) "경기 재개" else "경기 일시정지",
                     fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.Medium
+                    fontFamily = FontFamily(Font(R.font.pretendard_medium))
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))

@@ -42,6 +42,7 @@ public class PhoneDataLayerListener extends WearableListenerService {
     public void onMessageReceived(@NonNull MessageEvent ev) {
         final String path = ev.getPath();
         final String fromNode = ev.getSourceNodeId();
+        PhoneDataLayerClient.setWatchNodeId(fromNode);
         final String body = new String(ev.getData(), StandardCharsets.UTF_8);
         Log.d(TAG, "onMessageReceived <- " + path + " from " + fromNode + " : " + body);
 
@@ -110,16 +111,20 @@ public class PhoneDataLayerListener extends WearableListenerService {
 
     private void pushSnapshotNow() {
         try {
+            JSONObject payload = new JSONObject()
+                    .put("setNumber", 1)
+                    .put("user1Sets", 0)
+                    .put("user2Sets", 0)
+                    .put("user1Score", 0)
+                    .put("user2Score", 0)
+                    .put("currentServer", "USER1");
             JSONObject snap = new JSONObject()
+                    .put("version", 1)
                     .put("type", "SNAPSHOT")
-                    .put("state", new JSONObject()
-                            .put("setNumber", 1)
-                            .put("userSets", 0)
-                            .put("opponentSets", 0)
-                            .put("userScore", 0)
-                            .put("opponentScore", 0)
-                            .put("currentServer", "USER1")
-                    );
+                    .put("eventId", java.util.UUID.randomUUID().toString())
+                    .put("createdAt", System.currentTimeMillis())
+                    .put("matchId", "match-123")
+                    .put("payload", payload);
 
             PutDataMapRequest req = PutDataMapRequest.create(PATH_SNAPSHOT);
             req.getDataMap().putString("json", snap.toString());

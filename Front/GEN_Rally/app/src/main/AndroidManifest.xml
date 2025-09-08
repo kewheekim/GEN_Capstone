@@ -2,85 +2,113 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rally"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.GameResultActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M"/>
+            android:value="AIzaSyBZt2tKHejWOtLWkIT64JLGHifjUPomV7M" />
 
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
-        <activity android:name=".ui.MainActivity" android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MatConditionActivity"/>
-        <activity android:name=".ui.MatTypeActivity"/>
-        <activity android:name=".ui.SetTimeActivity"/>
-        <activity android:name=".ui.SetLocationActivity"/>
-        <activity android:name=".ui.SearchLocationActivity"/>
-        <activity android:name=".ui.PopupLocationActivity" android:theme="@style/PopupTheme" />
-        <activity android:name=".ui.PopupConfirmActivity" android:theme="@style/PopupTheme" />
-        <activity android:name=".ui.LoadingActivity"/>
-        <activity android:name=".ui.CandidateActivity"/>
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.MatConditionActivity" />
+        <activity android:name=".ui.MatTypeActivity" />
+        <activity android:name=".ui.SetTimeActivity" />
+        <activity android:name=".ui.SetLocationActivity" />
+        <activity android:name=".ui.SearchLocationActivity" />
+        <activity
+            android:name=".ui.PopupLocationActivity"
+            android:theme="@style/PopupTheme" />
+        <activity
+            android:name=".ui.PopupConfirmActivity"
+            android:theme="@style/PopupTheme" />
+        <activity android:name=".ui.LoadingActivity" />
+        <activity android:name=".ui.CandidateActivity" />
         <activity android:name=".ui.CandidateNullActivity" />
-        <activity android:name=".ui.PopupCandidateDetailActivity" android:theme="@style/PopupTheme"/>
-        <activity android:name=".ui.PopupInviteActivity" android:theme="@style/PopupTheme"/>
-        <activity android:name=".ui.AuthActivity"/>
-        <activity android:name=".ui.SurveyActivity"/>
-        <activity android:name=".ui.ScoreMonitorActivity"/>
-        <activity android:name=".ui.ScoreRecordActivity" android:exported="true" >
+        <activity
+            android:name=".ui.PopupCandidateDetailActivity"
+            android:theme="@style/PopupTheme" />
+        <activity
+            android:name=".ui.PopupInviteActivity"
+            android:theme="@style/PopupTheme" />
+        <activity android:name=".ui.AuthActivity" />
+        <activity android:name=".ui.SurveyActivity" />
+        <activity android:name=".ui.ScoreMonitorActivity" />
+        <activity
+            android:name=".ui.ScoreRecordActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.EvaluationActivity"/>
-        <activity android:name=".ui.TierActivity"/>
+        <activity android:name=".ui.EvaluationActivity" />
+        <activity android:name=".ui.TierActivity" />
 
         <service
             android:name=".wear.PhoneDataLayerListener"
             android:exported="true">
+
             <!-- 이벤트: 워치 -> 폰 -->
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/rally/event"/>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="/rally/event"
+                    android:scheme="wear" />
             </intent-filter>
             <!-- 스냅샷: 폰 -> 워치 (/rally/snapshot) 수신 -->
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
-                <data android:scheme="wear" android:host="*" android:path="/rally/snapshot"/>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+
+                <data
+                    android:host="*"
+                    android:path="/rally/snapshot"
+                    android:scheme="wear" />
             </intent-filter>
             <!-- Capability 변경 감지 -->
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED"/>
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.android.wearable.capability"
             android:resource="@xml/wear_capabilities_phone" />
     </application>
+
 </manifest>

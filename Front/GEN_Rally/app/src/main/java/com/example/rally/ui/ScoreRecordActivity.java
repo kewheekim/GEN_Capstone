@@ -6,12 +6,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.rally.R;
@@ -19,7 +21,6 @@ import com.example.rally.api.websocket.RealtimeClient;
 import com.example.rally.api.websocket.WsRealtimeClient;
 import com.example.rally.viewmodel.Player;
 import com.example.rally.viewmodel.ScoreViewModel;
-import com.example.rally.viewmodel.SetResult;
 
 public class ScoreRecordActivity extends AppCompatActivity {
     private ScoreViewModel viewModel;
@@ -27,9 +28,10 @@ public class ScoreRecordActivity extends AppCompatActivity {
     private final String matchId = "match-123";
 
     private TextView tvSetNumber, tvOpponentName, tvUserName,
-            tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer;
+            tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer, tvUndo, tvPause;
     private ImageView ivServeLeft, ivServeRight;
-    private Button btnScore, btnUndo, btnPause;
+    ImageButton btnBack;
+    private Button btnScore;
 
     private int setNumber;
     private boolean isSetFinished = false;
@@ -53,7 +55,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         int userSets = intent.getIntExtra("userSets", 0);
         String nextFirst = intent.getStringExtra("nextFirstServer");
         this.nextFirstServer = nextFirst != null ? Player.valueOf(nextFirst) : Player.USER1;
-        boolean isUser1 = intent.getBooleanExtra("localIsUser1", false);
+        boolean isUser1 = intent.getBooleanExtra("localIsUser1", true);
 
         viewModel.initSets(userSets, opponentSets);
         viewModel.initPlayer(isUser1);
@@ -61,7 +63,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
-        String url = "ws://172.19.14.52:8080/ws?matchId=" + matchId;
+        String url = "ws://172.19.7.17:8080/ws?matchId=" + matchId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/match."+matchId, json -> viewModel.applyIncoming(json));
         client.connect();
@@ -72,6 +74,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         btnScore.setEnabled(false);
         isSetFinished = true;    // 대기
         tvTimer.setText("00:00:00");
+        btnBack.setColorFilter(ContextCompat.getColor(this, R.color.white));
         updateButtonsForState();
     }
 
@@ -87,8 +90,9 @@ public class ScoreRecordActivity extends AppCompatActivity {
         ivServeLeft = findViewById(R.id.iv_opponent_serve);
         ivServeRight = findViewById(R.id.iv_user_serve);
         btnScore = findViewById(R.id.btn_score);
-        btnUndo = findViewById(R.id.btn_undo);
-        btnPause = findViewById(R.id.btn_pause);
+        tvUndo = findViewById(R.id.tv_undo);
+        tvPause = findViewById(R.id.tv_pause);
+        btnBack = findViewById(R.id.btn_back);
     }
 
     private void setupObservers() {
@@ -111,7 +115,6 @@ public class ScoreRecordActivity extends AppCompatActivity {
             isSetFinished = fin;
             btnScore.setText(fin ? "경기 시작" : "득점");
             viewModel.resetStopwatch();
-//            tvTimer.setText("00:00:00");
             updateButtonsForState();
         });
 
@@ -123,7 +126,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         // 일시정지 버튼 텍스트 갱신
         viewModel.getIsPaused().observe(this, paused -> {
             boolean p = paused != null && paused;
-            btnPause.setText(p ? "경기 재개" : "경기 일시정지");
+            tvPause.setText(p ? "경기 재개" : "경기 일시정지");
             updateButtonsForState();
         });
     }
@@ -133,14 +136,14 @@ public class ScoreRecordActivity extends AppCompatActivity {
         // 세트 시작 전
         if (isSetFinished) {
             btnScore.setEnabled(true);
-            btnUndo.setEnabled(false);
-            btnPause.setEnabled(false);
+            tvUndo.setEnabled(false);
+            tvPause.setEnabled(false);
         } else {
             // 세트 진행 중 pause 시 득점, 되돌리기 버튼 비활성화
             boolean isPaused = viewModel.getIsPaused().getValue();
-            btnPause.setEnabled(true);
+            tvPause.setEnabled(true);
             btnScore.setEnabled(!isPaused);
-            btnUndo.setEnabled(!isPaused);
+            tvUndo.setEnabled(!isPaused);
         }
     }
 
@@ -170,7 +173,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
             }
         });
         // 점수 되돌리기 버튼
-        btnUndo.setOnClickListener(v -> {
+        tvUndo.setOnClickListener(v -> {
             if (!viewModel.canUndoMyLastScore()) {
                 Toast.makeText(this, "마지막 득점이 내가 아니라서 되돌릴 수 없어요.", Toast.LENGTH_SHORT).show();
                 return;
@@ -183,7 +186,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
             }
         });
         // 일시정지 <-> 경기 재개 버튼
-        btnPause.setOnClickListener(v -> {
+        tvPause.setOnClickListener(v -> {
             boolean paused = Boolean.TRUE.equals(viewModel.getIsPaused().getValue());
             long now = System.currentTimeMillis();
             if (!paused) {

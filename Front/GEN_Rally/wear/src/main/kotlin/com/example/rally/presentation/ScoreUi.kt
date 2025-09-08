@@ -40,9 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ScoreScreen(
     setNumber: Int,
-    opponentName: String,
-    userName: String,
-    viewModel: ScoreViewModel = viewModel(),
+    viewModel: ScoreViewModel,
     onSetFinished: (SetResult) -> Unit
 ) {
     val context = LocalContext.current
@@ -52,6 +50,8 @@ fun ScoreScreen(
     val opponentSets by viewModel.opponentSets.collectAsState()
     val isUser1 by viewModel.isUser1.collectAsState()
     val currentServer by viewModel.currentServer.collectAsState()
+    val userName by viewModel.userName.collectAsState()
+    val opponentName by viewModel.opponentName.collectAsState()
     val serveOnRight = (currentServer == Player.USER1 && isUser1) || (currentServer == Player.USER2 && !isUser1)
 
     val isPaused by viewModel.isPaused.collectAsState()
@@ -79,8 +79,7 @@ fun ScoreScreen(
                 text = "${setNumber}세트",
                 fontSize = 12.sp,
                 color = Color.White,
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.Medium
+                fontFamily = FontFamily(Font(R.font.pretendard_medium))
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -96,7 +95,7 @@ fun ScoreScreen(
                         text = "$opponentName",
                         fontSize = 10.sp,
                         color = Color.Gray,
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        fontFamily = FontFamily(Font(R.font.pretendard_regular)),
                         modifier = Modifier.widthIn(max = 50.dp),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -105,8 +104,7 @@ fun ScoreScreen(
                         text = "$opponentScore",
                         fontSize = 46.sp,
                         color = Color.White,
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                        fontWeight = FontWeight.Black
+                        fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
                     )
                 }
 
@@ -127,8 +125,7 @@ fun ScoreScreen(
                     text = "$opponentSets",
                     fontSize = 16.sp,
                     color = Color.White,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.SemiBold
+                    fontFamily = FontFamily(Font(R.font.pretendard_semibold))
                 )
 
                 if (checkMatchPoint(userScore, opponentScore)) {
@@ -136,8 +133,7 @@ fun ScoreScreen(
                         text = "Match\nPoint!",
                         fontSize = 8.sp,
                         color = colorResource(id = R.color.green_active),
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                        fontWeight = FontWeight.Black,
+                        fontFamily = FontFamily(Font(R.font.pretendard_extrabold)),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.offset(y=16.dp)
                     )
@@ -150,8 +146,7 @@ fun ScoreScreen(
                     text = "$userSets",
                     fontSize = 16.sp,
                     color = Color.White,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.SemiBold
+                    fontFamily = FontFamily(Font(R.font.pretendard_semibold))
                 )
 
                 Column(
@@ -178,7 +173,7 @@ fun ScoreScreen(
                         text = "$userName",
                         fontSize = 10.sp,
                         color = Color.Gray,
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        fontFamily = FontFamily(Font(R.font.pretendard_regular)),
                         modifier = Modifier.widthIn(max = 50.dp),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -187,8 +182,7 @@ fun ScoreScreen(
                         text = "$userScore",
                         fontSize = 46.sp,
                         color = colorResource(id = R.color.green_active),
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                        fontWeight = FontWeight.Black
+                        fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
                     )
                 }
             }
@@ -207,7 +201,12 @@ fun ScoreScreen(
                     isPressed=true
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                     viewModel.addUserScore()
-                    WatchDataLayerClient.sendScore(context, matchId = "match-123", userScore = userScore+1, oppScore = opponentScore, setNumber = setNumber) // 폰으로 전송
+                    // 폰으로 전송
+                    WatchDataLayerClient.sendScore(
+                        context = context,
+                        matchId = "match-123",
+                        userScore = userScore + 1, opponentScore = opponentScore,
+                        setNumber = setNumber, localIsUser1 = isUser1)
 
                     //세트 종료
                     if (checkSetWin(userScore + 1, opponentScore)) {
@@ -220,9 +219,11 @@ fun ScoreScreen(
                             toastMessage= "\n승리했습니다!"
                         showToast = true
 
-                        viewModel.setFinished() // 세트 종료 처리
+                        viewModel.setFinished()  // 세트 종료 처리
                         viewModel.pause()
-                        onSetFinished(viewModel.onSetFinished())
+                        val result = viewModel.computeSetResult()
+                        onSetFinished(result)
+
                     } else if (checkMatchPoint(userScore + 1, opponentScore)) {
                         toastTitle = "Match Point!"
                         toastMessage = "이번 세트 승리까지 단 1점,\n마지막까지 최선을!"
@@ -240,8 +241,7 @@ fun ScoreScreen(
                 Text(
                     text = "득점",
                     fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.Medium
+                    fontFamily = FontFamily(Font(R.font.pretendard_medium))
                 )
             }
 
@@ -257,7 +257,14 @@ fun ScoreScreen(
                         isPressed=true
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)  // 진동 피드백
                         viewModel.undoUserScore()
-                        WatchDataLayerClient.sendUndo(context, matchId = "match-123", setNumber = setNumber)  // 폰으로 전송
+                        WatchDataLayerClient.sendUndo(
+                            context = context,
+                            matchId = "match-123",
+                            setNumber = setNumber,
+                            userScore = userScore-1,
+                            opponentScore = opponentScore,
+                            localIsUser1 = isUser1
+                        )
 
                         // 1초동안 비활성화
                         scope.launch {
@@ -265,7 +272,7 @@ fun ScoreScreen(
                             isPressed = false
                         }
                     }),
-                fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                fontFamily = FontFamily(Font(R.font.pretendard_regular))
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -313,8 +320,6 @@ fun checkSetWin(
 fun MatchScoreScreenPreview() {
     ScoreScreen(
         setNumber = 1,
-        opponentName = "아어려워요",
-        userName = "안세영이되",
         viewModel = viewModel(),
         onSetFinished = {}
     )

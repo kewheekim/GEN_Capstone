@@ -13,9 +13,15 @@ class WatchDataLayerListener : WearableListenerService() {
 
     companion object {
         private const val TAG = "WatchDL"
-        private const val PATH_ACK = "/rally/ack"
+        const val ACTION_PHONE_EVENT = "rally.EVENT_FROM_PHONE"
         private const val PATH_SNAPSHOT = "/rally/snapshot"
         private const val PATH_GAME_SETUP = "/rally/game_setup"
+        private const val PATH_EVENT_SET_START = "/rally/event/set_start"
+        private const val PATH_EVENT_SCORE = "/rally/event/score"
+        private const val PATH_EVENT_UNDO  = "/rally/event/undo"
+        private const val PATH_EVENT_PAUSE = "/rally/event/pause"
+        private const val PATH_EVENT_RESUME= "/rally/event/resume"
+        private const val PATH_EVENT_SET_FINISH = "/rally/event/set_finish"
     }
 
     // Message 수신
@@ -47,9 +53,14 @@ class WatchDataLayerListener : WearableListenerService() {
                     Log.e(TAG, "GAME_SETUP parse/start failed", it)
                 }
             }
-            PATH_ACK -> {
-                // eventId 기반 전송 큐에서 제거 등 추가
-                Log.d(TAG, "ACK 수신: $body")
+            PATH_EVENT_SET_START, PATH_EVENT_SCORE, PATH_EVENT_UNDO,
+            PATH_EVENT_PAUSE, PATH_EVENT_RESUME, PATH_EVENT_SET_FINISH -> {
+                Log.d("WatchDL", "BROADCAST -> $path")
+                androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+                    .sendBroadcast(Intent(ACTION_PHONE_EVENT).apply {
+                        putExtra("path", path)
+                        putExtra("json", body)
+                    })
             }
             else -> super.onMessageReceived(event)
         }
@@ -58,13 +69,15 @@ class WatchDataLayerListener : WearableListenerService() {
     // DataItem(스냅샷) 수신
     override fun onDataChanged(events: DataEventBuffer) {
         for (e in events) {
-            if (e.type == DataEvent.TYPE_CHANGED &&
-                e.dataItem.uri.path == PATH_SNAPSHOT) {
-                val json = DataMapItem.fromDataItem(e.dataItem)
-                    .dataMap.getString("json") ?: "{}"
+            if (e.type == DataEvent.TYPE_CHANGED && e.dataItem.uri.path == PATH_SNAPSHOT) {
+                val json = DataMapItem.fromDataItem(e.dataItem).dataMap.getString("json") ?: "{}"
                 Log.d(TAG, "SNAPSHOT 수신: $json")
-
-                //  ViewModel.applySnapshot(json) 호출로 ui 갱신
+                // 스냅샷 액티비티로 전달
+                androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+                    .sendBroadcast(Intent(ACTION_PHONE_EVENT).apply {
+                        putExtra("path", PATH_SNAPSHOT)
+                        putExtra("json", json)
+                    })
             }
         }
     }

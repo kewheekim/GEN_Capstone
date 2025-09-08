@@ -37,8 +37,7 @@ fun ResultScoreScreen(
                 text = "결과화면",
                 fontSize = 12.sp,
                 color = Color.White,
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.Medium
+                fontFamily = FontFamily(Font(R.font.pretendard_medium))
             )
         }
     }

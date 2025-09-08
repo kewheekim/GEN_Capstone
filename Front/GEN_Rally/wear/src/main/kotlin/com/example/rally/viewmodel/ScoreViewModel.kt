@@ -57,6 +57,10 @@ class ScoreViewModel : ViewModel() {
     // 직전 상태 복원 위한 내역 저장
     private data class Action (val preServer: Player, val scorer: Player)
     private val history = ArrayDeque<Action>()
+    fun noteRally(preServer: Player, scorer: Player) {
+        history.addLast(Action(preServer=preServer, scorer=scorer))
+        _currentServer.value = scorer
+    }
     // 득점
     fun addUserScore() {
         _userScore.value += 1
@@ -75,10 +79,10 @@ class ScoreViewModel : ViewModel() {
             history.addLast(last)
         }
     }
-//    // 상대 점수 반영 (dataLayer)
-//    fun applyOpponentScore(newScore: Int) {
-//        _opponentScore.value = newScore
-//    }
+
+    private val _hasStarted = MutableStateFlow(false)
+    val hasStarted: StateFlow<Boolean> = _hasStarted
+    fun markStarted(started: Boolean) { _hasStarted.value = started }
 
     // 세트 초기화
     fun initSets(user:Int, opponent: Int) {
@@ -109,45 +113,72 @@ class ScoreViewModel : ViewModel() {
     private val _isGameFinished = MutableStateFlow(false)
     val isGameFinished: StateFlow<Boolean> = _isGameFinished
 
+    // 점수 스냅샷 반영
+    fun applyScoreSnapshot(my: Int, opp: Int) {
+        _userScore.value = my
+        _opponentScore.value = opp
+    }
+
+    //  상대 점수 증감(백업 플랜)
+    fun applyOpponentScoreDelta(delta: Int) {
+        val cur = _opponentScore.value
+        _opponentScore.value = (cur + delta).coerceAtLeast(0)
+    }
+
     // 세트 종료 처리
-    fun onSetFinished(): SetResult {
+    // 경기 결과 계산만 수행, 상태 변경 X
+    fun computeSetResult(): SetResult {
         val user = _userScore.value
-        val opponent = _opponentScore.value
-        history.clear()   // 세트 종료 시 히스토리 초기화
-
-        val winner = when {
-            user > opponent -> {
-                _userSets.value += 1
-                "user"
-            }
-            opponent > user -> {
-                _opponentSets.value += 1
-                "opponent"
-            }
-            else -> "draw"
-        }
-
-        // 다음 세트 첫 서브
-        _currentServer.value = if (winner == "user") {
-            if (_isUser1.value) Player.USER1 else Player.USER2
-        } else {
-            if (_isUser1.value) Player.USER2 else Player.USER1
-        }
-        // 게임 종료 판정
-        if (_userSets.value >= 2 || _opponentSets.value >= 2) {
-            _isGameFinished.value = true
-        }
-        _setNumber.value = _userSets.value + _opponentSets.value + 1
+        val opp  = _opponentScore.value
+        val winnerIsUser = user > opp
+        val userSetsFuture     = _userSets.value + if (winnerIsUser) 1 else 0
+        val opponentSetsFuture = _opponentSets.value + if (winnerIsUser) 0 else 1
+        val nextSet = userSetsFuture + opponentSetsFuture + 1
+        val nextFirst = if (winnerIsUser) (if (_isUser1.value) Player.USER1 else Player.USER2)
+        else              (if (_isUser1.value) Player.USER2 else Player.USER1)
+        val gameFinished = (userSetsFuture >= 2 || opponentSetsFuture >= 2)
 
         return SetResult(
-            nextSetNumber = _setNumber.value,
-            userSets = _userSets.value,
-            userScore=_userScore.value,
-            opponentSets = _opponentSets.value,
-            opponentScore = _opponentScore.value,
-            currentServer = _currentServer.value,
-            isGameFinished = _isGameFinished.value
+            nextSetNumber = nextSet,
+            userScore = user,
+            userSets = userSetsFuture,
+            opponentSets = opponentSetsFuture,
+            opponentScore = opp,
+            currentServer = nextFirst,
+            isGameFinished = gameFinished
         )
+    }
+
+    // set_finish 이벤트 수신 시 상태 변경
+    fun applySetFinishFromRemote(
+        setNumberFinished: Int,    // 방금 끝난 세트 번호
+        user1Score: Int,
+        user2Score: Int,
+        isGameFinishedRemote: Boolean,
+        nextFirstServer: Player? = null // 서버가 주면 우선 사용
+    ) {
+        val iAmUser1 = _isUser1.value
+        val winner = when {
+            user1Score > user2Score -> Player.USER1
+            user2Score > user1Score -> Player.USER2
+            else -> null
+        }
+
+        winner?.let {
+            if (it == Player.USER1) {
+                if (iAmUser1) _userSets.value += 1 else _opponentSets.value += 1
+            } else {
+                if (iAmUser1) _opponentSets.value += 1 else _userSets.value += 1
+            }
+        }
+
+        _currentServer.value = nextFirstServer ?: (winner ?: _currentServer.value)
+        _userScore.value = 0
+        _opponentScore.value = 0
+        _setNumber.value = setNumberFinished + 1
+        _isSetFinished.value = true
+        if (isGameFinishedRemote) _isGameFinished.value = true
+        resetStopwatch()
     }
 
     // 경기 시간 측정
@@ -182,12 +213,35 @@ class ScoreViewModel : ViewModel() {
             }
         }
     }
+    fun startStopwatchAt(epochMillisUtc: Long) {
+        startTime = epochMillisUtc
+        totalPaused = 0
+        pauseStartedAt = null
+        _isPaused.value = false
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            while (isActive) {
+                delay(1000)
+                if (!_isPaused.value) {
+                    val now = System.currentTimeMillis()
+                    val elapsedMillis = now - startTime - totalPaused
+                    _elapsed.value = elapsedMillis / 1000
+                }
+            }
+        }
+    }
 
     // 일시정지
     fun pause() {
         if (!_isPaused.value) {
             _isPaused.value = true
             pauseStartedAt = System.currentTimeMillis()
+        }
+    }
+    fun pauseAt(epochMillisUtc: Long) {
+        if (!_isPaused.value) {
+            _isPaused.value = true
+            pauseStartedAt = epochMillisUtc
         }
     }
 
@@ -201,6 +255,22 @@ class ScoreViewModel : ViewModel() {
             pauseStartedAt = null
             _isPaused.value = false
         }
+    }
+    fun resumeAt(epochMillisUtc: Long) {
+        if (_isPaused.value) {
+            pauseStartedAt?.let { totalPaused += (epochMillisUtc - it) }
+            pauseStartedAt = null
+            _isPaused.value = false
+        }
+    }
+
+    fun resetStopwatch() {
+        timerJob?.cancel()
+        startTime = 0L
+        totalPaused = 0L
+        pauseStartedAt = null
+        _elapsed.value = 0L
+        _isPaused.value = true
     }
 }
 
