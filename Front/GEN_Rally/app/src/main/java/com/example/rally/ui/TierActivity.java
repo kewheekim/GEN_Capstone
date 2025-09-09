@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -55,6 +56,13 @@ public class TierActivity extends AppCompatActivity {
         req.setQ3(footWork);
         req.setQ4(count);
         req.setQ5(howLong);
+
+        btnNext = findViewById(R.id.btn_next);
+        btnNext.setOnClickListener(v -> {
+            Intent intent = new Intent(TierActivity.this, TutorialActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         apiService.getTier(req)
                 .enqueue(new Callback<TierAssessResponse>() {

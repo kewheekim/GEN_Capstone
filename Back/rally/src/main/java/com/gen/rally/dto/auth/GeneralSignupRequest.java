@@ -11,7 +11,7 @@ public class GeneralSignupRequest {
     private String userId;
     private String password;
     private String name;
-    private byte[] profileImage;
+    private String imageUrl;
     private Gender gender;
     private Primary primaryThing;
 }

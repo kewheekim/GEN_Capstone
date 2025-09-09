@@ -20,6 +20,9 @@ import com.example.rally.api.RetrofitClient;
 import com.example.rally.auth.TokenStore;
 import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.SignupResponse;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 
@@ -37,6 +40,7 @@ public class SetPrimaryFragment extends Fragment {
     private static final String ARG_GENDER = "gender";
     private String userId, userPw, name, gender;
     private byte[] imageBytes;
+    private StorageReference storage;
     private ImageButton btnBack;
     private Button btnNext;
     private RadioGroup radioGroup;
@@ -87,6 +91,10 @@ public class SetPrimaryFragment extends Fragment {
             }
         });
 
+        com.google.firebase.FirebaseApp.initializeApp(requireContext().getApplicationContext());
+
+        storage = FirebaseStorage.getInstance().getReference();
+
         final ApiService apiService = RetrofitClient
                 .getClient("http://10.0.2.2:8080/")
                 .create(ApiService.class);
@@ -105,14 +113,45 @@ public class SetPrimaryFragment extends Fragment {
                 Toast.makeText(getContext(), "하나의 옵션을 선택해주세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
+            imageUpload(apiService);
+        });
+    }
 
-            GeneralSignupRequest request = new GeneralSignupRequest();
-            request.setUserId(userId);
-            request.setPassword(userPw);
-            request.setName(name);
-            request.setProfileImage(imageBytes);
-            request.setGender(gender);
-            request.setPrimaryThing(String.valueOf(checkedIndex));
+    private void imageUpload(ApiService apiService){
+        // 가입 전이라 서버 PK가 없으니, 입력한 userId를 폴더 키로 사용
+        String fileName = System.currentTimeMillis() + ".jpg";
+        String objectPath = "images/" + userId + "/profile/" + fileName;
+
+        StorageReference ref = storage.child(objectPath);
+        StorageMetadata meta = new StorageMetadata.Builder()
+                .setContentType("image/jpeg") // 기본/갤러리 모두 JPEG로 맞춘다는 전제
+                .build();
+
+        ref.putBytes(imageBytes, meta)
+                .continueWithTask(t -> {
+                    if (!t.isSuccessful()) throw t.getException();
+                    return ref.getDownloadUrl();
+                })
+                .addOnSuccessListener(uri -> {
+                    String downloadUrl = uri.toString();
+                    callSignup(apiService, downloadUrl);
+                })
+                .addOnFailureListener(e -> {
+                    btnNext.setEnabled(true);
+                    btnNext.setText("다음");
+                    Log.e("SignUp", "Firebase 업로드 실패", e);
+                    Toast.makeText(getContext(), "이미지 업로드 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    private void callSignup(ApiService apiService, @NonNull String imageUrl) {
+        GeneralSignupRequest request = new GeneralSignupRequest();
+        request.setUserId(userId);
+        request.setPassword(userPw);
+        request.setName(name);
+        request.setGender(gender);
+        request.setPrimaryThing(String.valueOf(checkedIndex));
+        request.setImageUrl(imageUrl);
 
             apiService.signup(request)
                     .enqueue(new Callback<SignupResponse>() {
@@ -156,6 +195,5 @@ public class SetPrimaryFragment extends Fragment {
                                     Toast.LENGTH_LONG).show();
                         }
                     });
-        });
     }
 }
