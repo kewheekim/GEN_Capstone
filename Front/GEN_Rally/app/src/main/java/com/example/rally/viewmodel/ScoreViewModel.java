@@ -2,18 +2,15 @@ package com.example.rally.viewmodel;
 
 import android.os.Looper;
 import android.util.Log;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-import org.json.JSONObject;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import org.json.JSONObject;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 public class ScoreViewModel extends ViewModel {
     private final MutableLiveData<Integer> setNumber = new MutableLiveData<>(1);
@@ -132,41 +129,6 @@ public class ScoreViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> isGameFinished = new MutableLiveData<>(false);
     public LiveData<Boolean> getIsGameFinished() { return isGameFinished; }
-
-    public SetResult onSetFinished() {
-        int user = userScore.getValue() == null ? 0 : userScore.getValue();
-        int opp = opponentScore.getValue() == null ? 0 : opponentScore.getValue();
-
-        String winner;
-        if (user > opp) { userSets.setValue((userSets.getValue()==null?0:userSets.getValue()) + 1); winner = "user"; }
-        else if (opp > user) { opponentSets.setValue((opponentSets.getValue()==null?0:opponentSets.getValue()) + 1); winner = "opponent"; }
-        else { winner = "draw"; }
-
-        // 다음 세트 첫 서브 = 세트 승자
-        if ("user".equals(winner)) {
-            currentServer.setValue(localPlayer());
-        } else {
-            currentServer.setValue(opponentPlayer());
-        }
-
-        if ((userSets.getValue()!=null && userSets.getValue()>=2) || (opponentSets.getValue()!=null && opponentSets.getValue()>=2)) {
-            isGameFinished.setValue(true);
-        }
-
-        history.clear();
-
-        int nextSetNum = (userSets.getValue()==null?0:userSets.getValue()) + (opponentSets.getValue()==null?0:opponentSets.getValue()) + 1;
-        setNumber.setValue(nextSetNum);
-        return new SetResult(
-                nextSetNum,
-                user,
-                userSets.getValue()==null?0:userSets.getValue(),
-                opponentSets.getValue()==null?0:opponentSets.getValue(),
-                opp,
-                currentServer.getValue()==null?Player.USER1:currentServer.getValue(),
-                Boolean.TRUE.equals(isGameFinished.getValue())
-        );
-    }
 
     // 스톱워치
     public void startStopwatch() {

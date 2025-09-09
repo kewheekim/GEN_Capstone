@@ -56,8 +56,7 @@ fun StartScreen(
             text = if(!isGameFinished) "${setNumber}세트" else "경기 종료",
             fontSize = 12.sp,
             color = Color.White,
-            fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-            fontWeight = FontWeight.Medium
+            fontFamily = FontFamily(Font(R.font.pretendard_medium))
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -73,7 +72,7 @@ fun StartScreen(
                     text = "$opponentName",
                     fontSize = 10.sp,
                     color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    fontFamily = FontFamily(Font(R.font.pretendard_regular)),
                     modifier = Modifier.widthIn(max = 50.dp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -82,8 +81,7 @@ fun StartScreen(
                     text = "$opponentScore",
                     fontSize = 46.sp,
                     color = Color.White,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.Black
+                    fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
                 )
             }
 
@@ -92,8 +90,7 @@ fun StartScreen(
                 text = "$opponentSets",
                 fontSize = 16.sp,
                 color = Color.White,
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.SemiBold
+                fontFamily = FontFamily(Font(R.font.pretendard_semibold))
             )
 
             // 사용자 점수 영역
@@ -103,8 +100,7 @@ fun StartScreen(
                 text = "$userSets",
                 fontSize = 16.sp,
                 color = Color.White,
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.SemiBold
+                fontFamily = FontFamily(Font(R.font.pretendard_semibold))
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column(
@@ -115,7 +111,7 @@ fun StartScreen(
                     text = "$userName",
                     fontSize = 10.sp,
                     color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                    fontFamily = FontFamily(Font(R.font.pretendard_regular)),
                     modifier = Modifier.widthIn(max = 50.dp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -124,8 +120,7 @@ fun StartScreen(
                     text = "$userScore",
                     fontSize = 46.sp,
                     color = colorResource(id = R.color.green_active),
-                    fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                    fontWeight = FontWeight.Black
+                    fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
                 )
             }
         }
@@ -145,25 +140,8 @@ fun StartScreen(
         ) {
             Text(
                 text = if (isGameFinished) "경기 결과 보기" else "경기 시작",
-                fontFamily = FontFamily(Font(R.font.pretendard_variable)),
-                fontWeight = FontWeight.Medium
+                fontFamily = FontFamily(Font(R.font.pretendard_medium))
             )
         }
     }
-}
-
-@Preview(showBackground = true, widthDp = 192, heightDp = 192)
-@Composable
-fun StartScreenPreview() {
-    StartScreen(
-        setNumber = 1,
-        opponentName = "랠리랠리랠리랠리",
-        opponentScore = 0,
-        opponentSets = 0,
-        userName = "나",
-        userScore = 0,
-        userSets = 0,
-        isGameFinished = false,
-        onStart = {}
-    )
 }

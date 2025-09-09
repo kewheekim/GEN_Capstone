@@ -15,13 +15,14 @@ import java.util.UUID
 object WatchDataLayerClient {
     private const val TAG = "WatchDL"
     private const val CAP_PHONE = "rally_phone"     // 폰 capability(없어도 폴백)
-    private const val PATH_EVENT_START  = "/rally/event/start"
-    private const val PATH_EVENT_SCORE  = "/rally/event/score"
-    private const val PATH_EVENT_UNDO   = "/rally/event/undo"
-    private const val PATH_EVENT_PAUSE  = "/rally/event/pause"
+    private const val PATH_EVENT_SET_START = "/rally/event/set_start"
+    private const val PATH_EVENT_SCORE = "/rally/event/score"
+    private const val PATH_EVENT_UNDO = "/rally/event/undo"
+    private const val PATH_EVENT_PAUSE = "/rally/event/pause"
     private const val PATH_EVENT_RESUME = "/rally/event/resume"
     private const val PATH_EVENT_SET_FINISH = "/rally/event/set_finish"
     private const val PATH_EVENT_GAME_FINISH = "/rally/event/game_finish"
+    private const val PATH_SNAPSHOT_REQ = "/rally/snapshot_req"
 
     // 노드 조회 + 메시지 전송
     private suspend fun sendBytes(ctx: Context, path: String, data: ByteArray) {
@@ -71,13 +72,17 @@ object WatchDataLayerClient {
 
     fun sendGameStart(context: Context, matchId: String, setNumber: Int) {
         val json = JSONObject()
+            .put("version", 1)
+            .put("type", "SET_START")
             .put("eventId", UUID.randomUUID().toString())
-            .put("type", "START")
+            .put("createdAt", System.currentTimeMillis())
             .put("matchId", matchId)
-            .put("setNumber", setNumber)
-            .put("timeStamp", System.currentTimeMillis())
-            .toString()
-        val data = json.toByteArray(Charsets.UTF_8)
+            .put(
+                "payload", JSONObject()
+                    .put("setNumber", setNumber)
+                    .put("startAt", System.currentTimeMillis())
+            )
+        val data = json.toString().toByteArray(Charsets.UTF_8)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -89,14 +94,18 @@ object WatchDataLayerClient {
                 if (nodes.isEmpty()) {
                     val connected = Tasks.await(Wearable.getNodeClient(context).connectedNodes)
                     for (n in connected) {
-                        val r = Tasks.await(Wearable.getMessageClient(context)
-                            .sendMessage(n.id, PATH_EVENT_START, data))
+                        val r = Tasks.await(
+                            Wearable.getMessageClient(context)
+                                .sendMessage(n.id, PATH_EVENT_SET_START, data)
+                        )
                         Log.d(TAG, "START -> ${n.displayName} result=$r")
                     }
                 } else {
                     for (n in nodes) {
-                        val r = Tasks.await(Wearable.getMessageClient(context)
-                            .sendMessage(n.id, PATH_EVENT_START, data))
+                        val r = Tasks.await(
+                            Wearable.getMessageClient(context)
+                                .sendMessage(n.id, PATH_EVENT_SET_START, data)
+                        )
                         Log.d(TAG, "START -> ${n.displayName} result=$r")
                     }
                 }
@@ -106,61 +115,119 @@ object WatchDataLayerClient {
         }
     }
 
-    fun sendScore(context: Context, matchId: String, userScore: Int, oppScore: Int, setNumber: Int) {
+    fun sendScore(
+        context: Context,
+        matchId: String,
+        userScore: Int,
+        opponentScore: Int,
+        setNumber: Int,
+        localIsUser1: Boolean
+    ) {
+        // 로컬 관점 점수를 절대 좌표(user1/user2)로 변환
+        val u1 = if (localIsUser1) userScore else opponentScore
+        val u2 = if (localIsUser1) opponentScore else userScore
         val json = JSONObject()
+            .put("version", 1)
             .put("type", "SCORE")
             .put("eventId", UUID.randomUUID().toString())
-            .put("createdAtUtc", System.currentTimeMillis())
+            .put("createdAt", System.currentTimeMillis())
             .put("matchId", matchId)
-            .put("payload", JSONObject()
-                .put("setNumber", setNumber)
-                .put("userScore", userScore)
-                .put("opponentScore", oppScore)
+            .put(
+                "payload", JSONObject()
+                    .put("setNumber", setNumber)
+                    .put("user1Score", u1)
+                    .put("user2Score", u2)
             )
         sendJson(context, PATH_EVENT_SCORE, json)
     }
 
-    fun sendUndo(context: Context, matchId: String, setNumber: Int) {
+    fun sendUndo(
+        context: Context,
+        matchId: String,
+        userScore: Int,
+        opponentScore: Int,
+        setNumber: Int,
+        localIsUser1: Boolean
+    ) {
+        val u1 = if (localIsUser1) userScore else opponentScore
+        val u2 = if (localIsUser1) opponentScore else userScore
         val json = JSONObject()
+            .put("version", 1)
             .put("type", "UNDO")
             .put("eventId", UUID.randomUUID().toString())
-            .put("createdAtUtc", System.currentTimeMillis())
+            .put("createdAt", System.currentTimeMillis())
             .put("matchId", matchId)
-            .put("payload", JSONObject()
-                .put("setNumber", setNumber))
+            .put(
+                "payload", JSONObject()
+                    .put("setNumber", setNumber)
+                    .put("user1Score", u1)
+                    .put("user2Score", u2)
+            )
         sendJson(context, PATH_EVENT_UNDO, json)
     }
 
     fun sendPause(context: Context, matchId: String) {
         val json = JSONObject()
+            .put("version", 1)
             .put("type", "PAUSE")
             .put("eventId", UUID.randomUUID().toString())
-            .put("timeStamp", System.currentTimeMillis())
+            .put("createdAt", System.currentTimeMillis())
             .put("matchId", matchId)
+            .put("payload", JSONObject()
+                .put("timeStamp", System.currentTimeMillis())
+            )
         sendJson(context, PATH_EVENT_PAUSE, json)
     }
 
     fun sendResume(context: Context, matchId: String) {
         val json = JSONObject()
-            .put("type", "RESUME")
-            .put("eventId", UUID.randomUUID().toString())
-            .put("timeStamp", System.currentTimeMillis())
-            .put("matchId", matchId)
-        sendJson(context, PATH_EVENT_RESUME, json)
-    }
-
-    fun sendSetFinish(context: Context, matchId: String, setNumber: Int, userScore: Int, opponentScore: Int, elapsed: Long, isGameFinished: Boolean) {
-        val json = JSONObject()
-            .put("type", "SET_FINISH")
+            .put("version", 1).put("type", "RESUME")
             .put("eventId", UUID.randomUUID().toString())
             .put("createdAtUtc", System.currentTimeMillis())
             .put("matchId", matchId)
             .put("payload", JSONObject()
-                .put("setNumber", setNumber)
-                .put("userScore", userScore)
-                .put("opponentScore", opponentScore)
-                .put("elapsed", elapsed)
-                .put("isGameFinished", isGameFinished))
+                .put("timeStamp", System.currentTimeMillis())
+            )
+        sendJson(context, PATH_EVENT_RESUME, json)
+    }
+
+    fun sendSetFinish(
+        context: Context,
+        matchId: String,
+        setNumber: Int,
+        userScore: Int,
+        opponentScore: Int,
+        elapsed: Long,
+        isGameFinished: Boolean,
+        localIsUser1: Boolean
+    ) {
+        val u1 = if (localIsUser1) userScore else opponentScore
+        val u2 = if (localIsUser1) opponentScore else userScore
+        val payload = JSONObject()
+            .put("setNumber", setNumber)
+            .put("user1Score", u1)
+            .put("user2Score", u2)
+            .put("elapsed", elapsed)
+            .put("isGameFinished", isGameFinished)
+
+        val json = JSONObject()
+            .put("version", 1)
+            .put("type", "SET_FINISH")
+            .put("eventId", UUID.randomUUID().toString())
+            .put("createdAt", System.currentTimeMillis())
+            .put("matchId", matchId)
+            .put("payload", payload)
+
         sendJson(context, PATH_EVENT_SET_FINISH, json)
+    }
+
+    fun requestSnapshot(context: Context, matchId: String) {
+        val json = org.json.JSONObject()
+            .put("version", 1)
+            .put("type", "SNAPSHOT_REQ")
+            .put("eventId", java.util.UUID.randomUUID().toString())
+            .put("createdAtUtc", System.currentTimeMillis())
+            .put("matchId", matchId)
+        sendJson(context, PATH_SNAPSHOT_REQ, json)
     }
 }

@@ -60,16 +60,14 @@ fun ScoreEventToast(
                         text = title,
                         color = colorResource(id = R.color.green_active),
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable))
+                        fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = message,
                         color = Color.White,
                         fontSize = 8.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = FontFamily(Font(R.font.pretendard_variable)),
+                        fontFamily = FontFamily(Font(R.font.pretendard_regular)),
                         textAlign = TextAlign.Center
                     )
                 }

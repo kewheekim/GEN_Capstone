@@ -74,7 +74,7 @@ public class MatchFragment extends Fragment {
                     requireContext(),
                     "match-123",
                     "너무어려워요",      // user1
-                    "나",      // user2
+                    "안세영이되",      // user2
                     false,          // 워치에서 로컬을 USER1로 취급할지
                     new PhoneDataLayerClient.SendCallback() {
                         @Override
@@ -131,7 +131,7 @@ public class MatchFragment extends Fragment {
                     requireContext(),
                     "match-123",
                     "너무어려워요",
-                    "나",
+                    "안세영이되",
                     false,
                     new PhoneDataLayerClient.SendCallback() {
                         @Override
@@ -157,7 +157,11 @@ public class MatchFragment extends Fragment {
                     }
             );
             startActivity(new Intent(requireContext(), ScoreMonitorActivity.class)
-                    .putExtra("opponentName", "너무어려워요"));
+                    .putExtra("matchId", "match-123")
+                    .putExtra("opponentName", "너무어려워요")
+                    .putExtra("userName", "안세영이되")
+                    .putExtra("localIsUser1", false)
+            );
         });
     }
 }

@@ -10,7 +10,10 @@
         <item name="colorOnSurface">#343434</item>
         <item name="buttonStyle">@style/FlatButton</item>
     </style>
-
+    <style name="Text" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">#343434</item>
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
     <style name="TextAppearance.Title" parent="TextAppearance.AppCompat">
         <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingExtra">6sp</item>
@@ -49,6 +52,4 @@
         <item name="android:backgroundDimAmount">0.5</item>
         <item name="materialButtonStyle">@style/MyGreenButton</item>
     </style>
-
-
 </resources>
