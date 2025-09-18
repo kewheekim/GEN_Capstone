@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GameRepository  extends JpaRepository<Game, Long> {
     @Query("""
@@ -14,4 +15,5 @@ public interface GameRepository  extends JpaRepository<Game, Long> {
     ORDER BY g.date DESC
 """)
     List<Game> findRecentGamesByUserId(@Param("userId") String userId, Pageable pageable);
+    Optional<Game> findByGameId(Long gameId);
 }

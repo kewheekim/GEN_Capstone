@@ -12,15 +12,16 @@ import java.time.LocalDate;
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long game_id;
+    private Long gameId;
 
     @ManyToOne
     @JoinColumn(name = "request_id")
-    private MatchRequest request_id;
+    private MatchRequest requestId;
 
     @ManyToOne
     @JoinColumn(name = "user_id1")
     private User user1;
+
     @ManyToOne
     @JoinColumn(name = "user_id2")
     private User user2;
