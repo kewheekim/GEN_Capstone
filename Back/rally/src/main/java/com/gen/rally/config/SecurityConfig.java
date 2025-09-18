@@ -37,7 +37,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/kakao/**","/auth/naver/**", "/api/users/login","/api/users/signup","/api/users/check-id", "/api/users/check-nickname", "/ws/**").permitAll()
+                        .requestMatchers("/auth/kakao/**","/auth/naver/**",
+                                        "/api/users/login","/api/users/signup","/api/users/check-id", "/api/users/check-nickname",
+                                        "/ws/**","/stomp/**","/chat/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(login -> login.disable())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);// 폼 로그인 비활성화
@@ -66,7 +68,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // 허용할 도메인
+        configuration.setAllowedOriginPatterns(List.of("*")); // 허용할 도메인
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
