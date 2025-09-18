@@ -1,0 +1,39 @@
+package com.gen.rally.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+public class ChatRoom {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "room_id")
+    private Long id;
+
+    @OneToOne(fetch=FetchType.LAZY, optional=false)
+    @JoinColumn(name="game_id", nullable=false)
+    private Game game;
+
+    @ManyToOne(fetch=FetchType.LAZY, optional=false)
+    @JoinColumn(name="user_id1", nullable = false)
+    private User user1;
+
+    @ManyToOne(fetch=FetchType.LAZY, optional=false)
+    @JoinColumn(name="user_id2", nullable = false)
+    private User user2;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    public static ChatRoom create(Game game) {
+        ChatRoom room = new ChatRoom();
+        room.setGame(game);
+        room.setUser1(game.getUser1());
+        room.setUser2(game.getUser2());
+        return room;
+    }
+}
