@@ -26,13 +26,13 @@ public class TutorialActivity extends AppCompatActivity {
             new Page("쾌적한\n구장 이용을 위해", "구장 전용 실내화를 준비!\n함께 깨끗한 구장을 만들어요",
                     R.drawable.image_tut001, 0.6f),
             new Page("서로 존중하는\n경기를 위해","‘잘 부탁드립니다’, ‘수고하셨습니다’\n경기 전•후 모두에게 인사는 기본이에요",
-                    R.drawable.image_tut002,0.8f),
+                    R.drawable.image_tut002,0.9f),
             new Page("원활한\n경기를 위해","서브는 상대의 준비를\n꼭 확인하고 넣어요",
-                    R.drawable.image_tut003,0.8f),
+                    R.drawable.image_tut003,1.0f),
             new Page("배려 있는\n경기를 위해","상대를 셔틀콕으로 맞혔을 경우에는\n정중히 사과해요",
-                    R.drawable.image_tut004,0.8f),
+                    R.drawable.image_tut004,1.3f),
             new Page("깔끔한\n경기를 위해","인/아웃 판정은 빠르고 정확하게!\n애매할 땐 상대에게 유리하게 판정해요",
-                    R.drawable.image_tut005,0.7f)
+                    R.drawable.image_tut005,1.0f)
     };
 
     @Override
