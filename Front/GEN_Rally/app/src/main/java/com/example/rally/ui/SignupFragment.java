@@ -200,6 +200,7 @@ public class SignupFragment extends Fragment {
         });
     }
 
+    // TODO: 형식 안 맞는다고 텍스트로 띄우기
     // 아이디 형식(6~20자 영문+숫자) 검사
     private boolean isValidId(String id) {
         return id.matches("^[A-Za-z0-9]{6,20}$");
