@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ===== Title ===== -->
-
-    <style name="Text">
-        <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textColor">@color/black_text</item>
-    </style>
-
     <style name="Text.Bold24">
         <item name="android:fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">24sp</item>
@@ -29,7 +22,7 @@
     <style name="Text.Semibold24">
         <item name="android:fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">24sp</item>
-        <item name="android:lineHeight">12sp</item>
+        <item name="android:lineHeight">36sp</item>
     </style>
 
     <style name="Text.Semibold22">
@@ -72,7 +65,7 @@
 
     <!-- ===== Body ===== -->
     <style name="Text.Regular18">
-        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">18sp</item>
         <item name="android:lineHeight">27sp</item>
     </style>
