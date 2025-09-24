@@ -79,6 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="아이디 찾기"
+            android:textColor="@color/gray_text"
             style="@style/Text.Medium14"
             android:layout_marginEnd="16dp"
             />
@@ -95,6 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="비밀번호 찾기"
+            android:textColor="@color/gray_text"
             style="@style/Text.Medium14"
             android:layout_marginEnd="16dp"
             />
@@ -111,6 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="회원가입"
+            android:textColor="@color/gray_text"
             style="@style/Text.Medium14"
             />
 
