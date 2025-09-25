@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -63,9 +64,41 @@ public class ScoreRecordActivity extends AppCompatActivity {
         viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
-        String url = "ws://172.19.7.17:8080/ws?matchId=" + matchId;
+        String url = "ws://172.19.13.14:8080/ws-score?matchId=" + matchId;
         client = new WsRealtimeClient(url);
-        client.subscribe("/topic/match."+matchId, json -> viewModel.applyIncoming(json));
+        client.subscribe("/topic/match."+matchId, json -> {
+            runOnUiThread(() -> {
+                try {
+                    org.json.JSONObject obj = new org.json.JSONObject(json);
+                    String type = obj.optString("type", "");
+                    org.json.JSONObject p = obj.optJSONObject("payload");
+
+                    viewModel.applyIncoming(json);  // viewModel 적용, ui 갱신
+
+                    if ("game_finish".equals(type) && p != null) {
+                        String winner = p.optString("winner", "");
+                        org.json.JSONArray sets = p.optJSONArray("sets");
+                        long totalElapsedSec = p.optLong("totalElapsedSec", 0L);
+
+                        Intent i = new Intent(ScoreRecordActivity.this, GameResultActivity.class);
+                        i.putExtra("matchId", matchId);
+                        i.putExtra("winner", winner);
+                        i.putExtra("sets_json", sets != null ? sets.toString() : "[]");
+                        i.putExtra("totalElapsedSec", totalElapsedSec);
+
+                        i.putExtra("user1Name", tvUserName.getText().toString());
+                        i.putExtra("user2Name", tvOpponentName.getText().toString());
+
+                        startActivity(i);
+                        // 현재 스코어 기록 화면은 끝내고 결과 화면으로 넘기고 싶으면 finish()
+                        finish();
+                        return;
+                    }
+                } catch (Throwable t) {
+                    Log.e("ScoreRecordActivity", "game_finsh: ws parse error", t);
+                }
+            });
+        });
         client.connect();
 
         tvOpponentName.setText("상대");

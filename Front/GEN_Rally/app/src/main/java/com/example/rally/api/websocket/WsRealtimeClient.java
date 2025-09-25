@@ -9,7 +9,7 @@ import okio.ByteString;
 
 public class WsRealtimeClient implements RealtimeClient {
     private final OkHttpClient client;
-    private final String url;                //  에뮬레이터 "ws://10.0.2.2:8080/ws?matchId=TEST"
+    private final String url;
     private WebSocket socket;
     private Consumer<String> listener;
     private int backoffMs = 1000;

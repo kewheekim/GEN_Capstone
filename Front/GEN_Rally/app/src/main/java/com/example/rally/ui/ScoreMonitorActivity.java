@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import com.example.rally.R;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,21 +9,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.example.rally.R;
 import com.example.rally.api.websocket.RealtimeClient;
 import com.example.rally.api.websocket.WsRealtimeClient;
 import com.example.rally.viewmodel.Player;
 import com.example.rally.viewmodel.ScoreViewModel;
 import com.example.rally.wear.PhoneDataLayerClient;
 import com.example.rally.wear.PhoneDataLayerListener;
-
 import org.json.JSONObject;
-
 import java.util.Locale;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ScoreMonitorActivity extends AppCompatActivity {
 
@@ -32,6 +32,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
     private static final String PATH_EVENT_PAUSE  = "/rally/event/pause";
     private static final String PATH_EVENT_RESUME = "/rally/event/resume";
     private static final String PATH_EVENT_SET_FINISH = "/rally/event/set_finish";
+    private static final String PATH_EVENT_GAME_FINISH = "/rally/event/game_finish";
     private ScoreViewModel viewModel;
     private String matchId;
     private RealtimeClient client;
@@ -76,7 +77,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
         // websocket 연결
         matchId = intent.getStringExtra("matchId");
-        String url = "ws://172.19.7.17:8080/ws?matchId=" + matchId;
+        String url = "ws://172.19.13.14:8080/ws-score?matchId=" + matchId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/match."+matchId, json -> {
             runOnUiThread( () -> {
@@ -198,6 +199,12 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                             int u1 = iAmUser1 ? my : opp;
                             int u2 = iAmUser1 ? opp : my;
 
+                            int mySets  = viewModel.getUserSets().getValue() == null ? 0 : viewModel.getUserSets().getValue();
+                            int oppSets = viewModel.getOpponentSets().getValue() == null ? 0 : viewModel.getOpponentSets().getValue();
+                            int u1Sets = iAmUser1 ? mySets : oppSets;
+                            int u2Sets = iAmUser1 ? oppSets : mySets;
+                            String winner = (u1 > u2) ? "user1" : "user2";
+
                             JSONObject env = new JSONObject()
                                     .put("version", 1)
                                     .put("type", "SET_FINISH")
@@ -208,10 +215,29 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                             .put("setNumber", sn)
                                             .put("user1Score", u1)
                                             .put("user2Score", u2)
+                                            .put("user1Sets", u1Sets)
+                                            .put("user2Sets", u2Sets)
+                                            .put("winner", winner)
                                             .put("elapsed", viewModel.getElapsed().getValue() == null ? 0 : viewModel.getElapsed().getValue())
                                             .put("isGameFinished", p.optBoolean("isGameFinished", false))
                                     );
                             PhoneDataLayerClient.sendPhoneEventToWatch(this, PATH_EVENT_SET_FINISH, env.toString());
+                            break;
+                        }
+                        case "game_finish": {
+                            JSONObject env = new JSONObject()
+                                    .put("version", 1)
+                                    .put("type", "GAME_FINISH")
+                                    .put("eventId", UUID.randomUUID().toString())
+                                    .put("createdAtUtc", System.currentTimeMillis())
+                                    .put("matchId", matchId)
+                                    .put("payload", p);
+
+                            // 워치로 전달
+                            PhoneDataLayerClient.sendPhoneEventToWatch(this, PATH_EVENT_GAME_FINISH, env.toString());
+
+                            Intent intentToEvaluate = new Intent(this, GameResultActivity.class);
+                            startActivity(intentToEvaluate);
                             break;
                         }
                     }

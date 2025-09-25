@@ -22,6 +22,7 @@ class WatchDataLayerListener : WearableListenerService() {
         private const val PATH_EVENT_PAUSE = "/rally/event/pause"
         private const val PATH_EVENT_RESUME= "/rally/event/resume"
         private const val PATH_EVENT_SET_FINISH = "/rally/event/set_finish"
+        private const val PATH_EVENT_GAME_FINISH = "/rally/event/game_finish"
     }
 
     // Message 수신
@@ -44,8 +45,8 @@ class WatchDataLayerListener : WearableListenerService() {
                     val i = Intent(this, com.example.rally.presentation.ScoreActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         putExtra("setNumber", setNumber)
-                        putExtra("opponentName", if (isUser1) user2 else user1) // 상대 닉네임
-                        putExtra("userName", if (isUser1) user1 else user2)     // 로컬 사용자 닉네임
+                        putExtra("opponentName", if (isUser1) user2 else user1)
+                        putExtra("userName", if (isUser1) user1 else user2)
                         putExtra("localIsUser1", isUser1)
                     }
                     startActivity(i)
@@ -54,7 +55,7 @@ class WatchDataLayerListener : WearableListenerService() {
                 }
             }
             PATH_EVENT_SET_START, PATH_EVENT_SCORE, PATH_EVENT_UNDO,
-            PATH_EVENT_PAUSE, PATH_EVENT_RESUME, PATH_EVENT_SET_FINISH -> {
+            PATH_EVENT_PAUSE, PATH_EVENT_RESUME, PATH_EVENT_SET_FINISH, PATH_EVENT_GAME_FINISH -> {
                 Log.d("WatchDL", "BROADCAST -> $path")
                 androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
                     .sendBroadcast(Intent(ACTION_PHONE_EVENT).apply {

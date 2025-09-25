@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
@@ -28,10 +31,14 @@
         </activity>
 
         <activity
-            android:name=".presentation.ResultSwipeActivity"
-            android:exported="false"
-            android:taskAffinity=""
-            android:theme="@style/ScoreActivityTheme.Starting" />
+            android:name=".presentation.ResultActivity"
+            android:exported="true"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".datalayer.WatchDataLayerListener"

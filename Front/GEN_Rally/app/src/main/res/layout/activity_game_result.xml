@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="60dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="95dp"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textSize="48sp"
         />
     <TextView
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="349dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textSize="20sp"
         />
     <android.widget.Button
@@ -45,8 +45,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="24dp"
-        android:text="다음에 고르기"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="상대 평가하기"
         android:textSize="16sp"
         android:textColor="@color/green_active"
         android:background="@drawable/bg_view_active2" />

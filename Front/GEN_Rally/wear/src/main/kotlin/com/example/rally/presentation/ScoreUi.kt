@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -88,7 +89,7 @@ fun ScoreScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
-                    modifier = Modifier.width(58.dp),
+                    modifier = Modifier.width(62.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -102,9 +103,10 @@ fun ScoreScreen(
                     )
                     Text(
                         text = "$opponentScore",
-                        fontSize = 46.sp,
+                        fontSize = 44.sp,
                         color = Color.White,
-                        fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
+                        fontFamily = FontFamily(Font(R.font.kimm_bold)),
+                        letterSpacing = (-0.06).em
                     )
                 }
 
@@ -166,7 +168,7 @@ fun ScoreScreen(
                 }
 
                 Column(
-                    modifier = Modifier.width(58.dp),
+                    modifier = Modifier.width(62.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -180,14 +182,15 @@ fun ScoreScreen(
                     )
                     Text(
                         text = "$userScore",
-                        fontSize = 46.sp,
+                        fontSize = 44.sp,
                         color = colorResource(id = R.color.green_active),
-                        fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
+                        fontFamily = FontFamily(Font(R.font.kimm_bold)),
+                        letterSpacing = (-0.06).em
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             // 득점 버튼
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
@@ -219,8 +222,6 @@ fun ScoreScreen(
                             toastMessage= "\n승리했습니다!"
                         showToast = true
 
-                        viewModel.setFinished()  // 세트 종료 처리
-                        viewModel.pause()
                         val result = viewModel.computeSetResult()
                         onSetFinished(result)
 

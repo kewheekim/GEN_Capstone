@@ -83,6 +83,7 @@ class ScoreViewModel : ViewModel() {
     private val _hasStarted = MutableStateFlow(false)
     val hasStarted: StateFlow<Boolean> = _hasStarted
     fun markStarted(started: Boolean) { _hasStarted.value = started }
+    fun markGameFinished(finished: Boolean) { _isGameFinished.value = finished}
 
     // 세트 초기화
     fun initSets(user:Int, opponent: Int) {
@@ -94,6 +95,7 @@ class ScoreViewModel : ViewModel() {
     }
     // 세트 시작
     fun startSet(setNumber: Int, firstServer: Player) {
+        if(_isGameFinished.value) return
         _setNumber.value = setNumber
         _currentServer.value = firstServer
         _userScore.value = 0
@@ -104,6 +106,7 @@ class ScoreViewModel : ViewModel() {
 
     // 세트 종료
     private val _isSetFinished = mutableStateOf(false)
+    private var lastAppliedFinishedSet: Int = 0
     val isSetFinished: State<Boolean> = _isSetFinished
     fun setFinished() {
         _isSetFinished.value = true
@@ -135,7 +138,7 @@ class ScoreViewModel : ViewModel() {
         val opponentSetsFuture = _opponentSets.value + if (winnerIsUser) 0 else 1
         val nextSet = userSetsFuture + opponentSetsFuture + 1
         val nextFirst = if (winnerIsUser) (if (_isUser1.value) Player.USER1 else Player.USER2)
-        else              (if (_isUser1.value) Player.USER2 else Player.USER1)
+        else (if (_isUser1.value) Player.USER2 else Player.USER1)
         val gameFinished = (userSetsFuture >= 2 || opponentSetsFuture >= 2)
 
         return SetResult(
@@ -151,33 +154,81 @@ class ScoreViewModel : ViewModel() {
 
     // set_finish 이벤트 수신 시 상태 변경
     fun applySetFinishFromRemote(
-        setNumberFinished: Int,    // 방금 끝난 세트 번호
+        setNumberFinished: Int,
         user1Score: Int,
         user2Score: Int,
         isGameFinishedRemote: Boolean,
-        nextFirstServer: Player? = null // 서버가 주면 우선 사용
+        nextFirstServer: Player? = null,
+        user1Sets: Int? = null,
+        user2Sets: Int? = null
     ) {
-        val iAmUser1 = _isUser1.value
-        val winner = when {
-            user1Score > user2Score -> Player.USER1
-            user2Score > user1Score -> Player.USER2
-            else -> null
-        }
+        if (setNumberFinished <= lastAppliedFinishedSet) return
+        lastAppliedFinishedSet = setNumberFinished
 
-        winner?.let {
-            if (it == Player.USER1) {
-                if (iAmUser1) _userSets.value += 1 else _opponentSets.value += 1
-            } else {
-                if (iAmUser1) _opponentSets.value += 1 else _userSets.value += 1
+        val iAmUser1 = _isUser1.value
+        val hasAbsoluteSets =
+            (user1Sets != null && user1Sets >= 0) &&
+                    (user2Sets != null && user2Sets >= 0)
+
+        if (hasAbsoluteSets) {
+            _userSets.value     = if (iAmUser1) user1Sets!! else user2Sets!!
+            _opponentSets.value = if (iAmUser1) user2Sets!! else user1Sets!!
+        } else {
+            var winner: Player? = when {
+                user1Score >= 0 && user2Score >= 0 && user1Score != user2Score ->
+                    if (user1Score > user2Score) Player.USER1 else Player.USER2
+                else -> null
+            }
+            if (winner == null && nextFirstServer != null) winner = nextFirstServer
+
+            winner?.let {
+                if (it == Player.USER1) {
+                    if (iAmUser1) _userSets.value += 1 else _opponentSets.value += 1
+                } else {
+                    if (iAmUser1) _opponentSets.value += 1 else _userSets.value += 1
+                }
             }
         }
-
-        _currentServer.value = nextFirstServer ?: (winner ?: _currentServer.value)
-        _userScore.value = 0
-        _opponentScore.value = 0
-        _setNumber.value = setNumberFinished + 1
+        _currentServer.value = nextFirstServer ?: _currentServer.value
+        // 세트 종료 처리
+        if(!isGameFinishedRemote) {
+            _userScore.value = 0
+            _opponentScore.value = 0
+        } else {
+            _isGameFinished.value = true
+        }
         _isSetFinished.value = true
-        if (isGameFinishedRemote) _isGameFinished.value = true
+        _setNumber.value = setNumberFinished
+        resetStopwatch()
+    }
+
+    fun applySetFinishLocal(
+        finishedSetNumber: Int,
+        winner: Player,
+        nextFirstServer: Player? = null,
+        gameFinished: Boolean
+    ) {
+        // 이미 처리한 세트면 무시
+        if (finishedSetNumber <= lastAppliedFinishedSet) return
+        lastAppliedFinishedSet = finishedSetNumber
+
+        val iAmUser1 = _isUser1.value
+        // sets 증가
+        if (winner == Player.USER1) {
+            if (iAmUser1) _userSets.value += 1 else _opponentSets.value += 1
+        } else {
+            if (iAmUser1) _opponentSets.value += 1 else _userSets.value += 1
+        }
+
+        // 다음 세트 준비
+        _currentServer.value = nextFirstServer ?: winner
+        if(!gameFinished) {
+            _userScore.value = 0
+            _opponentScore.value = 0
+        } else {
+            _isGameFinished.value = true
+        }
+        _isSetFinished.value = true
         resetStopwatch()
     }
 

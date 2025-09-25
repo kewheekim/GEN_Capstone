@@ -21,11 +21,12 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
@@ -65,7 +66,7 @@ fun StartScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier.width(58.dp),
+                modifier = Modifier.width(64.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -79,9 +80,10 @@ fun StartScreen(
                 )
                 Text(
                     text = "$opponentScore",
-                    fontSize = 46.sp,
+                    fontSize = 44.sp,
                     color = Color.White,
-                    fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
+                    fontFamily = FontFamily(Font(R.font.kimm_bold)),
+                    letterSpacing = (-0.08).em
                 )
             }
 
@@ -94,7 +96,7 @@ fun StartScreen(
             )
 
             // 사용자 점수 영역
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
             Text(
                 text = "$userSets",
@@ -104,7 +106,7 @@ fun StartScreen(
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column(
-                modifier = Modifier.width(58.dp),
+                modifier = Modifier.width(66.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -118,9 +120,10 @@ fun StartScreen(
                 )
                 Text(
                     text = "$userScore",
-                    fontSize = 46.sp,
+                    fontSize = 44.sp,
                     color = colorResource(id = R.color.green_active),
-                    fontFamily = FontFamily(Font(R.font.pretendard_extrabold))
+                    fontFamily = FontFamily(Font(R.font.kimm_bold)),
+                    letterSpacing = (-0.08).em
                 )
             }
         }
@@ -144,4 +147,20 @@ fun StartScreen(
             )
         }
     }
+}
+
+@Preview(showBackground = true, widthDp = 192, heightDp = 192)
+@Composable
+fun StartScreenPreview() {
+    StartScreen(
+        setNumber=1,
+        opponentName="상대",
+        opponentScore=23,
+        opponentSets=1,
+        userName="나",
+        userScore=24,
+        userSets=1,
+        isGameFinished=false,
+        onStart = {}
+    )
 }
