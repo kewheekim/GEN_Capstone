@@ -1,5 +1,6 @@
 package com.gen.rally.websocket.service;
 
+import com.gen.rally.websocket.bus.MessageBus;
 import com.gen.rally.websocket.model.GameState;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class GameEventService {
+    private final MessageBus messageBus;
+    public GameEventService(MessageBus messageBus) {
+        this.messageBus = messageBus;
+    }
     private final ObjectMapper mapper = new ObjectMapper();
     private final Map<String, GameState> matches = new ConcurrentHashMap<>();
 
@@ -67,6 +72,25 @@ public class GameEventService {
                     if ("user1".equals(winner)) st.user1Sets++; else st.user2Sets++;
                     st.setNumber++;
                     st.user1Score = st.user2Score = 0;
+
+                    if(st.user1Sets >=2 || st.user2Sets >=2) {
+                        ObjectNode gf = mapper.createObjectNode();
+                        gf.put("path", "/rally/event/game_finish");
+                        gf.put("type", "game_finish");
+                        gf.put("matchId", matchId);
+
+                        ObjectNode p = mapper.createObjectNode();
+                        p.put("winner", (st.user1Sets > st.user2Sets) ? "user1" : "user2");
+                        p.put("user1Sets", st.user1Sets);
+                        p.put("user2Sets", st.user2Sets);
+                        p.put("setNumberFinished", st.setNumber - 1);
+
+                        //  세트별 점수/시간 요약 포함
+                        // p.set("sets", listOrArray);
+                        gf.set("payload", p);
+
+                        messageBus.publish("/topic/match."+ matchId, mapper.writeValueAsString(gf));
+                    }
                 }
                 case "snapshot_request" -> { return false; }
                 default -> { return false; }
