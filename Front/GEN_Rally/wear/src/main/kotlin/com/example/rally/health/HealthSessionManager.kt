@@ -1,5 +1,6 @@
 import android.content.Context
 import android.hardware.Sensor
+import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.os.Parcelable
 import android.util.Log
@@ -77,11 +78,17 @@ class HealthSessionManager(private val context: Context) {
         HealthServices.getClient(context).exerciseClient
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    private var segBaselineCounter: Long? = null
     private val stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
     private val stepListener = object : android.hardware.SensorEventListener {
-        override fun onSensorChanged(ev: android.hardware.SensorEvent) {
-            // 누적 스텝 (부팅 후 총계)
-            lastSteps = ev.values.firstOrNull()?.toLong() ?: lastSteps
+        override fun onSensorChanged(ev: SensorEvent) {
+            val v = ev.values.firstOrNull()?.toLong() ?: return
+            lastSteps = v
+
+            if (isActive && segBaselineCounter == null) {
+                segBaselineCounter = v
+                Log.d("HS/STEPS", "baseline set: $v")
+            }
         }
         override fun onAccuracyChanged(sensor:  Sensor?, accuracy: Int) {}
     }
@@ -89,19 +96,10 @@ class HealthSessionManager(private val context: Context) {
 
     private var totalSteps: Long = 0L
     private var totalKcal: Double = 0.0
-
-    private val bootInstant by lazy {
-        val now = System.currentTimeMillis()
-        val sinceBoot = android.os.SystemClock.elapsedRealtime()
-        java.time.Instant.ofEpochMilli(now - sinceBoot)
-    }
     private val heartSeries = mutableListOf<HeartSample>()
-    private var hrSum: Double = 0.0
-    private var hrCount: Int = 0
     private var hrMax: Int? = null
     private var hrMin: Int? = null
 
-    private var segmentStartSteps: Long? = null
     private var segmentStartKcal: Double? = null
 
     private var lastSteps: Long = 0L
@@ -119,21 +117,12 @@ class HealthSessionManager(private val context: Context) {
     suspend fun beginSet() {
         resetAll()
 
-        val caps = exerciseClient.getCapabilities()
-        val exCaps = caps.getExerciseTypeCapabilities(ExerciseType.BADMINTON)
-        val sup = exCaps.supportedDataTypes
-
-        val wanted = mutableSetOf<DataType<*, *>>()
-        wanted += DataType.HEART_RATE_BPM
-        wanted += DataType.CALORIES
-
         val config = ExerciseConfig.Builder(ExerciseType.BADMINTON)
-            .setDataTypes(wanted)
+            .setDataTypes(setOf(DataType.HEART_RATE_BPM, DataType.CALORIES))
             .build()
 
         registerUpdateCallbackIfNeeded()
         exerciseClient.startExercise(config)
-        Log.d("HS", "startExercise OK; requested=$wanted")
 
         startStepSensorIfAvailable()
         markSegmentStart()
@@ -211,7 +200,6 @@ class HealthSessionManager(private val context: Context) {
                             isActive = true
                         }
                         val container = update.latestMetrics ?: return
-                        var gotAny = false
 
                         // 칼로리
                         container.getData(DataType.CALORIES)?.forEach { dp ->
@@ -229,18 +217,20 @@ class HealthSessionManager(private val context: Context) {
                         (container.getData(DataType.HEART_RATE_BPM) ?: emptyList()).forEach { dp ->
                             (dp as? StatisticalDataPoint<*>)?.let {
                                 if (isActive) {
-                                    val avg = (it.average as Number).toInt()
-                                    val mx  = (it.max as Number).toInt()
-                                    val mn  = runCatching { (it.min as Number).toInt() }.getOrNull() ?: avg
+                                    val mxD = (it.max as Number).toDouble()
+                                    val mnD = (it.min as? Number)?.toDouble() ?: Double.NaN
 
-                                    hrSum += avg
-                                    hrCount += 1
-                                    hrMax =  max(hrMax ?: mx, mx)
-                                    hrMin =  min(hrMin ?: mn, mn)
+                                    // 유효값만 사용 (NaN/0/음수 거르기)
+                                    if (mxD.isFinite() && mxD > 0) {
+                                        val mx = mxD.toInt()
+                                        val mn = if (mnD.isFinite() && mnD > 0) mnD.toInt() else mx
 
-                                    val t = System.currentTimeMillis()
-                                    heartSeries += HeartSample(t, avg)
+                                        hrMax = kotlin.math.max(hrMax ?: mx, mx)
+                                        hrMin = if (hrMin == null) mn else kotlin.math.min(hrMin!!, mn)
+                                        heartSeries += HeartSample(System.currentTimeMillis(), mx)
+                                    }
                                 }
+                                handledHr = true
                             }
                         }
                         // 샘플형 데이터
@@ -248,19 +238,14 @@ class HealthSessionManager(private val context: Context) {
                             (container.getData(DataType.HEART_RATE_BPM) ?: emptyList()).forEach { dp ->
                                 (dp as? SampleDataPoint<*>)?.value?.let { v ->
                                     val bpm = (v as Number).toInt()
-                                    if (isActive) {
-                                        hrSum += bpm
-                                        hrCount += 1
-                                        hrMax = kotlin.math.max(hrMax ?: bpm, bpm)
-                                        hrMin = kotlin.math.min(hrMin ?: bpm, bpm)
-
-                                        val t = System.currentTimeMillis()
-                                        heartSeries += HeartSample(t, bpm)
+                                    if (isActive && bpm in 30..230) {
+                                        hrMax = max(hrMax ?: bpm, bpm)
+                                        hrMin = if (hrMin == null) bpm else kotlin.math.min(hrMin!!, bpm)
+                                        heartSeries += HeartSample(System.currentTimeMillis(), bpm)
                                     }
                                 }
                             }
                         }
-                        if (!gotAny) Log.w("HS", "update with no metrics")
 
                     } catch (t: Throwable) {
                         Log.e("HS", "onExerciseUpdateReceived crashed", t)
@@ -331,26 +316,34 @@ class HealthSessionManager(private val context: Context) {
     }
 
     private fun markSegmentStart() {
-        segmentStartSteps = lastSteps
         segmentStartKcal = lastKcal
+        segBaselineCounter = null
     }
 
     private fun settleActiveSegment() {
-        segmentStartSteps?.let { start -> totalSteps += (lastSteps - start).coerceAtLeast(0L) }
-        segmentStartKcal?.let { start -> totalKcal += (lastKcal - start).coerceAtLeast(0.0) }
-        segmentStartSteps = null
+        // 걸음수: 현재누적 - 베이스라인
+        segBaselineCounter?.let { base ->
+            val delta = (lastSteps - base).coerceAtLeast(0L)
+            totalSteps += delta
+            Log.d("HS/STEPS", "segment settle: base=$base last=$lastSteps +$delta -> total=$totalSteps")
+        }
+        segBaselineCounter = null
+
+        // 칼로리: 기존 로직
+        segmentStartKcal?.let { start ->
+            val d = (lastKcal - start).coerceAtLeast(0.0)
+            totalKcal += d
+            Log.d("HS/CAL", "segment settle: +$d -> total=$totalKcal")
+        }
         segmentStartKcal = null
     }
 
     private fun resetAll() {
         totalSteps = 0L
         totalKcal = 0.0
-        hrSum = 0.0
-        hrCount = 0
         hrMax = null
         hrMin = null
         heartSeries.clear()
-        segmentStartSteps = null
         segmentStartKcal = null
         lastSteps = 0L
         lastKcal = 0.0

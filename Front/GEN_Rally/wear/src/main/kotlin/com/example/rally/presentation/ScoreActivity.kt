@@ -2,10 +2,12 @@ package com.example.rally.presentation
 
 import HealthSessionManager
 import SetHealthSummary
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,12 +38,15 @@ import com.example.rally.viewmodel.ScoreViewModel
 import com.example.rally.viewmodel.SetResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class ScoreActivity : ComponentActivity() {
     private lateinit var vm: ScoreViewModel
 
     private lateinit var health: HealthSessionManager
     private var hsRunning: Boolean = false
+    private var finalSetsJson: String = "[]"
+    private var finalTotalElapsed : Long = 0L
     private val setHealthResults = mutableListOf<SetHealthSummary>()
     private val healthPermLauncher = registerForActivityResult (
         ActivityResultContracts.RequestMultiplePermissions()
@@ -86,8 +91,8 @@ class ScoreActivity : ComponentActivity() {
 
     private val watchRelayReceiver = object : android.content.BroadcastReceiver() {
         override fun onReceive(
-            context: android.content.Context,
-            intent: android.content.Intent
+            context: Context,
+            intent: Intent
         ) {
             Log.d("Watch/ScoreActivity", "BRIDGE <- " + (intent.getStringExtra("path")) + " : " + (intent.getStringExtra("json")))
             if (intent.action != "rally.EVENT_FROM_PHONE") return
@@ -95,8 +100,8 @@ class ScoreActivity : ComponentActivity() {
             val json = intent.getStringExtra("json") ?: "{}"
 
             try {
-                val obj = org.json.JSONObject(json)
-                val payload = obj.optJSONObject("payload") ?: org.json.JSONObject()
+                val obj = JSONObject(json)
+                val payload = obj.optJSONObject("payload") ?: JSONObject()
                 when (path) {
                     "/rally/event/set_start" -> {
                         val setNum = payload.optInt("setNumber", vm.setNumber.value)
@@ -255,11 +260,16 @@ class ScoreActivity : ComponentActivity() {
                         }
                     }
                     "/rally/event/game_finish" -> {
+                        val p = obj.optJSONObject("payload") ?: JSONObject()
+                        finalSetsJson = p.optJSONArray("sets")?.toString()?: "[]"
+                        finalTotalElapsed = p.optLong("totalElapsedSec", 0L)
+
                         vm.pause()
                         vm.resetStopwatch()
                         vm.markStarted(false)
                         vm.markGameFinished(true)
 
+                        // 헬스 세션 종료
                         lifecycleScope.launch {
                             if (hsRunning) {
                               runCatching { health.endSet() }
@@ -351,13 +361,18 @@ class ScoreActivity : ComponentActivity() {
                                             setNumber = displayNextSet
                                         )
                                     } else {
+                                        val intent = Intent(this@ScoreActivity, ResultActivity::class.java)
+                                            .putExtra("setsJson", finalSetsJson)
+                                            .putExtra("totalElapsed", finalTotalElapsed)
+                                            .putExtra("localIsUser1", vm.isUser1.value)
+                                            .putExtra("userName", userName)
+                                            .putExtra("opponentName", opponentName)
                                         // 결과 화면
                                         if (setHealthResults.isNotEmpty()) {
                                             val payload = GameHealthPayload.from(setHealthResults)
-                                            val intent = Intent(this@ScoreActivity, ResultActivity::class.java)
-                                                .putExtra("health_payload", payload)
-                                            startActivity(intent)
+                                           intent.putExtra("healthData", payload)
                                         }
+                                        startActivity(intent)
                                     }
                                 }
                             )
@@ -407,6 +422,15 @@ class ScoreActivity : ComponentActivity() {
             hsRunning = runCatching { health.ownsActiveExercise() }.getOrDefault(false)
             Log.d("HS", "onStart sync: hsRunning=$hsRunning")
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
     override fun onStop() {
         super.onStop()

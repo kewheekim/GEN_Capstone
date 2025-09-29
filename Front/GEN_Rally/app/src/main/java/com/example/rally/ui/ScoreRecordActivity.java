@@ -64,7 +64,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
-        String url = "ws://172.19.13.14:8080/ws-score?matchId=" + matchId;
+        String url = "ws://172.19.4.187:8080/ws-score?matchId=" + matchId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/match."+matchId, json -> {
             runOnUiThread(() -> {

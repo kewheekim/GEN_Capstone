@@ -29,6 +29,8 @@ import androidx.wear.compose.material.Text
 
 @Composable
 fun GameTimeScreen(
+    totalElapsed: Long,
+    sets: List<SetSummary>
 ) {
     Box(
         modifier = Modifier.fillMaxSize().background(colorResource(id = R.color.black_bg)),
@@ -57,7 +59,7 @@ fun GameTimeScreen(
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "00:45:23",
+                text = formatTime(totalElapsed),
                 fontSize = 28.sp,
                 color = colorResource(id = R.color.green_active) ,
                 fontFamily = FontFamily(Font(R.font.kimm_bold)),
@@ -76,61 +78,23 @@ fun GameTimeScreen(
                 Spacer(modifier=Modifier.width(60.dp))
             }
             Spacer(modifier=Modifier.height(5.dp))
-            // 1세트
-            Row (
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "1",
-                    fontSize = 12.sp,
-                    color = colorResource(id = R.color.white),
-                    fontFamily = FontFamily(Font(R.font.pretendard_regular))
-                )
-                Spacer(modifier=Modifier.width(20.dp))
-                Text(
-                    text = "00:15:12",
-                    fontSize = 12.sp,
-                    color = Color.White,   
-                    fontFamily = FontFamily(Font(R.font.pretendard_regular))
-                )
-            }
-            Spacer(modifier=Modifier.height(13.dp))
-            // 2세트
-            Row (
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "2",
-                    fontSize = 12.sp,
-                    color = colorResource(id = R.color.white),
-                    fontFamily = FontFamily(Font(R.font.pretendard_regular))
-                )
-                Spacer(modifier=Modifier.width(18.dp))
-                Text(
-                    text = "00:13:59",
-                    fontSize = 12.sp,
-                    color = colorResource(id = R.color.white),
-                    fontFamily = FontFamily(Font(R.font.pretendard_regular))
-                )
-            }
-            Spacer(modifier=Modifier.height(13.dp))
-            // 3세트
-            Row (
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "3",
-                    fontSize = 12.sp,
-                    color = colorResource(id = R.color.white),
-                    fontFamily = FontFamily(Font(R.font.pretendard_regular))
-                )
-                Spacer(modifier=Modifier.width(18.dp))
-                Text(
-                    text = "00:16:22",
-                    fontSize = 12.sp,
-                    color = colorResource(id = R.color.white),
-                    fontFamily = FontFamily(Font(R.font.pretendard_regular))
-                )
+            sets.forEach { s ->
+                Spacer(Modifier.height(13.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = s.setNumber.toString(),
+                        fontSize = 12.sp,
+                        color = colorResource(id = R.color.white),
+                        fontFamily = FontFamily(Font(R.font.pretendard_regular))
+                    )
+                    Spacer(Modifier.width(18.dp))
+                    Text(
+                        text = formatTime(s.elapsedSec),
+                        fontSize = 12.sp,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.pretendard_regular))
+                    )
+                }
             }
             Spacer(modifier=Modifier.height(16.dp))
         }
@@ -140,6 +104,4 @@ fun GameTimeScreen(
 @Preview(showBackground = true, widthDp = 192, heightDp = 192)
 @Composable
 fun GameTimeScreenPreview() {
-    GameTimeScreen(
-    )
 }

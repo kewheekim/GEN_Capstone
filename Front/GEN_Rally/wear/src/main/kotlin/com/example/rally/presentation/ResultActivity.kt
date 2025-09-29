@@ -20,17 +20,67 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
+data class SetSummary (
+    val setNumber: Int,
+    val user1Score: Int,
+    val user2Score: Int,
+    val elapsedSec: Long
+)
+
+private fun parseSets (json: String): List<SetSummary> {
+    val arr = org.json.JSONArray(json)
+    val out = mutableListOf<SetSummary>()
+    for (i in 0 until arr.length()) {
+        val o = arr.optJSONObject(i) ?: continue
+        out += SetSummary(
+            setNumber   = o.optInt("setNumber", i + 1),
+            user1Score  = o.optInt("user1Score", 0),
+            user2Score  = o.optInt("user2Score", 0),
+            elapsedSec  = o.optLong("elapsedSec", 0L)
+        )
+    }
+    return out
+}
+private fun fmtTime(sec: Long): String {
+    val h = sec / 3600
+    val m = (sec % 3600) / 60
+    val s = sec % 60
+    return String.format("%02d:%02d:%02d", h, m, s)
+}
 
 class ResultActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val payload = intent.getParcelableExtra<GameHealthPayload>("health_payload")
-        setContent { ResultPager( payload ) }
+        val healthData = intent.getParcelableExtra<GameHealthPayload>("healthData")
+        val setsJson = intent.getStringExtra("setsJson") ?: "[]"
+        val totalElapsed = intent.getLongExtra("totalElapsed", 0L)
+        val sets = parseSets(setsJson)
+
+        val isUser1 = intent.getBooleanExtra("localIsUser1", true)
+        val userName = intent.getStringExtra("userName") ?: "나"
+        val opponentName = intent.getStringExtra("opponentName") ?: "상대"
+
+        setContent {
+            ResultPager(
+                sets = sets,
+                totalElapsed = totalElapsed,
+                health = healthData,
+                isUser1 = isUser1,
+                userName = userName,
+                opponentName = opponentName
+            )
+        }
     }
 
     @Composable
-    private fun ResultPager( payload: GameHealthPayload?
+    private fun ResultPager(
+        sets: List<SetSummary>,
+        totalElapsed: Long,
+        health: GameHealthPayload?,
+        isUser1: Boolean,
+        userName: String,
+        opponentName: String
     ) {
         val pagerState = rememberPagerState(pageCount = { 4 })
 
@@ -45,13 +95,19 @@ class ResultActivity : ComponentActivity() {
             ) { page ->
                 when (page) {
                     0 -> ScoreResultScreen(
+                        sets = sets,
+                        isUser1 = isUser1,
+                        userName = userName,
+                        opponentName = opponentName
                     )
 
                     1 -> GameTimeScreen(
+                        totalElapsed = totalElapsed,
+                        sets = sets
                     )
 
                     2 -> HealthDataScreen(
-                        data = payload
+                        data = health
                     )
 
                     3 -> FinishScreen(

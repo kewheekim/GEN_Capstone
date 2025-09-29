@@ -77,7 +77,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
         // websocket 연결
         matchId = intent.getStringExtra("matchId");
-        String url = "ws://172.19.13.14:8080/ws-score?matchId=" + matchId;
+        String url = "ws://172.19.4.187:8080/ws-score?matchId=" + matchId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/match."+matchId, json -> {
             runOnUiThread( () -> {
