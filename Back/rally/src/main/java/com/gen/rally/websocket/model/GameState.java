@@ -1,8 +1,6 @@
 package com.gen.rally.websocket.model;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState {
@@ -17,7 +15,8 @@ public class GameState {
     public long startAt = 0L;
     public boolean paused = true;
     public long pauseStartedAt = 0L;
-    public long totalPaused = 0L;   // 누적 일시정지 시간(ms)
+    public long totalPaused = 0L;   // 세트 별 누적 일시정지 시간(ms)
+    public List<SetSummary> completedSets = new ArrayList<>();
 
     // 세트별 요약(점수/시간) 저장
     public static class SetSummary {
