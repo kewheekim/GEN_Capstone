@@ -1,10 +1,12 @@
 package com.gen.rally.controller;
 
+import com.gen.rally.dto.ChatRoomDto;
 import com.gen.rally.entity.ChatRoom;
 import com.gen.rally.repository.ChatRoomRepository;
 import com.gen.rally.repository.GameRepository;
 import com.gen.rally.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -29,11 +31,18 @@ public class ChatController {
         return lists;
     }
 
-    // 채팅방 개설
+    /* 채팅방 개설
     @PostMapping("/api/rooms/{gameId}")
     @ResponseBody
-    public ChatRoom createRoom(@PathVariable Long gameId,@RequestParam Long userId ) {
+    public ChatRoom createRoom(@PathVariable Long gameId, @RequestParam Long userId ) {
         return chatService.createRoom(gameId, userId);
+    } */
+
+    // 채팅방 입장, 사용자 프로필 캐싱용
+    @GetMapping("/api/rooms/{roomId}/participants")
+    @ResponseBody
+    public ResponseEntity<List<ChatRoomDto>> enterChatRoom(@PathVariable Long roomId) {
+        return chatService.enter(roomId);
     }
 
     // 메시지 발신 및 수신
