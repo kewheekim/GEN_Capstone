@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/chat_card"
+        android:layout_width="262dp"
+        android:layout_height="152dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/bg_chat_card">
+
+        <TextView
+            android:id="@+id/tv_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="경기 약속을 만들었습니다."
+            android:textColor="@color/white"
+            style="@style/Text.Semibold16"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="날짜"
+                android:textColor="@color/gray_text"
+                style="@style/Text.Semibold16"
+                />
+
+            <TextView
+                android:id="@+id/tv_card_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10월 3일 금요일"
+                android:textColor="@color/black_text"
+                style="@style/Text.Regular16"
+                android:layout_marginStart="12dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간"
+                android:textColor="@color/gray_text"
+                style="@style/Text.Semibold16"
+
+                />
+
+            <TextView
+                android:id="@+id/tv_card_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20:00~21:00"
+                android:textColor="@color/black_text"
+                style="@style/Text.Regular16"
+                android:layout_marginStart="12dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="장소"
+                android:textColor="@color/gray_text"
+                style="@style/Text.Semibold16"
+
+                />
+
+            <TextView
+                android:id="@+id/tv_card_place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="망원 다목적 체육관"
+                android:textColor="@color/black_text"
+                style="@style/Text.Regular16"
+                android:layout_marginStart="12dp"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
