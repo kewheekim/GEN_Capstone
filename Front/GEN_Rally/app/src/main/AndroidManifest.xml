@@ -87,6 +87,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.TierActivity" />
+        <activity android:name=".ui.ChatListActivity"/>
+        <activity android:name=".ui.ChatActivity"/>
+
 
         <service
             android:name=".wear.PhoneDataLayerListener"
