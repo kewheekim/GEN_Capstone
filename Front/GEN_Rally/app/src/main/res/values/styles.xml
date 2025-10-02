@@ -44,6 +44,12 @@
         <item name="backgroundTint">@color/green_active</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="MyCustomRatingBar2" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/ratingbar2_drawable</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:maxHeight">40dp</item>
+        <item name="android:minWidth">216dp</item>
+    </style>
     <!-- 팝업 전용 테마 정의 -->
     <style name="PopupTheme" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -54,5 +60,9 @@
     <style name="RoundedImage">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">32dp</item>
+    </style>
+    <style name="RoundedProfileImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
     </style>
 </resources>
