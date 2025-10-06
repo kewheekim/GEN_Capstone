@@ -3,9 +3,7 @@ package com.gen.rally.service;
 import com.gen.rally.config.jwt.JwtProvider;
 import com.gen.rally.dto.TierAssessRequest;
 import com.gen.rally.dto.TierAssessResponse;
-import com.gen.rally.dto.auth.GeneralSignupRequest;
-import com.gen.rally.dto.auth.SignupResponse;
-import com.gen.rally.dto.auth.SocialSignupRequest;
+import com.gen.rally.dto.auth.*;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.entity.User;
 import com.gen.rally.enums.Tier;
@@ -18,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -40,14 +37,17 @@ public class UserService {
         user.setLoginType(LoginType.NORMAL);
         userRepository.save(user);
 
-        String accessToken  = jwtProvider.generateAccessToken(user.getUserId());
-        String refreshToken = jwtProvider.generateRefreshToken(user.getUserId());
+        String subject = String.valueOf(user.getId());
+
+        String accessToken  = jwtProvider.generateAccessToken(subject);
+        String refreshToken = jwtProvider.generateRefreshToken(subject);
 
         return new SignupResponse(
                 user.getUserId(),
                 user.getName(),
                 accessToken,
-                refreshToken
+                refreshToken,
+                user.getId()
         );
     }
 
@@ -61,6 +61,22 @@ public class UserService {
 
         userRepository.save(user);
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
+    }
+
+    // 일반 로그인
+    public GeneralLoginResponse login(GeneralLoginRequest request){
+        User user = userRepository.findByUserId(request.getUserId())
+                .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (request.getPassword() == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
+        }
+
+        String accessToken  = jwtProvider.generateAccessToken(user.getUserId());
+        String refreshToken = jwtProvider.generateRefreshToken(user.getUserId());
+
+        GeneralLoginResponse rep = new GeneralLoginResponse(request.getUserId(),accessToken,refreshToken);
+        return rep;
     }
 
     @Transactional

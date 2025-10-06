@@ -42,6 +42,13 @@ public class UserController {
         return ResponseEntity.ok(res);
     }
 
+    // 일반 로그인
+    @PostMapping("/api/users/login")
+    public ResponseEntity<?> login(@RequestBody GeneralLoginRequest request){
+        GeneralLoginResponse res = userService.login(request);
+        return ResponseEntity.ok(res);
+    }
+
     // 아이디 중복 체크
     @PostMapping("/api/users/check-id")
     public ResponseEntity<?> checkId(@RequestBody CheckIdRequest request) throws IOException {
