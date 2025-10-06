@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/layout_message"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        android:paddingVertical="19dp"
+        android:paddingHorizontal="24dp"
+        >
+
+        <ImageView
+            android:id="@+id/iv_user_profile"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:src="@drawable/profile_image_male"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아어려워요"
+                style="@style/Text.Semibold16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/tv_game_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="단식"
+                android:textColor="#525252"
+                style="@style/Text.Medium12"
+                app:layout_constraintStart_toEndOf="@+id/tv_name"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                />
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="저희 그럼 7월 25일 망원 다목적 체육관 오후 8시로 확정할까요? 😀"
+                style="@style/Text.Regular12"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="26dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="오후 3:56"
+            android:textSize="11sp"
+            android:textColor="#525252"
+            android:layout_marginStart="14dp"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_unread"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/bg_circle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="24dp"/>
+
+    <TextView
+        android:id="@+id/tv_unread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        style="@style/Text.Medium16"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="31.4dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
