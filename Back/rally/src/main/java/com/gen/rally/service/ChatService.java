@@ -2,6 +2,7 @@ package com.gen.rally.service;
 
 import com.gen.rally.dto.ChatMessageDto;
 import com.gen.rally.dto.ChatRoomDto;
+import com.gen.rally.dto.ChatRoomListDto;
 import com.gen.rally.entity.ChatMessage;
 import com.gen.rally.entity.ChatRoom;
 import com.gen.rally.entity.Game;
@@ -18,7 +19,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -30,6 +33,72 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
 
+    // 채팅방 목록 조회
+    public List<ChatRoomListDto> findRoomsByUser(Long userId) {
+        List<ChatRoom> rooms = chatRoomRepository.findAllByUser1_IdOrUser2_Id(userId, userId);
+        return rooms.stream()
+                .map(room -> convertToDto(room, userId)) // DTO 변환 메서드 사용
+                .collect(Collectors.toList());
+    }
+
+    private ChatRoomListDto convertToDto(ChatRoom room, Long myId) {
+        User user1 = room.getUser1();
+        User user2 = room.getUser2();
+
+        User opponent = null;
+        if (user1 != null && user1.getId() != null && user1.getId().equals(myId)) {
+            opponent = user2;
+        } else if (user2 != null && user2.getId() != null && user2.getId().equals(myId)) {
+            opponent = user1;
+        }
+        ChatMessage lastMessage = getLastMessage(room.getId());
+
+        return ChatRoomListDto.builder()
+                .roomId(room.getId())
+                .opponentId(opponent != null ? opponent.getId() : null)
+                .opponentName(opponent != null ? opponent.getName() : "탈퇴 회원") // 안전한 기본값
+                .gameStyle(room.getGame() != null ? room.getGame().getGameType().toString() : "미정")
+                .opponentProfileImageUrl(opponent != null ? opponent.getImageUrl() : null)
+                .lastMessage(lastMessage != null ? lastMessage.getContent() : " ")
+                .lastMessageTime(lastMessage != null ? lastMessage.getCreatedAt() : room.getCreatedAt())
+                .unreadCount(getUnreadCount(room.getId(), myId, room))
+                .build();
+    }
+
+    private ChatMessage getLastMessage(Long roomId) {
+        return chatMessageRepository.findFirstByChatRoom_IdOrderByCreatedAtDesc(roomId)
+                .orElse(null);
+    }
+    private int getUnreadCount(Long roomId, Long myId, ChatRoom room) {
+        LocalDateTime lastReadAt;
+        if (room.getUser1().getId().equals(myId)) {
+            lastReadAt = room.getUser1LastReadAt();
+            lastReadAt = room.getCreatedAt();
+        } else {
+            lastReadAt = room.getUser2LastReadAt();
+            lastReadAt = room.getCreatedAt();
+        }
+        if (lastReadAt == null) {
+            return 0;
+        }
+        return chatMessageRepository.countUnreadMessages(roomId, lastReadAt);
+    }
+
+    // 채팅 읽음 처리
+    public void markMessagesAsRead(Long roomId, Long userId) {
+        ChatRoom room = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
+        LocalDateTime now = LocalDateTime.now();
+
+        if (room.getUser1().getId().equals(userId)) {
+            room.setUser1LastReadAt(now);
+        } else if (room.getUser2().getId().equals(userId)) {
+            room.setUser2LastReadAt(now);
+        }
+    }
+
+    // 안 읽은 채팅 처리
+
     /* 채팅방 개설
     public ChatRoom createRoom(Long gameId, Long userId) {
         Game game = gameRepository.findByGameId(gameId)
@@ -40,18 +109,41 @@ public class ChatService {
     }*/
 
     // 채팅방 입장
-    public ResponseEntity<List<ChatRoomDto>> enter(Long roomId){
+    public ResponseEntity<List<ChatRoomDto>> enter(Long roomId, Long userId){
         ChatRoom room = chatRoomRepository.findById(roomId)
                         .orElseThrow(()-> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
+        Long user1Id = room.getUser1().getId();
+        Long user2Id = room.getUser2().getId();
+
+        if (!user1Id.equals(userId) && !user2Id.equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
         User user1 = room.getUser1();
         User user2 = room.getUser2();
 
         ChatRoomDto dto1 = new ChatRoomDto(user1.getId(), user1.getName(), user1.getImageUrl());
         ChatRoomDto dto2 = new ChatRoomDto(user2.getId(), user2.getName(), user2.getImageUrl());
-
         List<ChatRoomDto> participants = List.of(dto1, dto2);
 
         return ResponseEntity.ok(participants);
+    }
+
+    // 이전 메시지 조회
+    public List<ChatMessageDto> loadMessages(Long roomId, Long userId){
+        ChatRoom room = chatRoomRepository.findById(roomId)
+                .orElseThrow(()-> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
+
+        if(!room.getUser1().getId().equals(userId) && !room.getUser2().getId().equals(userId)){
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomId(roomId);
+        List<ChatMessageDto> dtos = messages.stream()
+                .map(ChatMessageDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return dtos;
     }
 
     // 메시지 전송
@@ -69,11 +161,10 @@ public class ChatService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         ChatMessage message = ChatMessage.create(room, sender, content);
-
         chatMessageRepository.save(message);
 
         ChatMessageDto payload = ChatMessageDto.builder()
-                .messageId(message.getId())
+                .id(message.getId())
                 .roomId(room.getId())
                 .senderId(sender.getId())
                 .content(message.getContent())
