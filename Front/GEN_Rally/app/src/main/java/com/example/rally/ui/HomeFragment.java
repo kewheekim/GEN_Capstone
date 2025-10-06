@@ -31,6 +31,13 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
+        // 채팅 버튼
+        ImageButton chatBtn = view.findViewById(R.id.btn_chat);
+        chatBtn.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(),ChatListActivity.class);
+            startActivity(intent);
+        });
+
         // 뒤로가기 막기
         requireActivity().getOnBackPressedDispatcher().addCallback(
                 getViewLifecycleOwner(),
