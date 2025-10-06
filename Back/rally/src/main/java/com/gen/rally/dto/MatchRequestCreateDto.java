@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
 // 매칭 신청 시 프론트에서 전달하는 데이터 형식
 @Getter @Setter
 @NoArgsConstructor

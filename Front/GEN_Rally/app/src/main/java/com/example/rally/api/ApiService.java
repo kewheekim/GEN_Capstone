@@ -2,6 +2,7 @@ package com.example.rally.api;
 
 import com.example.rally.dto.CheckIdRequest;
 import com.example.rally.dto.CheckNicknameResponse;
+import com.example.rally.dto.EvaluationCreateRequest;
 import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.SignupResponse;
 import com.example.rally.dto.TierAssessRequest;
@@ -27,4 +28,6 @@ public interface ApiService {
     @Headers("Requires-Auth: true")
     @POST("/api/users/tier")
     Call<TierAssessResponse> getTier(@Body TierAssessRequest request);
+    @POST("/api/evaluation")
+    Call<Void> createEvaluation(@Body EvaluationCreateRequest body);
 }

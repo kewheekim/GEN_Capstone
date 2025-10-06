@@ -64,7 +64,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
-        String url = "ws://172.19.4.187:8080/ws-score?matchId=" + matchId;
+        String url = "ws://172.19.20.49:8080/ws-score?matchId=" + matchId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/match."+matchId, json -> {
             runOnUiThread(() -> {
@@ -80,7 +80,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
                         org.json.JSONArray sets = p.optJSONArray("sets");
                         long totalElapsedSec = p.optLong("totalElapsedSec", 0L);
 
-                        Intent i = new Intent(ScoreRecordActivity.this, GameResultActivity.class);
+                        Intent i = new Intent(ScoreRecordActivity.this, GameFinishActivity.class);
                         i.putExtra("matchId", matchId);
                         i.putExtra("winner", winner);
                         i.putExtra("sets_json", sets != null ? sets.toString() : "[]");

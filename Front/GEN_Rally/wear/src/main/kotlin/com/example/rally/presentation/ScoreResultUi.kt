@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Text
 
 @Composable
@@ -75,7 +74,7 @@ fun ScoreResultScreen(
                     )
                     Text(
                         text = oppSetWins.toString(),
-                        fontSize = 28.sp,
+                        fontSize = 36.sp,
                         color = Color.White,
                         fontFamily = FontFamily(Font(R.font.kimm_bold)),
                         letterSpacing = (-0.06).em
@@ -103,7 +102,7 @@ fun ScoreResultScreen(
                     )
                     Text(
                         text = mySetWins.toString(),
-                        fontSize = 28.sp,
+                        fontSize = 36.sp,
                         color = colorResource(id = R.color.gray_text),
                         fontFamily = FontFamily(Font(R.font.kimm_bold)),
                         letterSpacing = (-0.06).em

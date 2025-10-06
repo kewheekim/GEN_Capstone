@@ -29,6 +29,7 @@ import androidx.wear.compose.material.Text
 
 @Composable
 fun FinishScreen(
+    onExit: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current  // 진동 피드백
 
@@ -48,7 +49,7 @@ fun FinishScreen(
                 modifier = Modifier
                     .width(109.dp)
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.green_active)),
                 modifier = Modifier
@@ -58,6 +59,7 @@ fun FinishScreen(
 
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onExit()
                 }
             ) {
                 Text(
@@ -75,5 +77,6 @@ fun FinishScreen(
 @Composable
 fun FinishScreenPreview() {
     FinishScreen(
+        onExit = {}
     )
 }

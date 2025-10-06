@@ -41,4 +41,3 @@ public class User {
     private double manner;
     private LocalDateTime createdAt = LocalDateTime.now();
 }
-

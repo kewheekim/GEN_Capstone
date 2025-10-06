@@ -94,4 +94,9 @@ public class UserService {
         }
         return response;
     }
+
+    public void setManner(double manner, String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
 }

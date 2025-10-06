@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
-                android:stepSize="1.0"
+                android:stepSize="0.5"
                 android:rating="0"
                 style="@style/MyCustomRatingBar2"
                 app:layout_constraintTop_toBottomOf="@+id/tv_opponent_name"
@@ -114,7 +114,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:background="@drawable/bg_next_button_inactive"
-                    android:hint="건강한 배드민턴 문화를 위해, 욕설이나 비방은 삼가주세요."
+                    android:hint="  건강한 배드민턴 문화를 위해, 욕설이나 비방은 삼가주세요."
                     android:fontFamily="@font/pretendard_medium"
                     android:textSize="14sp"
                     android:padding="17dp"
@@ -459,7 +459,7 @@
                 android:button="@drawable/custom_checkbox" />
         </androidx.constraintlayout.widget.ConstraintLayout>
             <android.widget.Button
-                android:id="@+id/btn_cancel"
+                android:id="@+id/btn_next"
                 style="@style/FlatButton"
                 android:layout_width="364dp"
                 android:layout_height="54dp"

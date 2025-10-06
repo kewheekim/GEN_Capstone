@@ -108,4 +108,14 @@ public class UserController {
         TierAssessResponse response = userService.getFirstTier(request, userId);
         return ResponseEntity.ok(response);
     }
+
+    // 매너점수 갱신
+    @PostMapping("/api/users/manner") public void setManner( int manner, @AuthenticationPrincipal UserDetails userDetails) {
+        if(userDetails == null){
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+        String userId = userDetails.getUsername();
+        // 반환 필요없음
+        return ;
+    }
 }

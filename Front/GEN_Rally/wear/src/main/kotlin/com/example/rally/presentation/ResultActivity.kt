@@ -1,6 +1,7 @@
 package com.example.rally.presentation
 
 import GameHealthPayload
+import android.app.Activity
 import com.example.rally.R
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,6 +17,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -83,6 +85,7 @@ class ResultActivity : ComponentActivity() {
         opponentName: String
     ) {
         val pagerState = rememberPagerState(pageCount = { 4 })
+        val context = LocalContext.current
 
         Column(
             modifier = Modifier
@@ -111,7 +114,11 @@ class ResultActivity : ComponentActivity() {
                     )
 
                     3 -> FinishScreen(
-
+                        onExit = {
+                            (context as? Activity)?.apply {
+                                finishAffinity()
+                            }
+                        }
                     )
                 }
             }

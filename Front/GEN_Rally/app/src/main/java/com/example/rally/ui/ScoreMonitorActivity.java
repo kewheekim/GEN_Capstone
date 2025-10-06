@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,7 +21,6 @@ import com.example.rally.wear.PhoneDataLayerClient;
 import com.example.rally.wear.PhoneDataLayerListener;
 import org.json.JSONObject;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
 
 public class ScoreMonitorActivity extends AppCompatActivity {
@@ -77,7 +76,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
         // websocket 연결
         matchId = intent.getStringExtra("matchId");
-        String url = "ws://172.19.4.187:8080/ws-score?matchId=" + matchId;
+        String url = "ws://172.19.20.49:8080/ws-score?matchId=" + matchId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/match."+matchId, json -> {
             runOnUiThread( () -> {
@@ -236,7 +235,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                             // 워치로 전달
                             PhoneDataLayerClient.sendPhoneEventToWatch(this, PATH_EVENT_GAME_FINISH, env.toString());
 
-                            Intent intentToEvaluate = new Intent(this, GameResultActivity.class);
+                            Intent intentToEvaluate = new Intent(this, GameFinishActivity.class);
                             startActivity(intentToEvaluate);
                             break;
                         }
