@@ -49,6 +49,12 @@
         <item name="android:lineHeight">24sp</item>
     </style>
 
+    <style name="Text.Semibold14">
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">21sp</item>
+    </style>
+
 
     <!-- ===== Label ===== -->
     <style name="Text.Medium18">
@@ -77,7 +83,7 @@
     </style>
 
     <style name="Text.Regular14">
-        <item name="android:fontFamily">@font/pretendard_variable</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineHeight">21sp</item>
     </style>
@@ -86,6 +92,12 @@
         <item name="android:fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">12sp</item>
         <item name="android:lineHeight">18sp</item>
+    </style>
+
+    <style name="Text.Regular10">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:lineHeight">15sp</item>
     </style>
 
     <!-- ===== Option ===== -->

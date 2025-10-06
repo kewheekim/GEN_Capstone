@@ -26,6 +26,7 @@ public enum ErrorCode {
     // 404 Not Found
     USER_NOT_FOUND("USER_NOT_FOUND", "해당 유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     GAME_NOT_FOUND("GAME_NOT_FOUND","해당 게임을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    CHATROOM_NOT_FOUND("CHATROOM_NOT_FOUND","해당 채팅방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
