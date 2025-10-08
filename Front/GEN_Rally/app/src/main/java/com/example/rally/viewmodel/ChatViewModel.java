@@ -35,25 +35,49 @@ public class ChatViewModel extends ViewModel {
         }
     }
 
+    public void initializeMessages(List<ChatMessageDto> dtos, Long myUserId) {
+        if (dtos == null || dtos.isEmpty()) {
+            messages.setValue(new ArrayList<>());
+            return;
+        }
+
+        List<ChatMessage> finalMessageList = new ArrayList<>();
+        Long lastTimestamp = null; // 이전 메시지의 타임스탬프 (날짜 비교용)
+
+        for (ChatMessageDto dto : dtos) {
+            // 1. DTO를 ChatMessage로 변환
+            int viewType = dto.getSenderId().equals(myUserId) ?
+                    ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
+            long currentTimestamp = convertToTimestamp(dto.getCreatedAt());
+
+            ChatMessage newMsg = convertDtoToMessage(dto, myUserId);
+
+            // 2. 날짜 라벨 전처리 로직 (initializeMessage는 메시지가 시간 순으로 정렬되어 있음을 가정)
+            if (lastTimestamp == null || !isSameDay(lastTimestamp, currentTimestamp)) {
+                // 첫 메시지이거나 이전 메시지와 날짜가 다르면 날짜 라벨 추가
+                finalMessageList.add(ChatMessage.dateLabel(formatDateLabel(currentTimestamp)));
+            }
+
+            finalMessageList.add(newMsg);
+            lastTimestamp = currentTimestamp; // 현재 메시지의 타임스탬프를 다음 비교를 위해 저장
+        }
+
+        // LiveData 업데이트 (RecyclerView에 데이터 표시)
+        messages.setValue(finalMessageList);
+    }
+
     // 웹소켓 메시지 수신 및 LiveData 업데이트 함수
     public void addIncomingMessage(ChatMessageDto dto, Long myUserId) {
         List<ChatMessage> currentList = messages.getValue() == null ?
                 new ArrayList<>() : messages.getValue();
 
-        // 1. DTO를 ChatMessage로 변환
+        // DTO를 ChatMessage로 변환
         int viewType = dto.getSenderId().equals(myUserId) ?
                 ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
 
         long timestamp = convertToTimestamp(dto.getCreatedAt());
 
-        ChatMessage newMsg = new ChatMessage(
-                dto.getMessageId(),
-                viewType,
-                dto.getContent(),
-                timestamp,
-                dto.getSenderId(),
-                null // MatchInfo가 있다면 여기서 파싱하여 추가
-        );
+        ChatMessage newMsg = convertDtoToMessage(dto, myUserId);
 
         List<ChatMessage> updatedList = new ArrayList<>(currentList);
 
@@ -112,6 +136,21 @@ public class ChatViewModel extends ViewModel {
 
     private String formatTime(long timeMillis) {
         return DateFormat.format("a h:mm", timeMillis).toString(); // 오전 8:10 형식
+    }
+
+    private ChatMessage convertDtoToMessage(ChatMessageDto dto, Long myUserId) {
+        int viewType = dto.getSenderId().equals(myUserId) ?
+                ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
+        long timestamp = convertToTimestamp(dto.getCreatedAt());
+
+        return new ChatMessage(
+                dto.getId(),
+                viewType,
+                dto.getContent(),
+                timestamp,
+                dto.getSenderId(),
+                null
+        );
     }
 
     public LiveData<List<ChatMessage>> getMessages() { return messages; }

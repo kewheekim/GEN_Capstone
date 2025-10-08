@@ -162,7 +162,7 @@ public class SetPrimaryFragment extends Fragment {
 
                                 try{
                                     TokenStore tokenStore = new TokenStore(requireContext().getApplicationContext());
-                                    tokenStore.saveTokens(body.getAccessToken(), body.getRefreshToken());
+                                    tokenStore.saveTokens(body.getAccessToken(), body.getRefreshToken(), body.getUserPk());
                                 }catch(Exception e){
                                     Log.e("SignUp", "토큰 저장 실패", e);
                                 }

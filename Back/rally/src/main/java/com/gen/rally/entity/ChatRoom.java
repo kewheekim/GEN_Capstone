@@ -29,6 +29,10 @@ public class ChatRoom {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // 사용자가 마지막으로 읽은 메시지의 시각
+    private LocalDateTime user1LastReadAt;
+    private LocalDateTime user2LastReadAt;
+
     public static ChatRoom create(Game game) {
         ChatRoom room = new ChatRoom();
         room.setGame(game);

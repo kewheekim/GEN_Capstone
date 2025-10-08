@@ -27,6 +27,7 @@ public enum ErrorCode {
     USER_NOT_FOUND("USER_NOT_FOUND", "해당 유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     GAME_NOT_FOUND("GAME_NOT_FOUND","해당 게임을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     CHATROOM_NOT_FOUND("CHATROOM_NOT_FOUND","해당 채팅방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    CHATMESSAGE_NOT_FOUND("CHATMESSAGE_NOT_FOUND","메시지를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // 409 Conflict
     CONFLICT("CONFLICT", "중복이 발생했습니다.", HttpStatus.CONFLICT),

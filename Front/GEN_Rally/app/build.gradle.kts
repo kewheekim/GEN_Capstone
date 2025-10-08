@@ -56,6 +56,10 @@ dependencies {
     implementation ("com.google.android.gms:play-services-wearable:18.2.0")
     implementation ("androidx.core:core-ktx:1.13.1")
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation(platform("com.google.firebase:firebase-bom:34.2.0")) // Firebase
+    implementation (platform("com.google.firebase:firebase-bom:34.2.0")) // Firebase
     implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.github.NaikSoftware:StompProtocolAndroid:1.6.6") // STOMP
+    implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
+    implementation ("com.google.code.gson:gson:2.10.1")
 }

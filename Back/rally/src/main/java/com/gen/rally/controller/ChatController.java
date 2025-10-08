@@ -1,35 +1,63 @@
 package com.gen.rally.controller;
 
+import com.gen.rally.dto.ChatMessageDto;
+import com.gen.rally.dto.ChatMessageRequest;
 import com.gen.rally.dto.ChatRoomDto;
+import com.gen.rally.dto.ChatRoomListDto;
+import com.gen.rally.entity.ChatMessage;
 import com.gen.rally.entity.ChatRoom;
+import com.gen.rally.exception.CustomException;
+import com.gen.rally.exception.ErrorCode;
+import com.gen.rally.repository.ChatMessageRepository;
 import com.gen.rally.repository.ChatRoomRepository;
 import com.gen.rally.repository.GameRepository;
 import com.gen.rally.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
     private final ChatRoomRepository chatRoomRepository;
     private final GameRepository gameRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     // 채팅방 목록 조회
     @GetMapping("/api/rooms")
     @ResponseBody
-    public List<ChatRoom> findAllRooms() {
-        List<ChatRoom> lists = chatRoomRepository.findAll();
+    public List<ChatRoomListDto> findAllRooms(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+        Long userId = Long.parseLong(userDetails.getUsername());
+        log.info("Successfully authenticated and starting chat room lookup for user PK: {}", userId);
+        List<ChatRoomListDto> lists = chatService.findRoomsByUser(userId);
         return lists;
     }
+
+    // 채팅 읽음 표시
+    @PostMapping("/api/rooms/{roomId}/read")
+    public ResponseEntity<Void> markAsRead(@PathVariable Long roomId, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        Long userId = Long.parseLong(userDetails.getUsername());
+        chatService.markMessagesAsRead(roomId, userId);
+        return ResponseEntity.ok().build();
+    }
+
 
     /* 채팅방 개설
     @PostMapping("/api/rooms/{gameId}")
@@ -41,15 +69,30 @@ public class ChatController {
     // 채팅방 입장, 사용자 프로필 캐싱용
     @GetMapping("/api/rooms/{roomId}/participants")
     @ResponseBody
-    public ResponseEntity<List<ChatRoomDto>> enterChatRoom(@PathVariable Long roomId) {
-        return chatService.enter(roomId);
+    public ResponseEntity<List<ChatRoomDto>> enterChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        Long userId = Long.parseLong(userDetails.getUsername());
+        return chatService.enter(roomId, userId);
+    }
+
+    // 이전 메시지 로드
+    @GetMapping("/api/rooms/{roomId}/messages")
+    @ResponseBody
+    public ResponseEntity<List<ChatMessageDto>> findChatMessages(@PathVariable Long roomId, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        Long userId = Long.parseLong(userDetails.getUsername());
+        List<ChatMessageDto> list = chatService.loadMessages(roomId, userId);
+        return ResponseEntity.ok(list);
     }
 
     // 메시지 발신 및 수신
     @MessageMapping("/dm/{gameId}")
     public void send(@DestinationVariable Long gameId,
-                     @Header("senderId") Long senderId,
-                     @Payload String content){
-        chatService.send(gameId, senderId, content);
+                     @Payload ChatMessageRequest req){
+        chatService.send(gameId, req.getSenderId(), req.getContent());
     }
 }
