@@ -22,31 +22,30 @@ public class EvaluationService {
 
     @Transactional
     public Long createEvaluation(EvaluationCreateRequest req) {
-        // 필수값 널 체크(간단)
         if (req.getGameId() == null ||
                 req.getEvaluator() == null ||
                 req.getSubject() == null ||
                 req.getMannerScore() == null) {
-            throw new CustomException(ErrorCode.INVALID_INPUT, "필수 값 누락");
+            throw new CustomException(ErrorCode.INVALID_STATE);
         }
 
         // 사용자 존재 확인
         userRepository.findByUserId(req.getEvaluator())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "평가자 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         userRepository.findByUserId(req.getSubject())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "평가 대상자 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 점수 검증: 1.0~5.0, 0.5 step
         double score = req.getMannerScore();
         if (Double.isNaN(score) || Double.isInfinite(score)
                 || score < 1.0 || score > 5.0 || !isHalfStep(score)) {
-            throw new CustomException(ErrorCode.INVALID_INPUT, "mannerScore는 1.0~5.0, 0.5 단위여야 합니다.");
+            throw new CustomException(ErrorCode.INVALID_STATE);
         }
 
         // 중복 평가 방지
         if (evaluationRepository.existsByGameIdAndEvaluatorAndSubject(
                 req.getGameId(), req.getEvaluator(), req.getSubject())) {
-            throw new CustomException(ErrorCode.CONFLICT, "이미 이 경기에서 해당 사용자를 평가했습니다.");
+            throw new CustomException(ErrorCode.CONFLICT);
         }
 
         // 저장
