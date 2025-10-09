@@ -1,6 +1,7 @@
 package com.gen.rally.controller;
 
 import com.gen.rally.dto.EvaluationCreateRequest;
+import com.gen.rally.entity.CustomUserDetails;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.service.EvaluationService;
@@ -23,7 +24,7 @@ public class EvaluationController {
     @PostMapping
     public ResponseEntity<Void> create(
             @RequestBody EvaluationCreateRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         if (userDetails == null) throw new CustomException(ErrorCode.UNAUTHORIZED);
 
