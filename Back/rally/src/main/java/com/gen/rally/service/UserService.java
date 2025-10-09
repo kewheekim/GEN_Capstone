@@ -75,8 +75,8 @@ public class UserService {
         String accessToken  = jwtProvider.generateAccessToken(user.getUserId());
         String refreshToken = jwtProvider.generateRefreshToken(user.getUserId());
 
-        GeneralLoginResponse rep = new GeneralLoginResponse(request.getUserId(),accessToken,refreshToken);
-        return rep;
+        GeneralLoginResponse res = new GeneralLoginResponse(user.getId(),user.getName(),accessToken,refreshToken);
+        return res;
     }
 
     @Transactional

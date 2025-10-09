@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -112,5 +113,12 @@ public class AuthActivity extends AppCompatActivity {
                 .replace(R.id.auth_fragment_container, SignupCompleteFragment.newInstance(name, image))
                 .addToBackStack(null)
                 .commit();
+    }
+
+    // MainActivity
+    public void loginSuccess(){
+        Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

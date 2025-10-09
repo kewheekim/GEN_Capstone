@@ -6,6 +6,7 @@ import com.gen.rally.dto.ChatRoomDto;
 import com.gen.rally.dto.ChatRoomListDto;
 import com.gen.rally.entity.ChatMessage;
 import com.gen.rally.entity.ChatRoom;
+import com.gen.rally.entity.CustomUserDetails;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.ChatMessageRepository;
@@ -37,27 +38,25 @@ public class ChatController {
     // 채팅방 목록 조회
     @GetMapping("/api/rooms")
     @ResponseBody
-    public List<ChatRoomListDto> findAllRooms(@AuthenticationPrincipal UserDetails userDetails) {
+    public List<ChatRoomListDto> findAllRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
-        Long userId = Long.parseLong(userDetails.getUsername());
-        log.info("Successfully authenticated and starting chat room lookup for user PK: {}", userId);
+        Long userId = userDetails.getId();
         List<ChatRoomListDto> lists = chatService.findRoomsByUser(userId);
         return lists;
     }
 
     // 채팅 읽음 표시
     @PostMapping("/api/rooms/{roomId}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable Long roomId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Void> markAsRead(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        Long userId = Long.parseLong(userDetails.getUsername());
+        Long userId = userDetails.getId();
         chatService.markMessagesAsRead(roomId, userId);
         return ResponseEntity.ok().build();
     }
-
 
     /* 채팅방 개설
     @PostMapping("/api/rooms/{gameId}")
@@ -69,30 +68,30 @@ public class ChatController {
     // 채팅방 입장, 사용자 프로필 캐싱용
     @GetMapping("/api/rooms/{roomId}/participants")
     @ResponseBody
-    public ResponseEntity<List<ChatRoomDto>> enterChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<ChatRoomDto>> enterChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        Long userId = Long.parseLong(userDetails.getUsername());
+        Long userId = userDetails.getId();
         return chatService.enter(roomId, userId);
     }
 
     // 이전 메시지 로드
     @GetMapping("/api/rooms/{roomId}/messages")
     @ResponseBody
-    public ResponseEntity<List<ChatMessageDto>> findChatMessages(@PathVariable Long roomId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<ChatMessageDto>> findChatMessages(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        Long userId = Long.parseLong(userDetails.getUsername());
+        Long userId = userDetails.getId();
         List<ChatMessageDto> list = chatService.loadMessages(roomId, userId);
         return ResponseEntity.ok(list);
     }
 
     // 메시지 발신 및 수신
-    @MessageMapping("/dm/{gameId}")
-    public void send(@DestinationVariable Long gameId,
+    @MessageMapping("/dm/{roomId}")
+    public void send(@DestinationVariable Long roomId,
                      @Payload ChatMessageRequest req){
-        chatService.send(gameId, req.getSenderId(), req.getContent());
+        chatService.send(roomId, req.getSenderId(), req.getContent());
     }
 }
