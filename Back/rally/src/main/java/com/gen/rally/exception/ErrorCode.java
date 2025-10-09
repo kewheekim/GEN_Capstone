@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_KAKAO_CODE("INVALID_KAKAO_CODE", "카카오 인가 코드가 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
     INVALID_NAVER_CODE("INVALID_NAVER_CODE", "네이버 인가 코드가 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
     INVALID_MESSAGE("INVALID_MESSAGE","유효하지 않은 메시지입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_INPUT("INVALID_INPUT","유효하지 않은 입력값입니다.", HttpStatus.BAD_REQUEST),
 
     // 401 Unauthorized
     INVALID_TOKEN("INVALID_TOKEN", "유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED),
