@@ -97,17 +97,6 @@ public class ChatService {
         }
     }
 
-    // 안 읽은 채팅 처리
-
-    /* 채팅방 개설
-    public ChatRoom createRoom(Long gameId, Long userId) {
-        Game game = gameRepository.findByGameId(gameId)
-                .orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
-
-        return chatRoomRepository.findByGame_GameId(gameId)
-                .orElseGet(()->chatRoomRepository.save(ChatRoom.create(game)));
-    }*/
-
     // 채팅방 입장
     public ResponseEntity<List<ChatRoomDto>> enter(Long roomId, Long userId){
         ChatRoom room = chatRoomRepository.findById(roomId)
@@ -147,15 +136,12 @@ public class ChatService {
     }
 
     // 메시지 전송
-    public ChatMessage send(Long gameId, Long senderId, String content){
+    public ChatMessage send(Long roomId, Long senderId, String content){
         if (content == null || content.isBlank()) {
             throw new CustomException(ErrorCode.INVALID_MESSAGE);
         }
-        ChatRoom room = chatRoomRepository.findByGame_GameId(gameId).orElseGet(()->{
-            Game game = gameRepository.findByGameId(gameId).
-                    orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
-            return chatRoomRepository.save(ChatRoom.create(game));
-        });
+        ChatRoom room = chatRoomRepository.findById(roomId)
+                .orElseThrow(()-> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
 
         User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -171,7 +157,7 @@ public class ChatService {
                 .createdAt(message.getCreatedAt())
                 .build();
         // 브로커로 전송
-        template.convertAndSend("/sub/dm/" + gameId, payload);
+        template.convertAndSend("/sub/dm/" + roomId, payload);
         return message;
     }
 

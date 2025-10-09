@@ -155,15 +155,18 @@ public class ChatActivity extends AppCompatActivity {
         String txt = etMessage.getText().toString().trim();
         if (txt.isEmpty()) return;
 
-        Long tempMessageId = System.currentTimeMillis();
+        long tempMessageId = System.currentTimeMillis();
+
+        String formattedTime = viewModel.formatTime(tempMessageId);
+
         ChatMessage msg = new ChatMessage(
                 tempMessageId,
-                ChatMessage.VIEW_TYPE_SENT,
                 txt,
                 System.currentTimeMillis(),
-                myUserId,
-                null
+                formattedTime,
+                myUserId
         );
+
         adapter.addMessage(msg);
         etMessage.setText("");
         hideKeyboard();
@@ -218,6 +221,7 @@ public class ChatActivity extends AppCompatActivity {
             String payload = topicMessage.getPayload();
             try {
                 ChatMessageDto dto = gson.fromJson(payload, ChatMessageDto.class);
+
                 runOnUiThread(() -> viewModel.addIncomingMessage(dto, myUserId));
             } catch (Exception e) {
                 Log.e("ChatActivity", "payload parsing failed: " + payload, e);

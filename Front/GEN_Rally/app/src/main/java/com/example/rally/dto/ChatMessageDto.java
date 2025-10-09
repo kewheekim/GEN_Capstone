@@ -10,9 +10,9 @@ public class ChatMessageDto {
     private Long roomId;
     private Long senderId;
     private String content;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
-    public ChatMessageDto (Long id, Long roomId, Long senderId, String content, LocalDateTime createdAt){
+    public ChatMessageDto (Long id, Long roomId, Long senderId, String content, String createdAt){
         this.id = id;
         this.roomId = roomId;
         this.senderId = senderId;

@@ -15,30 +15,51 @@ public class ChatMessage {
 
         private final Long messageId;
         private final int viewType;
-        private final String text;
+        private final String content;
         private final long timestamp;
 
         private final Long senderId;
+        private final String formattedTime;
 
         @Nullable
         private final MatchInfo matchInfo;
 
+        private long tempId;
+        private boolean isSending; // 전송 상태 (true: 전송 중, false: 완료)
+
         // 일반 메시지 생성자
-        public ChatMessage(Long messageId, int viewType, String text, long timestamp,
-                           Long senderId,
+        public ChatMessage(Long id, int viewType, String content, long timestamp,
+                           Long senderId, String formattedTime,
                            @Nullable MatchInfo matchInfo) {
-            this.messageId = messageId;
+            this.messageId = id;
             this.viewType = viewType;
-            this.text = text;
+            this.content = content;
             this.timestamp = timestamp;
             this.senderId = senderId;
+            this.formattedTime = formattedTime;
             this.matchInfo = matchInfo;
+            this.tempId = (id != null) ? id : 0; // id가 null이면 0 등으로 초기화 (임시 메시지에서는 id가 tempId로 사용됨)
+            this.isSending = false;
         }
+
+    // 전송 전용 생성자
+    public ChatMessage(long tempId, String content, long timestamp,
+                       String formattedTime, Long senderId) {
+        this.messageId = null; // 실제 ID는 서버에서 받음
+        this.tempId = tempId;
+        this.viewType = VIEW_TYPE_SENT;
+        this.content = content;
+        this.timestamp = timestamp;
+        this.senderId = senderId;
+        this.isSending = true;
+        this.formattedTime = formattedTime;
+        this.matchInfo = null;
+    }
 
         // 날짜 라벨 생성자
         public static ChatMessage dateLabel(String label) {
             return new ChatMessage(null, VIEW_TYPE_DATE, null,
-                    System.currentTimeMillis(), null, null);
+                    System.currentTimeMillis(), null, null,null);
         }
 
         // 경기 약속 카드

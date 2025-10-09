@@ -1,6 +1,8 @@
 package com.example.rally.adapter;
 
 import android.content.Context;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,10 @@ import com.example.rally.R;
 import com.example.rally.dto.ChatRoomListDto;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +28,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatRo
 
     private final Context context;
     private List<ChatRoomListDto> items = new ArrayList<>();
+    private static final DateTimeFormatter SERVER_DATETIME_FORMATTER = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            .toFormatter();
 
     public ChatListAdapter(Context context){
         this.context = context;
@@ -84,9 +92,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatRo
 
         public void bind(ChatRoomListDto room, OnItemClickListener listener) {
 
+            String formatTime = room.getLastMessageTime();
+
             tvName.setText(room.getOpponentName());
             tvGameStyle.setText(room.getGameStyle());
-            tvTime.setText(formatTime(room.getLastMessageTime()));
+            tvTime.setText(formatChatListTime(formatTime));
             tvContent.setText(room.getLastMessage());
             Glide.with(context)
                     .load(room.getOpponentProfileImageUrl())
@@ -107,11 +117,21 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatRo
                 }
             });
         }
-    }
 
-    private static String formatTime(LocalDateTime timeMillis) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a h:mm");
-        String time = timeMillis.format(formatter);
-        return time;
+        public static String formatChatListTime(String dateTimeString) {
+            if (dateTimeString == null || dateTimeString.isEmpty()) {
+                return "";
+            }
+
+            try {
+                LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, SERVER_DATETIME_FORMATTER);
+                long timeMillis = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                return DateFormat.format("a h:mm", timeMillis).toString();
+
+            } catch (Exception e) {
+                Log.e("ChatList", "Failed to format list time: " + dateTimeString, e);
+                return dateTimeString.split(" ")[0]; // 예: 2025-09-18
+            }
+        }
     }
 }

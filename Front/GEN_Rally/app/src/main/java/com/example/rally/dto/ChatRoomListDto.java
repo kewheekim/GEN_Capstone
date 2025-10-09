@@ -14,6 +14,6 @@ public class ChatRoomListDto {
     private String gameStyle;
     private String opponentProfileImageUrl;
     private String lastMessage; // 마지막 메시지 내용
-    private LocalDateTime lastMessageTime; // 마지막 메시지 시간
+    private String lastMessageTime; // 마지막 메시지 시간
     private int unreadCount; // 안 읽은 메시지 수
 }
