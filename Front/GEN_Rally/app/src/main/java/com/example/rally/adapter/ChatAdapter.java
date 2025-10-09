@@ -1,7 +1,6 @@
 package com.example.rally.adapter;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +18,6 @@ import com.example.rally.viewmodel.ChatMessage;
 import com.example.rally.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -64,11 +61,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ChatMessage m = items.get(position);
         if (holder instanceof SentVH) {
             SentVH vh = (SentVH) holder;
-            vh.tvBubble.setText(m.getText());
+            vh.tvBubble.setText(m.getContent());
             vh.tvBubble.setMaxWidth(maxBubbleWidthPx);
         } else if (holder instanceof ReceivedVH) {
             ReceivedVH vh = (ReceivedVH) holder;
-            vh.tvBubble.setText(m.getText());
+            vh.tvBubble.setText(m.getContent());
             vh.tvBubble.setMaxWidth(maxBubbleWidthPx);
 
             ChatRoomDto profile = viewModel.getProfile(m.getSenderId());
@@ -80,7 +77,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         } else if (holder instanceof DateVH) {
             DateVH vh = (DateVH) holder;
-            vh.tvDate.setText(m.getText());
+            vh.tvDate.setText(m.getContent());
         }
     }
 
