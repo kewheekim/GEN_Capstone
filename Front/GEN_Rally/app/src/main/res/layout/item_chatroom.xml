@@ -16,12 +16,17 @@
         android:paddingHorizontal="24dp"
         >
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_user_profile"
             android:layout_width="62dp"
             android:layout_height="62dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/profile_image_male"
-            />
+            app:shapeAppearanceOverlay="@style/RoundedProfileImage"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="226dp"
