@@ -16,20 +16,24 @@ import com.bumptech.glide.Glide;
 import com.example.rally.R;
 import com.example.rally.dto.ChatRoomListDto;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatRoomViewHolder> {
 
     private final Context context;
     private List<ChatRoomListDto> items = new ArrayList<>();
     private static final DateTimeFormatter SERVER_DATETIME_FORMATTER = new DateTimeFormatterBuilder()
-            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            .append(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+            .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true) // 소수점 이하 0~9자리까지 허용
             .toFormatter();
 
     public ChatListAdapter(Context context){
@@ -126,11 +130,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatRo
             try {
                 LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, SERVER_DATETIME_FORMATTER);
                 long timeMillis = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                return DateFormat.format("a h:mm", timeMillis).toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("a h:mm", Locale.KOREA);
+                return sdf.format(new Date(timeMillis));
 
             } catch (Exception e) {
                 Log.e("ChatList", "Failed to format list time: " + dateTimeString, e);
-                return dateTimeString.split(" ")[0]; // 예: 2025-09-18
+                return dateTimeString.split(" ")[0];
             }
         }
     }

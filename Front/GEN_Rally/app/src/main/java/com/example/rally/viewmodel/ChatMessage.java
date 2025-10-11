@@ -58,8 +58,15 @@ public class ChatMessage {
 
         // 날짜 라벨 생성자
         public static ChatMessage dateLabel(String label) {
-            return new ChatMessage(null, VIEW_TYPE_DATE, null,
-                    System.currentTimeMillis(), null, null,null);
+            return new ChatMessage(
+                    null,                                     // messageId: 날짜 라벨은 ID 없음
+                    VIEW_TYPE_DATE,                           // viewType: 날짜 타입
+                    label,                                    // content: 날짜 문자열 ('2025년 10월 12일')
+                    System.currentTimeMillis(),               // timestamp: 날짜 비교용으로 사용되므로, 뷰모델에서 전달받은 값 중 하나를 넣거나 현재 시간을 넣어도 무방
+                    null,                                     // senderId: 없음
+                    null,                                     // formattedTime: 없음
+                    null                                      // matchInfo: 없음
+            );
         }
 
         // 경기 약속 카드

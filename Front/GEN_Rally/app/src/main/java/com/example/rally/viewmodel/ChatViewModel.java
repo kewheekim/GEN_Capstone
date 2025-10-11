@@ -10,24 +10,27 @@ import androidx.lifecycle.ViewModel;
 import com.example.rally.dto.ChatMessageDto;
 import com.example.rally.dto.ChatRoomDto;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ChatViewModel extends ViewModel {
     private final Map<Long, ChatRoomDto> profileCache = new HashMap<>();
     private final MutableLiveData<List<ChatMessage>> messages = new MutableLiveData<>(new ArrayList<>());
 
-    private static final DateTimeFormatter DATETIME_FORMATTER = new DateTimeFormatterBuilder()
-            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    private static final DateTimeFormatter SERVER_DATETIME_FORMATTER = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+            .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
             .toFormatter();
 
     // 채팅방 입장 시 호출하여 참가자 프로필 정보를 캐싱
@@ -117,7 +120,8 @@ public class ChatViewModel extends ViewModel {
             return System.currentTimeMillis();
         }
         try {
-            LocalDateTime localDateTime = LocalDateTime.parse(dateTime, DATETIME_FORMATTER);
+            LocalDateTime localDateTime = LocalDateTime.parse(dateTime, SERVER_DATETIME_FORMATTER);
+
             return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         } catch (Exception e) {
             Log.e("ChatViewModel", "Failed to parse date string: " + dateTime, e);
@@ -143,8 +147,8 @@ public class ChatViewModel extends ViewModel {
     }
 
     public String formatTime(long timeMillis) {
-        return DateFormat.format("a h:mm", timeMillis).toString(); // 오전 8:10 형식
-    }
+        SimpleDateFormat sdf = new SimpleDateFormat("a h:mm", Locale.KOREA);
+        return sdf.format(new Date(timeMillis));    }
 
     private ChatMessage convertDtoToMessage(ChatMessageDto dto, Long myUserId, long timestamp) {
         int viewType = dto.getSenderId().equals(myUserId) ?
