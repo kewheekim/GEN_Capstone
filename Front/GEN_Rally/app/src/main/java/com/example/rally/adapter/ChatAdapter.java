@@ -61,18 +61,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ChatMessage m = items.get(position);
         if (holder instanceof SentVH) {
             SentVH vh = (SentVH) holder;
-            vh.tvBubble.setText(m.getContent());
-            vh.tvBubble.setMaxWidth(maxBubbleWidthPx);
+            vh.tvSentBubble.setText(m.getContent());
+            vh.tvSentBubble.setMaxWidth(maxBubbleWidthPx);
+            vh.tvSentTime.setText(m.getFormattedTime());
+
         } else if (holder instanceof ReceivedVH) {
             ReceivedVH vh = (ReceivedVH) holder;
-            vh.tvBubble.setText(m.getContent());
-            vh.tvBubble.setMaxWidth(maxBubbleWidthPx);
+            vh.tvReceivedBubble.setText(m.getContent());
+            vh.tvReceivedBubble.setMaxWidth(maxBubbleWidthPx);
+            vh.tvReceivedTime.setText(m.getFormattedTime());
 
             ChatRoomDto profile = viewModel.getProfile(m.getSenderId());
             if (profile != null) {
                 Glide.with(context)
                         .load(profile.getProfileUrl())
                         .into(vh.ivProfile);
+                vh.tvNickname.setText(profile.getName());
             }
 
         } else if (holder instanceof DateVH) {
@@ -105,24 +109,26 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     // ViewHolders
     static class SentVH extends RecyclerView.ViewHolder {
-        TextView tvBubble;
-        TextView tvTime;
+        TextView tvSentBubble;
+        TextView tvSentTime;
         SentVH(@NonNull View itemView) {
             super(itemView);
-            tvBubble = itemView.findViewById(R.id.tv_bubble_me);
-            tvTime = itemView.findViewById(R.id.tv_sent_time);
+            tvSentBubble = itemView.findViewById(R.id.tv_bubble_me);
+            tvSentTime = itemView.findViewById(R.id.tv_sent_time);
         }
     }
 
     static class ReceivedVH extends RecyclerView.ViewHolder {
-        TextView tvBubble;
-        TextView tvTime;
+        TextView tvReceivedBubble;
+        TextView tvReceivedTime;
         ImageView ivProfile;
+        TextView tvNickname;
         ReceivedVH(@NonNull View itemView) {
             super(itemView);
-            tvBubble = itemView.findViewById(R.id.tv_bubble_you);
-            tvTime = itemView.findViewById(R.id.tv_received_time);
+            tvReceivedBubble = itemView.findViewById(R.id.tv_bubble_you);
+            tvReceivedTime = itemView.findViewById(R.id.tv_received_time);
             ivProfile = itemView.findViewById(R.id.iv_profile);
+            tvNickname = itemView.findViewById(R.id.tv_nickname);
         }
     }
     static class DateVH extends RecyclerView.ViewHolder {
