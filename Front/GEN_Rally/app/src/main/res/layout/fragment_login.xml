@@ -38,6 +38,7 @@
         />
     <EditText
         android:id="@+id/et_enter_pw"
+        android:inputType="textPassword"
         android:layout_width="364dp"
         android:layout_height="52dp"
         android:hint="비밀번호 입력"
