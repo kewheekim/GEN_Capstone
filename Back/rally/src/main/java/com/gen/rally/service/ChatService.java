@@ -69,19 +69,19 @@ public class ChatService {
         return chatMessageRepository.findFirstByChatRoom_IdOrderByCreatedAtDesc(roomId)
                 .orElse(null);
     }
+
     private int getUnreadCount(Long roomId, Long myId, ChatRoom room) {
-        LocalDateTime lastReadAt;
+        LocalDateTime lastReadAt = null;
+
         if (room.getUser1().getId().equals(myId)) {
             lastReadAt = room.getUser1LastReadAt();
-            lastReadAt = room.getCreatedAt();
         } else {
             lastReadAt = room.getUser2LastReadAt();
-            lastReadAt = room.getCreatedAt();
         }
         if (lastReadAt == null) {
-            return 0;
+            lastReadAt = room.getCreatedAt();
         }
-        return chatMessageRepository.countUnreadMessages(roomId, lastReadAt);
+        return chatMessageRepository.countUnreadMessages(roomId, lastReadAt, myId);
     }
 
     // 채팅 읽음 처리
