@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -30,7 +31,6 @@ import com.example.rally.viewmodel.ChatMessage;
 import com.example.rally.viewmodel.ChatViewModel;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
@@ -63,6 +63,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private EditText etMessage;
     private ImageButton btnSend;
+    private Button btnPromise;
     private Toolbar toolbar;
 
     private long roomId = -1L;
@@ -77,7 +78,6 @@ public class ChatActivity extends AppCompatActivity {
                 .getSecureClient(getApplicationContext(),"http://10.0.2.2:8080/")
                 .create(ApiService.class);
 
-        // Intent에서 roomId, myUserId 받아오기 (호출부에서 넣어줘야 함)
         Intent it = getIntent();
         roomId = it.getLongExtra(ROOM_ID, -1L);
         myUserId = it.getLongExtra(MY_USER_ID, -1L);
@@ -110,6 +110,10 @@ public class ChatActivity extends AppCompatActivity {
         // STOMP 연결 및 구독 시작
         connectStompAndSubscribe();
         markChatRoomAsRead(roomId);
+
+        btnPromise = findViewById(R.id.btn_promise);
+
+        // btnPromise.setOnClickListener();
     }
 
     private void findViewByIdViews() {

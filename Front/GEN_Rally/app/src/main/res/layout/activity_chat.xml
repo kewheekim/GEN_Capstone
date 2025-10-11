@@ -198,7 +198,7 @@
             </LinearLayout>
 
             <android.widget.Button
-                android:id="@+id/btn_select"
+                android:id="@+id/btn_promise"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:text="경기\n약속 잡기"
