@@ -18,6 +18,6 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     List<ChatMessage> findAllByChatRoomId(Long chatRoomId);
     Optional<ChatMessage> findFirstByChatRoom_IdOrderByCreatedAtDesc(Long chatRoomId);
 
-    @Query("SELECT COUNT(m) FROM ChatMessage m WHERE m.chatRoom.id = :roomId AND m.createdAt > :lastReadAt") // 안 읽은 메시지 조회
-    int countUnreadMessages(@Param("roomId") Long roomId, @Param("lastReadAt") LocalDateTime lastReadAt);
+    @Query("SELECT COUNT(m) FROM ChatMessage m WHERE m.chatRoom.id = :roomId AND m.createdAt > :lastReadAt AND m.sender.id != :senderId") // 안 읽은 메시지 조회
+    int countUnreadMessages(@Param("roomId") Long roomId, @Param("lastReadAt") LocalDateTime lastReadAt, @Param("senderId") Long senderId);
 }
