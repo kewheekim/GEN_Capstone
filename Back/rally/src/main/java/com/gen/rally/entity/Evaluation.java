@@ -1,6 +1,11 @@
 package com.gen.rally.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -34,6 +39,8 @@ public class Evaluation {
 
     @Column(name = "comment")
     private String comment;
+
+    private LocalDateTime createdAt =  LocalDateTime.now();
 
     public Long getEvaluationId() { return evaluationId; }
     public void setEvaluationId(Long evaluationId) { this.evaluationId = evaluationId; }

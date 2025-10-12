@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import com.example.rally.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -7,11 +8,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
-import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
 import com.example.rally.dto.EvaluationCreateRequest;
@@ -69,13 +67,13 @@ public class EvaluationActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v -> {
             btnNext.setEnabled(false);
 
-            long gameId = getIntent().getLongExtra("game_id", 0L);
+            long gameId = getIntent().getLongExtra("game_id", 1);
             String subjectUserId = getIntent().getStringExtra("subject_user_id");
 
             if (gameId == 0L || subjectUserId == null) {
                 Toast.makeText(this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                subjectUserId = "user003";
                 btnNext.setEnabled(true);
-                return;
             }
 
             // 최소 1.0 보정
@@ -93,7 +91,7 @@ public class EvaluationActivity extends AppCompatActivity {
             );
 
             ApiService api = RetrofitClient
-                    .getClient("http://192.168.35.44:8080/")
+                    .getClient("http://172.19.46.132:8080/")
                     .create(ApiService.class);
 
             api.createEvaluation(body).enqueue(new Callback<Void>() {

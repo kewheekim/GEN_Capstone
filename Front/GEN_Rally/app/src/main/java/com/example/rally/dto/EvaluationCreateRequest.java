@@ -6,8 +6,7 @@ public class EvaluationCreateRequest {
     private Double mannerScore;
     private String comment;
 
-    public EvaluationCreateRequest(Long gameId, String subject, Double mannerScore,
-                                   String comment) {
+    public EvaluationCreateRequest(Long gameId, String subject, Double mannerScore, String comment) {
         this.gameId = gameId;
         this.subject = subject;
         this.mannerScore = mannerScore;

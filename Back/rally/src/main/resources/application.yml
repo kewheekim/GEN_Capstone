@@ -32,3 +32,14 @@ logging:
     org.apache.catalina: DEBUG
     org.apache.coyote: DEBUG
     org.springframework.boot.web.embedded.tomcat: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+app:
+  dev:
+    allow-anonymous: true
+    anonymous-evaluator: user002
