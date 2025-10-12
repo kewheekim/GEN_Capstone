@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/kakao/**","/auth/naver/**",
                                         "/api/users/login","/api/users/signup","/api/users/check-id", "/api/users/check-nickname",
-                                        "/ws/**","/ws-score/**","/stomp/**","/chat/**").permitAll()
+                                        "/ws/**","/ws-score/**","/stomp/**","/chat/**", "/api/evaluation/**", "api/match/request").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(login -> login.disable())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);// 폼 로그인 비활성화
