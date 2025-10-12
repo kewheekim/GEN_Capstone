@@ -41,7 +41,7 @@ public class MatchRequestService {
 
         // User에서 가져온 정보 저장
         matchRequest.setSkill(user.getSkill());
-        matchRequest.setGender(user.getGender().getCode());
+        matchRequest.setGender(user.getGender());
 
         // 상태 저장
         matchRequest.setState(State.대기);
@@ -49,7 +49,6 @@ public class MatchRequestService {
         MatchRequest saved = matchRequestRepository.save(matchRequest);
         return saved.getRequestId();
     }
-
 
     public List<CandidatesResponseDto> findCandidates(MatchRequestCreateDto userInput) {
         User user = userRepository.findByUserId(userInput.getUserId()).orElseThrow();
@@ -130,8 +129,15 @@ public class MatchRequestService {
                         winningRate = calculateWinningRate(r.getUser().getUserId());
                     else
                         skillGap=Math.abs(r.getUser().getSkill()*2-r.getSkill()*2);
-                    boolean isSameTier;
-                    isSameTier= (user.getTier()==r.getUser().getTier()) ? true : false;
+
+                    int isSameTier;
+                    if (user.getTier() == r.getUser().getTier()) {
+                        isSameTier=1;
+                    } else if (user.getTier().getCode() < r.getUser().getTier().getCode()) {
+                        isSameTier = 0;    // 사용자보다 상위 티어
+                    } else {
+                        isSameTier = -1;    // 사용자보다 하위 티어
+                    }
 
                     return new CandidatesResponseDto(r, userInput, distance, winningRate, skillGap, isSameTier);
                 })

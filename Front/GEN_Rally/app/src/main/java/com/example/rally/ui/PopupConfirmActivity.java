@@ -61,7 +61,6 @@ public class PopupConfirmActivity extends AppCompatActivity {
         double latitude= prev.getDoubleExtra("latitude", -1);
         double longitude= prev.getDoubleExtra("longitude", -1);
 
-
         if (date != null) {
             // LocalDate로 파싱 (Java 8 이상)
             String formattedDate = date.getMonthValue() + "월 " + date.getDayOfMonth() + "일";
@@ -98,8 +97,8 @@ public class PopupConfirmActivity extends AppCompatActivity {
 
         // 확인버튼 클릭 시 api/match/request API 호출
         goBtn.setOnClickListener(v -> {
-
-            MatchRequestDto matchRequest = new MatchRequestDto("user001", gameType, gameStyle, sameGender, date, startHour, endHour, placeName, latitude, longitude);
+            MatchRequestDto matchRequest = new MatchRequestDto("user001", gameType, gameStyle,
+                    sameGender, date, startHour, endHour, placeName, latitude, longitude);
             Intent intent = new Intent(PopupConfirmActivity.this, LoadingActivity.class);
             intent.putExtra("matchRequest", matchRequest);
             startActivity(intent);

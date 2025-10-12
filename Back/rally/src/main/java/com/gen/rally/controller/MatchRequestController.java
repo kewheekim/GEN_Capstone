@@ -22,7 +22,7 @@ public class MatchRequestController {
             // findCandidates 매칭 후보 필터링
             List<CandidatesResponseDto> candidates = matchRequestService.findCandidates(dto);
             // match_request 테이블에 데이터 저장
-           //matchRequestService.createMatchRequest(dto);
+           matchRequestService.createMatchRequest(dto);
            // 매칭 후보 반환
            return ResponseEntity.ok(candidates);
     }

@@ -157,7 +157,7 @@ public class MatchFragment extends Fragment {
                     }
             );
             startActivity(new Intent(requireContext(), ScoreMonitorActivity.class)
-                    .putExtra("matchId", "match-123")
+                    .putExtra("gameId", "match-123")
                     .putExtra("opponentName", "너무어려워요")
                     .putExtra("userName", "안세영이되")
                     .putExtra("localIsUser1", false)

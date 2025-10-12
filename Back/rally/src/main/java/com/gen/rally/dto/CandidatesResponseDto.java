@@ -1,11 +1,8 @@
 package com.gen.rally.dto;
 
 import com.gen.rally.entity.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Base64;
 
 // 추천 후보 반환 형식
 @Getter
@@ -16,7 +13,7 @@ public class CandidatesResponseDto {
     private String profileImage;
     private int gender;
     private int tier;
-    private boolean isSameTier;     // 동일한 티어인지
+    private int isSameTier;     // 동일한 티어인지
 
     private double winningRate;      // 최근 5경기 승률 (단식)
     private int skillGap;// 팀원 간 실력 차이 정도 (복식)
@@ -31,37 +28,32 @@ public class CandidatesResponseDto {
     private double mannerScore;
 
     // MatchRequest 엔티티 -> CandidatesResponseDto로 변환
-    public CandidatesResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap, boolean isSameTier) {
+    public CandidatesResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap, int isSameTier) {
         this.userId = request.getUser().getUserId();
         this.name = request.getUser().getName();
         this.profileImage = request.getUser().getImageUrl();
-        this.gender= request.getGender();
-        this.tier=request.getUser().getTier().getCode();
-        this.isSameTier=isSameTier;
+        this.gender = request.getGender().getCode();
+        this.tier = request.getUser().getTier().getCode();
+        this.isSameTier = isSameTier;
 
-        if(request.getGameType().getCode() == 0) {
+        if (request.getGameType().getCode() == 0) {
             //단식
-            this.winningRate=winningRate;
-            this.skillGap=0;
-        }
-        else{
+            this.winningRate = winningRate;
+            this.skillGap = 0;
+        } else {
             // 복식
-            this.winningRate=0;
-            this.skillGap= skillGap;
+            this.winningRate = 0;
+            this.skillGap = skillGap;
         }
 
-        this.time= request.getStartTime() + ":00~" + request.getEndTime() + ":00";
-        this.isSameTime=(request.getStartTime() == userInput.getStartTime()) &&
+        this.time = request.getStartTime() + ":00~" + request.getEndTime() + ":00";
+        this.isSameTime = (request.getStartTime() == userInput.getStartTime()) &&
                 (request.getEndTime() == userInput.getEndTime());
 
         this.place = request.getPlace();
-        this.isSamePlace= (distance == 0.0? true : false);
-        this.distance=distance;
+        this.isSamePlace = (distance == 0.0 ? true : false);
+        this.distance = distance;
         this.gameStyle = request.getGameStyle().getCode();
-        this.mannerScore=request.getUser().getManner();
+        this.mannerScore = request.getUser().getManner();
     }
-
 }
-
-
-

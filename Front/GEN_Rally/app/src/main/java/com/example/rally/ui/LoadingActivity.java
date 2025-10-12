@@ -55,7 +55,7 @@ public class LoadingActivity extends AppCompatActivity {
         Intent prev= getIntent();
         MatchRequestDto matchRequest = (MatchRequestDto) prev.getSerializableExtra("matchRequest");
 
-        MatchService service = RetrofitClient.getClient("http://192.168.35.44:8080/")
+        MatchService service = RetrofitClient.getClient("http://172.19.46.132:8080/")
                 .create(MatchService.class);
         matchCall=service.requestMatch(matchRequest);    // Call 저장
 

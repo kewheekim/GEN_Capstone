@@ -26,11 +26,21 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final List<CandidateItem> items;
 
-    private final Map<Integer, Boolean> isSameTierMap;
+    private final Map<Integer, Integer> tierHeaderMap;
+    private final int firstTierHeader;   // 구분선 표시용
 
-    public CandidateAdapter(List<CandidateItem> items, Map<Integer, Boolean> isSameTierMap) {
+    public CandidateAdapter(List<CandidateItem> items, Map<Integer, Integer> tierHeaderMap) {
         this.items = items;
-        this.isSameTierMap = isSameTierMap;
+        this.tierHeaderMap = tierHeaderMap;
+
+        int first = -1;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) instanceof CandidateItem.TierHeader) {
+                first = i;
+                break;
+            }
+        }
+        this.firstTierHeader = first;
     }
 
     @Override
@@ -58,8 +68,8 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (holder instanceof TierHeaderViewHolder) {
             int tier = ((CandidateItem.TierHeader) item).tier;
-            boolean isSameTier = isSameTierMap.getOrDefault(tier, false);
-            ((TierHeaderViewHolder) holder).bind(tier, isSameTier);
+            int tierRelation = tierHeaderMap.getOrDefault(tier, -1);
+            ((TierHeaderViewHolder) holder).bind(tier, tierRelation, position == firstTierHeader);
         }
         else {
             CandidateResponseDto user = ((CandidateItem.UserCard) item).user;
@@ -77,19 +87,36 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     static class TierHeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView tierImage;
         MaterialCardView speechCard;
+        TextView tvCardText;
         View divider;
 
         TierHeaderViewHolder(View itemView) {
             super(itemView);
             tierImage = itemView.findViewById(R.id.tier_image);
             speechCard = itemView.findViewById(R.id.speech_card);
+            tvCardText = itemView.findViewById(R.id.tv_card_text);
             divider=itemView.findViewById(R.id.divider);
         }
 
-        void bind(int tier, boolean isSameTier) {
+        void bind(int tier, int relation, boolean isFirstHeader) {
             tierImage.setImageResource(getTierDrawable(tier));
-            speechCard.setVisibility(isSameTier ? View.VISIBLE : View.INVISIBLE);
-            divider.setVisibility(isSameTier ? View.INVISIBLE : View.VISIBLE);
+            // 말풍선
+            speechCard.setVisibility(View.GONE);
+            tvCardText.setText(null);
+            if (relation == 1) {
+                speechCard.setVisibility(View.VISIBLE);
+                tvCardText.setText("나와 같은 티어의 상대예요");
+            } else if (relation == 0) {
+                speechCard.setVisibility(View.VISIBLE);
+                tvCardText.setText("한 단계 위 티어의 상대예요");
+            }
+
+            // 구분선
+            if (isFirstHeader) {
+                divider.setVisibility(View.GONE);
+            } else {
+                divider.setVisibility(View.VISIBLE);
+            }
         }
 
         private int getTierDrawable(int tier) {
@@ -191,7 +218,6 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 samePlaceText.setText(String.format("%.1fkm 떨어져 있어요", user.getDistance()));
                 samePlaceIcon.setImageResource(R.drawable.ic_circlehalf);
             }
-
             // 클릭 시 상세화면으로 이동
             itemView.setOnClickListener(v -> {
                 Context context = v.getContext();
@@ -200,9 +226,5 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 context.startActivity(intent);
             });
         }
-
-
     }
-
 }
-

@@ -16,7 +16,5 @@ public enum Tier {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Tier code: " + code));
     }
-    public int getCode() {
-        return code;
-    }
+    public int getCode() { return code; }
 }

@@ -35,6 +35,7 @@ public class CandidateActivity extends AppCompatActivity {
 
         Intent prev = getIntent();
         MatchRequestDto userInput = (MatchRequestDto)getIntent().getSerializableExtra("userInput");
+
         LocalDate gameDate= LocalDate.parse(userInput.getGameDate());
         DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일");
         String formattedDate = gameDate.format(formatter);
@@ -57,30 +58,31 @@ public class CandidateActivity extends AppCompatActivity {
             grouped.computeIfAbsent(dto.getTier(), k -> new ArrayList<>()).add(dto);
         }
 
-        Map<Integer, Boolean> isSameTierMap = new HashMap<>();
+        // 티어 헤더 표시
+        Map<Integer, Integer> tierHeaderMap = new HashMap<>();
 
         // 동일 티어 그룹 먼저 추가
         for (Map.Entry<Integer, List<CandidateResponseDto>> entry : grouped.entrySet()) {
             int tier = entry.getKey();
             List<CandidateResponseDto> group = entry.getValue();
 
-            boolean hasSameTier = group.stream().anyMatch(CandidateResponseDto::isSameTier);
+            boolean hasSameTier = group.stream().anyMatch(dto -> dto.getIsSameTier() ==1);
             if (hasSameTier) {
-                isSameTierMap.put(tier, true);
+                tierHeaderMap.put(tier, 1);
                 displayList.add(new CandidateItem.TierHeader(tier));
                 for (CandidateResponseDto user : group) {
                     displayList.add(new CandidateItem.UserCard(user));
                 }
             }
         }
-
         // 나머지 티어 그룹 추가
         for (Map.Entry<Integer, List<CandidateResponseDto>> entry : grouped.entrySet()) {
             int tier = entry.getKey();
-            if (isSameTierMap.containsKey(tier)) continue;  // 이미 추가된 동일 티어는 제외
+            if (tierHeaderMap.containsKey(tier)) continue;  // 이미 추가된 동일 티어는 제외
 
             List<CandidateResponseDto> group = entry.getValue();
-            isSameTierMap.put(tier, false);
+            boolean hasUpperTier = group.stream().anyMatch( dto -> dto.getIsSameTier() == 0);
+            tierHeaderMap.put(tier, hasUpperTier? 0 : -1);
             displayList.add(new CandidateItem.TierHeader(tier));
             for (CandidateResponseDto user : group) {
                 displayList.add(new CandidateItem.UserCard(user));
@@ -90,7 +92,7 @@ public class CandidateActivity extends AppCompatActivity {
         // RecyclerView에 어댑터 연결
         RecyclerView recyclerView=findViewById(R.id.rv_candidates);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CandidateAdapter(displayList, isSameTierMap));
+        recyclerView.setAdapter(new CandidateAdapter(displayList, tierHeaderMap));
 
         // 뒤로가기 버튼 동작 막기
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

@@ -13,8 +13,7 @@ public class CandidateResponseDto  implements Serializable {
     private String profileImage;
     private int gender;
     private int tier;
-    @SerializedName("sameTier")
-    private boolean sameTier;
+    private int isSameTier;  // 1: 동일함, 0: 사용자보다 상위, -1: 하위
 
     private double winningRate;      // 최근 5경기 승률 (단식)
     private int skillGap;     // 팀원 간 실력 차이 정도 (복식)

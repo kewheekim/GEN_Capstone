@@ -16,6 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name="user_id", nullable=false, unique=true)
     private String userId;
 
     // TODO: 사용자 삭제 시 다른 속성 모두 삭제?

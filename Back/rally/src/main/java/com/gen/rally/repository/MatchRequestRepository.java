@@ -1,6 +1,7 @@
 package com.gen.rally.repository;
 
 import com.gen.rally.entity.MatchRequest;
+import com.gen.rally.enums.GameType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,7 +12,7 @@ public interface MatchRequestRepository extends JpaRepository<MatchRequest, Long
 
     List<MatchRequest> findByGameDateAndGameType(
             LocalDate gameDate,
-            int gameType
+            GameType gameType
     );
 
     @Query("""

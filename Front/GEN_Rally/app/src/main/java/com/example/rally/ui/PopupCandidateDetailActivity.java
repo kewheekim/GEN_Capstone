@@ -30,7 +30,7 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
 
         // ui
         ImageButton xBtn = findViewById(R.id.btn_x);
-        ImageView profileImg = findViewById(R.id.profile_img);
+        ImageView profileImg = findViewById(R.id.iv_profile);
         TextView nickname = findViewById(R.id.tv_nickname);
         ImageView genderIcon = findViewById(R.id.iv_gender); // 성별 이미지
         TextView winRate = findViewById(R.id.tv_win_rate);
