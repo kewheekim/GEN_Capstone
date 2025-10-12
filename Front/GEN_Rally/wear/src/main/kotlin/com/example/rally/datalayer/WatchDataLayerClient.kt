@@ -70,13 +70,13 @@ object WatchDataLayerClient {
         }
     }
 
-    fun sendGameStart(context: Context, matchId: String, setNumber: Int) {
+    fun sendGameStart(context: Context, gameId: String, setNumber: Int) {
         val json = JSONObject()
             .put("version", 1)
             .put("type", "SET_START")
             .put("eventId", UUID.randomUUID().toString())
             .put("createdAt", System.currentTimeMillis())
-            .put("matchId", matchId)
+            .put("gameId", gameId)
             .put(
                 "payload", JSONObject()
                     .put("setNumber", setNumber)
@@ -117,7 +117,7 @@ object WatchDataLayerClient {
 
     fun sendScore(
         context: Context,
-        matchId: String,
+        gameId: String,
         userScore: Int,
         opponentScore: Int,
         setNumber: Int,
@@ -131,7 +131,7 @@ object WatchDataLayerClient {
             .put("type", "SCORE")
             .put("eventId", UUID.randomUUID().toString())
             .put("createdAt", System.currentTimeMillis())
-            .put("matchId", matchId)
+            .put("gameId", gameId)
             .put(
                 "payload", JSONObject()
                     .put("setNumber", setNumber)
@@ -143,7 +143,7 @@ object WatchDataLayerClient {
 
     fun sendUndo(
         context: Context,
-        matchId: String,
+        gameId: String,
         userScore: Int,
         opponentScore: Int,
         setNumber: Int,
@@ -156,7 +156,7 @@ object WatchDataLayerClient {
             .put("type", "UNDO")
             .put("eventId", UUID.randomUUID().toString())
             .put("createdAt", System.currentTimeMillis())
-            .put("matchId", matchId)
+            .put("gameId", gameId)
             .put(
                 "payload", JSONObject()
                     .put("setNumber", setNumber)
@@ -166,25 +166,25 @@ object WatchDataLayerClient {
         sendJson(context, PATH_EVENT_UNDO, json)
     }
 
-    fun sendPause(context: Context, matchId: String) {
+    fun sendPause(context: Context, gameId: String) {
         val json = JSONObject()
             .put("version", 1)
             .put("type", "PAUSE")
             .put("eventId", UUID.randomUUID().toString())
             .put("createdAt", System.currentTimeMillis())
-            .put("matchId", matchId)
+            .put("gameId", gameId)
             .put("payload", JSONObject()
                 .put("timeStamp", System.currentTimeMillis())
             )
         sendJson(context, PATH_EVENT_PAUSE, json)
     }
 
-    fun sendResume(context: Context, matchId: String) {
+    fun sendResume(context: Context, gameId: String) {
         val json = JSONObject()
             .put("version", 1).put("type", "RESUME")
             .put("eventId", UUID.randomUUID().toString())
             .put("createdAtUtc", System.currentTimeMillis())
-            .put("matchId", matchId)
+            .put("gameId", gameId)
             .put("payload", JSONObject()
                 .put("timeStamp", System.currentTimeMillis())
             )
@@ -193,7 +193,7 @@ object WatchDataLayerClient {
 
     fun sendSetFinish(
         context: Context,
-        matchId: String,
+        gameId: String,
         setNumber: Int,
         userScore: Int,
         opponentScore: Int,
@@ -215,19 +215,19 @@ object WatchDataLayerClient {
             .put("type", "SET_FINISH")
             .put("eventId", UUID.randomUUID().toString())
             .put("createdAt", System.currentTimeMillis())
-            .put("matchId", matchId)
+            .put("gameId", gameId)
             .put("payload", payload)
 
         sendJson(context, PATH_EVENT_SET_FINISH, json)
     }
 
-    fun requestSnapshot(context: Context, matchId: String) {
+    fun requestSnapshot(context: Context, gameId: String) {
         val json = org.json.JSONObject()
             .put("version", 1)
             .put("type", "SNAPSHOT_REQ")
             .put("eventId", java.util.UUID.randomUUID().toString())
             .put("createdAtUtc", System.currentTimeMillis())
-            .put("matchId", matchId)
+            .put("gameId", gameId)
         sendJson(context, PATH_SNAPSHOT_REQ, json)
     }
 }

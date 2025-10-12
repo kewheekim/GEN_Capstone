@@ -88,14 +88,14 @@ public class PhoneDataLayerClient {
     }
 
     // 공통 데이터
-    private static String buildEnvelope(String type, String matchId, JSONObject payload) {
+    private static String buildEnvelope(String type, String gameId, JSONObject payload) {
         try {
             return new JSONObject()
                     .put("version", 1)
                     .put("type", type)
                     .put("eventId", java.util.UUID.randomUUID().toString())
                     .put("createdAtUtc", System.currentTimeMillis())
-                    .put("matchId", matchId == null ? "" : matchId)
+                    .put("gameId", gameId == null ? "" : gameId)
                     .put("payload", payload == null ? new JSONObject() : payload)
                     .toString();
         } catch (Exception e) {
@@ -104,7 +104,7 @@ public class PhoneDataLayerClient {
     }
 
     // 경기 시작 세팅
-    public static void sendGameSetup(Context ctx, String matchId,
+    public static void sendGameSetup(Context ctx, String gameId,
                                      String user1Name, String user2Name,
                                      boolean watchIsUser1, @Nullable SendCallback cb) {
         Executors.newSingleThreadExecutor().execute(() -> {
@@ -120,7 +120,7 @@ public class PhoneDataLayerClient {
                         .put("type", "GAME_SETUP")
                         .put("eventId", java.util.UUID.randomUUID().toString())
                         .put("createdAtUtc", System.currentTimeMillis())
-                        .put("matchId", matchId == null ? "" : matchId)
+                        .put("gameId", gameId == null ? "" : gameId)
                         .put("payload", new JSONObject()
                                 .put("user1Name", user1Name)
                                 .put("user2Name", user2Name)

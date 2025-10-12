@@ -31,6 +31,7 @@ public class Game {
     private String place;
 
     private State state;
+    @Enumerated(EnumType.STRING)
     private GameType gameType;
 
     @ManyToOne

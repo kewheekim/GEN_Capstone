@@ -17,16 +17,16 @@ public class WsHandler extends TextWebSocketHandler {
     private final GameEventService service;
     public WsHandler(MessageBus bus, GameEventService service){ this.bus = bus; this.service = service; }
 
-    private static String room(String matchId){ return "/topic/match." + matchId; }
+    private static String room(String gameId){ return "/topic/game." + gameId; }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession s) throws Exception {
         Map<String,String> q = QueryString.parse(s.getUri());
-        String matchId = q.getOrDefault("matchId", "LOCAL-TEST");
+        String gameId = q.getOrDefault("gameId", "LOCAL-TEST");
         // TODO: JWT 검증(q.get("token"))
-        bus.join(room(matchId), s);
+        bus.join(room(gameId), s);
 
-        String snap = service.getLatestSnapshot(matchId);
+        String snap = service.getLatestSnapshot(gameId);
         if (snap != null) s.sendMessage(new TextMessage(snap));
     }
 
@@ -34,15 +34,15 @@ public class WsHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession s, TextMessage m) throws Exception {
         String raw = m.getPayload();
         if (raw.contains("\"type\":\"snapshot_request\"")) {
-            String matchId = service.extractMatchId(raw);
-            String snap = service.getLatestSnapshot(matchId);
+            String gameId = service.extractgameId(raw);
+            String snap = service.getLatestSnapshot(gameId);
             if (snap != null) s.sendMessage(new TextMessage(snap));
             return;
         }
         boolean applied = service.applyIfValid(raw);
         if (applied) {
-            String matchId = service.extractMatchId(raw);
-            if (matchId != null) bus.publish(room(matchId), raw);
+            String gameId = service.extractgameId(raw);
+            if (gameId != null) bus.publish(room(gameId), raw);
         }
     }
 

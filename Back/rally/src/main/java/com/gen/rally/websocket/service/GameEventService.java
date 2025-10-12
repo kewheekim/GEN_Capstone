@@ -17,20 +17,20 @@ public class GameEventService {
         this.messageBus = messageBus;
     }
     private final ObjectMapper mapper = new ObjectMapper();
-    private final Map<String, GameState> matches = new ConcurrentHashMap<>();
+    private final Map<String, GameState> games = new ConcurrentHashMap<>();
 
     public boolean applyIfValid(String rawJson) {
         try {
             JsonNode root = mapper.readTree(rawJson);
             String type = text(root, "type");
-            String matchId = text(root, "matchId");
+            String gameId = text(root, "gameId");
             String clientMsgId = text(root, "clientMsgId");
             int seq = root.has("seq") ? root.get("seq").asInt() : 0;
-            if (matchId == null || clientMsgId == null || type == null) return false;
+            if (gameId == null || clientMsgId == null || type == null) return false;
 
-            GameState st = matches.computeIfAbsent(matchId, k -> new GameState());
+            GameState st = games.computeIfAbsent(gameId, k -> new GameState());
             if (st.appliedMsgIds.contains(clientMsgId)) return false;       // 멱등
-            if (seq != 0 && seq != st.lastSeq + 1) return false;   // 순서`        체크
+            if (seq != 0 && seq != st.lastSeq + 1) return false;   // 순서체크
 
             switch (type) {
                 case "set_start" -> {
@@ -103,7 +103,7 @@ public class GameEventService {
                         ObjectNode gf = mapper.createObjectNode();
                         gf.put("path", "/rally/event/game_finish");
                         gf.put("type", "game_finish");
-                        gf.put("matchId", matchId);
+                        gf.put("gameId", gameId);
 
                         ObjectNode p = mapper.createObjectNode();
                         p.put("winner", (st.user1Sets > st.user2Sets) ? "user1" : "user2");
@@ -127,7 +127,7 @@ public class GameEventService {
                         p.put("totalElapsedSec", total);
 
                         gf.set("payload", p);
-                        messageBus.publish("/topic/match."+ matchId, mapper.writeValueAsString(gf));
+                        messageBus.publish("/topic/game."+ gameId, mapper.writeValueAsString(gf));
                     }
                 }
                 case "snapshot_request" -> { return false; }
@@ -142,9 +142,9 @@ public class GameEventService {
         } catch (Exception e) { return false; }
     }
 
-    public String getLatestSnapshot(String matchId) {
+    public String getLatestSnapshot(String gameId) {
         try {
-            GameState st = matches.computeIfAbsent(matchId, k -> new GameState());
+            GameState st = games.computeIfAbsent(gameId, k -> new GameState());
             ObjectNode p = mapper.createObjectNode();
             ObjectNode u1 = mapper.createObjectNode(); u1.put("score", st.user1Score); u1.put("sets", st.user1Sets);
             ObjectNode u2 = mapper.createObjectNode(); u2.put("score", st.user2Score); u2.put("sets", st.user2Sets);
@@ -163,14 +163,14 @@ public class GameEventService {
 
             ObjectNode root = mapper.createObjectNode();
             root.put("type", "snapshot");
-            root.put("matchId", matchId);
+            root.put("gameId", gameId);
             root.set("payload", p);
             return mapper.writeValueAsString(root);
         } catch (Exception e) { return null; }
     }
 
-    public String extractMatchId(String rawJson) {
-        try { return text(new ObjectMapper().readTree(rawJson), "matchId"); }
+    public String extractgameId(String rawJson) {
+        try { return text(new ObjectMapper().readTree(rawJson), "gameId"); }
         catch (Exception e) { return null; }
     }
 

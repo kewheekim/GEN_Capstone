@@ -33,7 +33,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
     private static final String PATH_EVENT_SET_FINISH = "/rally/event/set_finish";
     private static final String PATH_EVENT_GAME_FINISH = "/rally/event/game_finish";
     private ScoreViewModel viewModel;
-    private String matchId;
+    private String gameId;
     private RealtimeClient client;
 
     ImageButton btnBack;
@@ -75,10 +75,10 @@ public class ScoreMonitorActivity extends AppCompatActivity {
         viewModel.prepareSet(1, Player.USER1);
 
         // websocket 연결
-        matchId = intent.getStringExtra("matchId");
-        String url = "ws://172.19.20.49:8080/ws-score?matchId=" + matchId;
+        gameId = intent.getStringExtra("gameId");
+        String url = "ws://172.19.20.49:8080/ws-score?gameId=" + gameId;
         client = new WsRealtimeClient(url);
-        client.subscribe("/topic/match."+matchId, json -> {
+        client.subscribe("/topic/match."+gameId, json -> {
             runOnUiThread( () -> {
                 viewModel.applyIncoming(json); // 모니터링 화면 ui 반영
                 // 워치로 데이터 전송
@@ -101,7 +101,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                     .put("type", "SET_START")
                                     .put("eventId", java.util.UUID.randomUUID().toString())
                                     .put("createdAtUtc", System.currentTimeMillis())
-                                    .put("matchId", matchId)
+                                    .put("gameId", gameId)
                                     .put("payload", new JSONObject()
                                             .put("setNumber", sn)
                                             .put("firstServer", fs)
@@ -131,7 +131,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                     .put("type", "SCORE")
                                     .put("eventId", java.util.UUID.randomUUID().toString())
                                     .put("createdAtUtc", System.currentTimeMillis())
-                                    .put("matchId", matchId)
+                                    .put("gameId", gameId)
                                     .put("payload", new JSONObject()
                                             .put("setNumber", sn)
                                             .put("user1Score", u1)
@@ -155,7 +155,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                     .put("type", "SCORE")
                                     .put("eventId", java.util.UUID.randomUUID().toString())
                                     .put("createdAtUtc", System.currentTimeMillis())
-                                    .put("matchId", matchId)
+                                    .put("gameId", gameId)
                                     .put("payload", new JSONObject()
                                             .put("setNumber", sn)
                                             .put("user1Score", u1)
@@ -170,7 +170,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                     .put("type", "PAUSE")
                                     .put("eventId", java.util.UUID.randomUUID().toString())
                                     .put("createdAtUtc", System.currentTimeMillis())
-                                    .put("matchId", matchId)
+                                    .put("gameId", gameId)
                                     .put("payload", new JSONObject()
                                             .put("timeStamp", ts)
                                     );
@@ -183,7 +183,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                     .put("type", "RESUME")
                                     .put("eventId", java.util.UUID.randomUUID().toString())
                                     .put("createdAtUtc", System.currentTimeMillis())
-                                    .put("matchId", matchId)
+                                    .put("gameId", gameId)
                                     .put("payload", new JSONObject()
                                             .put("timeStamp", ts)
                                     );
@@ -209,7 +209,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                     .put("type", "SET_FINISH")
                                     .put("eventId", java.util.UUID.randomUUID().toString())
                                     .put("createdAtUtc", System.currentTimeMillis())
-                                    .put("matchId", matchId)
+                                    .put("gameId", gameId)
                                     .put("payload", new JSONObject()
                                             .put("setNumber", sn)
                                             .put("user1Score", u1)
@@ -229,7 +229,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                                     .put("type", "GAME_FINISH")
                                     .put("eventId", UUID.randomUUID().toString())
                                     .put("createdAtUtc", System.currentTimeMillis())
-                                    .put("matchId", matchId)
+                                    .put("gameId", gameId)
                                     .put("payload", p);
 
                             // 워치로 전달
@@ -266,7 +266,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                         // 현재 세트번호/선서버로 set_start 이벤트
                         int sn = viewModel.getSetNumber().getValue() == null ? 1 : viewModel.getSetNumber().getValue();
                         Player fs = viewModel.getCurrentServer().getValue() == null ? Player.USER1 : viewModel.getCurrentServer().getValue();
-                        var msg = viewModel.buildSetStart(matchId, sn, fs, timeStamp);
+                        var msg = viewModel.buildSetStart(gameId, sn, fs, timeStamp);
                         if (msg != null) {
                             client.send(msg.toString());
                             viewModel.applyIncoming(msg.toString());
@@ -290,7 +290,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                             to = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2";
                         }
 
-                        var msg = viewModel.buildScoreAdd(matchId, to);
+                        var msg = viewModel.buildScoreAdd(gameId, to);
                         if (msg != null) {
                             try { msg.put("origin", "watch"); } catch (Exception ignore) {}
                             client.send(msg.toString());
@@ -301,17 +301,17 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                     case PATH_EVENT_UNDO: {
                         if (!viewModel.canUndoMyLastScore()) break;
                         String from = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2";
-                        var msg = viewModel.buildScoreUndo(matchId, from);
+                        var msg = viewModel.buildScoreUndo(gameId, from);
                         if (msg != null) { client.send(msg.toString()); viewModel.applyIncoming(msg.toString()); }
                         break;
                     }
                     case PATH_EVENT_PAUSE: {
-                        var msg = viewModel.buildSetPause(matchId, timeStamp);
+                        var msg = viewModel.buildSetPause(gameId, timeStamp);
                         if (msg != null) { client.send(msg.toString()); viewModel.applyIncoming(msg.toString()); }
                         break;
                     }
                     case PATH_EVENT_RESUME: {
-                        var msg = viewModel.buildSetResume(matchId, timeStamp);
+                        var msg = viewModel.buildSetResume(gameId, timeStamp);
                         if (msg != null) { client.send(msg.toString()); viewModel.applyIncoming(msg.toString()); }
                         break;
                     }
@@ -324,7 +324,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
                             winner = (u > o) ? (iAmUser1 ? "user1" : "user2")
                                     : (iAmUser1 ? "user2" : "user1");
                         }
-                        var msg = viewModel.buildSetFinish(matchId, winner);
+                        var msg = viewModel.buildSetFinish(gameId, winner);
                         if (msg != null) { client.send(msg.toString()); viewModel.applyIncoming(msg.toString()); }
                         break;
                     }

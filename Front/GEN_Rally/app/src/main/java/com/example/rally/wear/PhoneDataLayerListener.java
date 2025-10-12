@@ -123,7 +123,7 @@ public class PhoneDataLayerListener extends WearableListenerService {
                     .put("type", "SNAPSHOT")
                     .put("eventId", java.util.UUID.randomUUID().toString())
                     .put("createdAt", System.currentTimeMillis())
-                    .put("matchId", "match-123")
+                    .put("gameId", "match-123")
                     .put("payload", payload);
 
             PutDataMapRequest req = PutDataMapRequest.create(PATH_SNAPSHOT);

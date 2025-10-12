@@ -357,7 +357,7 @@ class ScoreActivity : ComponentActivity() {
                                         // 폰으로 경기 시작 이벤트 전송
                                         WatchDataLayerClient.sendGameStart(
                                             context = ctx,
-                                            matchId = "match-123",
+                                            gameId = "match-123",
                                             setNumber = displayNextSet
                                         )
                                     } else {
@@ -417,7 +417,7 @@ class ScoreActivity : ComponentActivity() {
             .getInstance(this)
             .registerReceiver(watchRelayReceiver, f)
 
-        WatchDataLayerClient.requestSnapshot(this, matchId = "match-123")
+        WatchDataLayerClient.requestSnapshot(this, gameId = "match-123")
         lifecycleScope.launch {
             hsRunning = runCatching { health.ownsActiveExercise() }.getOrDefault(false)
             Log.d("HS", "onStart sync: hsRunning=$hsRunning")
@@ -492,7 +492,7 @@ private fun ScorePager(
                         viewModel.pause()
                         WatchDataLayerClient.sendSetFinish(
                             context = context,
-                            matchId = "match-123",
+                            gameId = "match-123",
                             setNumber = viewModel.setNumber.value ,
                             userScore = result.userScore,
                             opponentScore = result.opponentScore,
@@ -509,9 +509,9 @@ private fun ScorePager(
                     onPause = {
                         if (isPaused) {
                             // 폰으로 이벤트 전송
-                            WatchDataLayerClient.sendResume(context, matchId = "match-123")
+                            WatchDataLayerClient.sendResume(context, gameId = "match-123")
                         } else {
-                            WatchDataLayerClient.sendPause(context, matchId = "match-123")
+                            WatchDataLayerClient.sendPause(context, gameId = "match-123")
                         }
                     }
                 )

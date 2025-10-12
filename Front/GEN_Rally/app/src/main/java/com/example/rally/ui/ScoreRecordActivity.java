@@ -26,7 +26,7 @@ import com.example.rally.viewmodel.ScoreViewModel;
 public class ScoreRecordActivity extends AppCompatActivity {
     private ScoreViewModel viewModel;
     private RealtimeClient client;
-    private final String matchId = "match-123";
+    private final String gameId = "match-123";
 
     private TextView tvSetNumber, tvOpponentName, tvUserName,
             tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer, tvUndo, tvPause;
@@ -64,9 +64,9 @@ public class ScoreRecordActivity extends AppCompatActivity {
         viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
-        String url = "ws://172.19.20.49:8080/ws-score?matchId=" + matchId;
+        String url = "ws://172.19.20.49:8080/ws-score?gameId=" + gameId;
         client = new WsRealtimeClient(url);
-        client.subscribe("/topic/match."+matchId, json -> {
+        client.subscribe("/topic/match."+gameId, json -> {
             runOnUiThread(() -> {
                 try {
                     org.json.JSONObject obj = new org.json.JSONObject(json);
@@ -81,7 +81,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
                         long totalElapsedSec = p.optLong("totalElapsedSec", 0L);
 
                         Intent i = new Intent(ScoreRecordActivity.this, GameFinishActivity.class);
-                        i.putExtra("matchId", matchId);
+                        i.putExtra("gameId", gameId);
                         i.putExtra("winner", winner);
                         i.putExtra("sets_json", sets != null ? sets.toString() : "[]");
                         i.putExtra("totalElapsedSec", totalElapsedSec);
@@ -190,7 +190,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
                 Player fs = viewModel.getCurrentServer().getValue() == null ? Player.USER1 : viewModel.getCurrentServer().getValue();
 
                 long now = System.currentTimeMillis();
-                var msg = viewModel.buildSetStart(matchId, sn, fs, now);
+                var msg = viewModel.buildSetStart(gameId, sn, fs, now);
                 if (msg != null) {
                     client.send(msg.toString());
                     viewModel.applyIncoming(msg.toString());   // ui 반영
@@ -198,7 +198,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
             } else {
                 // 득점
                 String to = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2";
-                var msg = viewModel.buildScoreAdd(matchId, to);
+                var msg = viewModel.buildScoreAdd(gameId, to);
                 if (msg != null) {
                     client.send(msg.toString());
                     viewModel.applyIncoming(msg.toString());
@@ -212,7 +212,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
                 return;
             }
             String from = Boolean.TRUE.equals(viewModel.getIsUser1().getValue()) ? "user1" : "user2";
-            var msg = viewModel.buildScoreUndo(matchId, from);
+            var msg = viewModel.buildScoreUndo(gameId, from);
             if (msg != null) {
                 client.send(msg.toString());      // 서버 전송
                 viewModel.applyIncoming(msg.toString()); // ui업데이트
@@ -223,13 +223,13 @@ public class ScoreRecordActivity extends AppCompatActivity {
             boolean paused = Boolean.TRUE.equals(viewModel.getIsPaused().getValue());
             long now = System.currentTimeMillis();
             if (!paused) {
-                var msg = viewModel.buildSetPause(matchId, now);
+                var msg = viewModel.buildSetPause(gameId, now);
                 if (msg != null) {
                     client.send(msg.toString());
                     viewModel.applyIncoming(msg.toString()); // ui반영
                 }
             } else {
-                var msg = viewModel.buildSetResume(matchId, now);
+                var msg = viewModel.buildSetResume(gameId, now);
                 if (msg != null) {
                     client.send(msg.toString());
                     viewModel.applyIncoming(msg.toString());
@@ -269,7 +269,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
                     ? (iAmUser1 ? "user1" : "user2")
                     : (iAmUser1 ? "user2" : "user1");
 
-            var msg = viewModel.buildSetFinish(matchId, winner);
+            var msg = viewModel.buildSetFinish(gameId, winner);
             if (msg != null) {
                 client.send(msg.toString());          // 서버 전송
                 viewModel.applyIncoming(msg.toString()); // ui 반영
