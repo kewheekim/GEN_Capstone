@@ -39,7 +39,8 @@
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:label="Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,7 +73,8 @@
         <activity android:name=".ui.TutorialActivity" />
         <activity
             android:name=".ui.ScoreRecordActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:label="ScoreRecord">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -81,7 +83,8 @@
         </activity>
         <activity
             android:name=".ui.EvaluationActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:label="Evaluation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
