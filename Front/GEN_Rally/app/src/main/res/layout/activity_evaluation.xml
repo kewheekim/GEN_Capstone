@@ -102,7 +102,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="24dp"
                     android:text="남기고 싶은 칭찬 한마디"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_text"
                     android:textSize="18sp"
                     android:fontFamily="@font/pretendard_semibold"/>
                 <EditText
@@ -137,7 +137,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="56dp"
                     android:text="이런 점을 칭찬해요"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_text"
                     android:textSize="18sp"
                     android:fontFamily="@font/pretendard_semibold"/>
 
@@ -311,7 +311,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="56dp"
                 android:text="이런 점은 아쉬워요"
-                android:textColor="@color/black"
+                android:textColor="@color/black_text"
                 android:textSize="18sp"
                 android:fontFamily="@font/pretendard_semibold"/>
 

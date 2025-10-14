@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#343434</color>
     <color name="white">#FFFFFFFF</color>
     <color name="bg_default">#FBFAFC </color>
-    <color name="green_active">#2ABA72</color>
     <color name="gray100">#F5F5F5</color>
     <color name="gray_inactive">#EBEBEB</color>
-    <color name="gray_nav_bar">#AAAAAA</color>
     <color name="gray_border">#D9D9D9</color>
+    <color name="gray_nav_bar">#AAAAAA</color>
     <color name="gray_text">#676769</color>
     <color name="black_text">#343434</color>
+    <color name="green_active">#2ABA72</color>
     <color name="green_select">#FAFFF9</color>
     <color name="pink">#F04898</color>
+    <color name="pink_light">#FFF7FB</color>
     <color name="red">#FB5656</color>
 </resources>
