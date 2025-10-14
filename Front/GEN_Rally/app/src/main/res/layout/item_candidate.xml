@@ -12,7 +12,6 @@
     app:strokeColor="@color/gray_border"
     android:layout_marginBottom="16dp">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,6 +29,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:src="@drawable/ic_default_profile"
+                app:cardCornerRadius="8dp"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="24dp"/>

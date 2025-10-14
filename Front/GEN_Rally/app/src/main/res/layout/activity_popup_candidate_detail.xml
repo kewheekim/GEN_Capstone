@@ -250,7 +250,7 @@
 
         <android.widget.Button
             style="@style/FlatButton"
-            android:id="@+id/request_button"
+            android:id="@+id/btn_request"
             android:layout_width="316dp"
             android:layout_height="54dp"
             android:background="@drawable/bg_next_button_active"

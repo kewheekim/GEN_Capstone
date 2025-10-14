@@ -42,7 +42,7 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         ImageView locationIcon = findViewById(R.id.ic_location);
         TextView style = findViewById(R.id.tv_type);
         ImageView tier = findViewById(R.id.iv_tier);
-        Button requestBtn = findViewById(R.id.request_button);
+        Button requestBtn = findViewById(R.id.btn_request);
         RatingBar ratingBar = findViewById(R.id.rating_bar);
 
         // 3. 데이터 바인딩
