@@ -23,6 +23,7 @@ import com.example.rally.api.websocket.WsRealtimeClient;
 import com.example.rally.viewmodel.Player;
 import com.example.rally.viewmodel.ScoreViewModel;
 
+// SCO_002, SCO_003
 public class ScoreRecordActivity extends AppCompatActivity {
     private ScoreViewModel viewModel;
     private RealtimeClient client;
@@ -64,9 +65,9 @@ public class ScoreRecordActivity extends AppCompatActivity {
         viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
-        String url = "ws://172.19.20.49:8080/ws-score?gameId=" + gameId;
+        String url = "ws://172.19.6.104:8080/ws-score?gameId=" + gameId;
         client = new WsRealtimeClient(url);
-        client.subscribe("/topic/match."+gameId, json -> {
+        client.subscribe("/topic/game."+gameId, json -> {
             runOnUiThread(() -> {
                 try {
                     org.json.JSONObject obj = new org.json.JSONObject(json);

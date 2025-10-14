@@ -355,7 +355,7 @@ public class ScoreViewModel extends ViewModel {
         opponentScore.setValue((v==null?0:v)+1);
     }
     //  경기 시작 이벤트 JSON 생성 (수신측은 startStopWatchAt(startAt)으로 스톱워치 초기화)
-    public JSONObject buildSetStart(String matchId, int setNum, Player firstServer, long startAt) {
+    public JSONObject buildSetStart(String gameId, int setNum, Player firstServer, long startAt) {
         try {
             JSONObject payload = new JSONObject()
                     .put("setNumber", setNum)
@@ -364,7 +364,7 @@ public class ScoreViewModel extends ViewModel {
 
             JSONObject root = new JSONObject();
             root.put("type", "set_start");
-            root.put("matchId", matchId);
+            root.put("gameId", gameId);
             root.put("clientMsgId", UUID.randomUUID().toString());
             int nextSeq = lastSeq + 1;
             root.put("seq", nextSeq);
@@ -375,12 +375,12 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     //  득점 이벤트 JSON 생성
-    public JSONObject buildScoreAdd(String matchId, String to) {
+    public JSONObject buildScoreAdd(String gameId, String to) {
         try {
             JSONObject payload = new JSONObject().put("scoreTo", to);
             JSONObject root = new JSONObject();
             root.put("type", "score_add");
-            root.put("matchId", matchId);
+            root.put("gameId", gameId);
             root.put("clientMsgId", UUID.randomUUID().toString());
             int nextSeq = lastSeq + 1;
             root.put("seq", nextSeq);
@@ -391,11 +391,11 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     //  되돌리기 이벤트 JSON 생성
-    public JSONObject buildScoreUndo(String matchId, String from) {
+    public JSONObject buildScoreUndo(String gameId, String from) {
         try {
             JSONObject root = new JSONObject();
             root.put("type", "score_undo");
-            root.put("matchId", matchId);
+            root.put("gameId", gameId);
             String id = java.util.UUID.randomUUID().toString();
             root.put("clientMsgId", id);
             int nextSeq = lastSeq + 1;
@@ -407,12 +407,12 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     // 일시 정지 이벤트 JSON 생성
-    public JSONObject buildSetPause(String matchId, long pausedAt) {
+    public JSONObject buildSetPause(String gameId, long pausedAt) {
         try {
             JSONObject payload = new JSONObject().put("pausedAt", pausedAt);
             JSONObject root = new JSONObject();
             root.put("type", "set_pause");
-            root.put("matchId", matchId);
+            root.put("gameId", gameId);
             root.put("clientMsgId", java.util.UUID.randomUUID().toString());
             root.put("seq", lastSeq + 1);
             root.put("eventTime", System.currentTimeMillis());
@@ -422,12 +422,12 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     // 경기 재개 이벤트 JSON 생성
-    public JSONObject buildSetResume(String matchId, long resumedAt) {
+    public JSONObject buildSetResume(String gameId, long resumedAt) {
         try {
             JSONObject payload = new JSONObject().put("resumedAt", resumedAt);
             JSONObject root = new JSONObject();
             root.put("type", "set_resume");
-            root.put("matchId", matchId);
+            root.put("gameId", gameId);
             root.put("clientMsgId", java.util.UUID.randomUUID().toString());
             root.put("seq", lastSeq + 1);
             root.put("eventTime", System.currentTimeMillis());
@@ -437,12 +437,12 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     //  세트 종료 이벤트 JSON 생성
-    public JSONObject buildSetFinish(String matchId, String winner) {
+    public JSONObject buildSetFinish(String gameId, String winner) {
         try {
             JSONObject payload = new JSONObject().put("winner", winner);
             JSONObject root = new JSONObject();
             root.put("type", "set_finish");
-            root.put("matchId", matchId);
+            root.put("gameId", gameId);
             root.put("clientMsgId", UUID.randomUUID().toString());
             int nextSeq = lastSeq + 1;
             root.put("seq", nextSeq);

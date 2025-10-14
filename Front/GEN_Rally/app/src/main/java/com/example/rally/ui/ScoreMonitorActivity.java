@@ -76,9 +76,9 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
         // websocket 연결
         gameId = intent.getStringExtra("gameId");
-        String url = "ws://172.19.20.49:8080/ws-score?gameId=" + gameId;
+        String url = "ws://172.19.6.104:8080/ws-score?gameId=" + gameId;
         client = new WsRealtimeClient(url);
-        client.subscribe("/topic/match."+gameId, json -> {
+        client.subscribe("/topic/game."+gameId, json -> {
             runOnUiThread( () -> {
                 viewModel.applyIncoming(json); // 모니터링 화면 ui 반영
                 // 워치로 데이터 전송

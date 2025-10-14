@@ -207,7 +207,7 @@ fun ScoreScreen(
                     // 폰으로 전송
                     WatchDataLayerClient.sendScore(
                         context = context,
-                        matchId = "match-123",
+                        gameId = "match-123",
                         userScore = userScore + 1, opponentScore = opponentScore,
                         setNumber = setNumber, localIsUser1 = isUser1)
 
@@ -260,7 +260,7 @@ fun ScoreScreen(
                         viewModel.undoUserScore()
                         WatchDataLayerClient.sendUndo(
                             context = context,
-                            matchId = "match-123",
+                            gameId = "match-123",
                             setNumber = setNumber,
                             userScore = userScore-1,
                             opponentScore = opponentScore,
