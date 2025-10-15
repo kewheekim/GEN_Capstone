@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -113,7 +114,7 @@ public class ChatActivity extends AppCompatActivity {
 
         btnPromise = findViewById(R.id.btn_promise);
 
-        // btnPromise.setOnClickListener();
+        btnPromise.setOnClickListener();
     }
 
     private void findViewByIdViews() {
@@ -238,22 +239,53 @@ public class ChatActivity extends AppCompatActivity {
     // 사용자 정보 캐싱
     private void loadParticipantProfilesFromServer(Long roomId) {
         apiService.getChatRoomInfo(roomId)
-                .enqueue(new Callback<List<ChatRoomDto>>() {
+                .enqueue(new Callback<ChatRoomDto>() {
                     @Override
-                    public void onResponse(Call<List<ChatRoomDto>> call, Response<List<ChatRoomDto>> response) {
+                    public void onResponse(Call<ChatRoomDto> call, Response<ChatRoomDto> response) {
                         if(response.isSuccessful() && response.body() != null) {
                             viewModel.cacheParticipantProfiles(response.body());
+                            bindMatchRequestData(response.body());
                         }else{
                             Log.d("failed to load user", "code=" + response.code());
                         }
                     }
                     @Override
-                    public void onFailure(Call<List<ChatRoomDto>> call, Throwable t) {
+                    public void onFailure(Call<ChatRoomDto> call, Throwable t) {
                         Log.e("loadMessage","onFailure " ,t);
                         Toast.makeText(ChatActivity.this, "네트워크 오류: " + t.getMessage(), Toast.LENGTH_LONG).show();
 
                     }
                 });
+    }
+
+    // 상단 매칭 요청 정보 확인을 위한 매핑 메서드
+    private void bindMatchRequestData(ChatRoomDto data) {
+
+        Log.d("MatchDataBind", "전달받은 DTO: " + data.toString());
+        Log.d("MatchDataBind", "상대방 이름: " + data.getOpponentName());
+        Log.d("MatchDataBind", "내 요청 정보: " + data.getMyRequestInfo());
+        TextView nicknameTextView = findViewById(R.id.tv_nickname);
+        nicknameTextView.setText(data.getOpponentName());
+
+        if (data.getMyRequestInfo() != null) {
+            Log.d("MatchDataBind", "내 요청 정보 != null. 매핑 시작");
+            TextView timeMe = findViewById(R.id.tv_time_me);
+            TextView placeMe = findViewById(R.id.tv_place_me);
+
+            String myTimeText = data.getMyRequestInfo().getTimeRange();
+
+            timeMe.setText(myTimeText);
+            placeMe.setText(data.getMyRequestInfo().getPlace());
+        }
+
+        if (data.getOpponentRequestInfo() != null) {
+            TextView timeYou = findViewById(R.id.tv_time_you);
+            TextView placeYou = findViewById(R.id.tv_place_you);
+            String opponentTimeText = data.getOpponentRequestInfo().getTimeRange();
+
+            timeYou.setText(opponentTimeText);
+            placeYou.setText(data.getOpponentRequestInfo().getPlace());
+        }
     }
 
     // 이전 메시지 로드

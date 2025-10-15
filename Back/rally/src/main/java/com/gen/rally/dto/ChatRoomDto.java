@@ -9,7 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ChatRoomDto {
-    private Long id;
-    private String name;
-    private String profileUrl;
+    private Long opponentId;
+    private String opponentName;
+    private String opponentProfileUrl;
+
+    private MatchRequestInfoDto myRequestInfo;
+    private MatchRequestInfoDto opponentRequestInfo;
 }

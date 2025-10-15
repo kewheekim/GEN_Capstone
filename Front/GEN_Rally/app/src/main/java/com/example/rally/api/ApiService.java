@@ -49,7 +49,7 @@ public interface ApiService {
 
     @Headers("Requires-Auth: true")
     @GET("/api/rooms/{roomId}/participants")
-    Call<List<ChatRoomDto>> getChatRoomInfo(@Path("roomId") Long roomId);
+    Call<ChatRoomDto> getChatRoomInfo(@Path("roomId") Long roomId);
 
     @Headers("Requires-Auth: true")
     @GET("/api/rooms/{roomId}/messages")

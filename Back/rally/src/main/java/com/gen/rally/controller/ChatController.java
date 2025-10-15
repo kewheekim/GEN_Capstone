@@ -51,7 +51,7 @@ public class ChatController {
     @PostMapping("/api/rooms/{roomId}/read")
     public ResponseEntity<Void> markAsRead(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
         Long userId = userDetails.getId();
         chatService.markMessagesAsRead(roomId, userId);
@@ -68,9 +68,9 @@ public class ChatController {
     // 채팅방 입장, 사용자 프로필 캐싱용
     @GetMapping("/api/rooms/{roomId}/participants")
     @ResponseBody
-    public ResponseEntity<List<ChatRoomDto>> enterChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ChatRoomDto enterChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
         Long userId = userDetails.getId();
         return chatService.enter(roomId, userId);
@@ -81,7 +81,7 @@ public class ChatController {
     @ResponseBody
     public ResponseEntity<List<ChatMessageDto>> findChatMessages(@PathVariable Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
         Long userId = userDetails.getId();
         List<ChatMessageDto> list = chatService.loadMessages(roomId, userId);

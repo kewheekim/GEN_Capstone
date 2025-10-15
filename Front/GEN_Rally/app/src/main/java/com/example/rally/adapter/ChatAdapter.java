@@ -74,9 +74,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             ChatRoomDto profile = viewModel.getProfile(m.getSenderId());
             if (profile != null) {
                 Glide.with(context)
-                        .load(profile.getProfileUrl())
+                        .load(profile.getOpponentProfileUrl())
                         .into(vh.ivProfile);
-                vh.tvNickname.setText(profile.getName());
+                vh.tvNickname.setText(profile.getOpponentName());
             }
 
         } else if (holder instanceof DateVH) {
@@ -107,7 +107,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ImageView ivProfile;
     }
 
-    // ViewHolders
+    // 아래로 유형별 뷰홀더
     static class SentVH extends RecyclerView.ViewHolder {
         TextView tvSentBubble;
         TextView tvSentTime;
@@ -131,6 +131,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             tvNickname = itemView.findViewById(R.id.tv_nickname);
         }
     }
+
+    // 채팅방 내 날짜 구분 라벨
     static class DateVH extends RecyclerView.ViewHolder {
         TextView tvDate;
         DateVH(@NonNull View itemView) {
@@ -139,8 +141,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
+    // 약속 잡기 카드
     static class CardVH extends RecyclerView.ViewHolder {
-        TextView tvCardTitle;
+        TextView tvCardTitle; // "경기 약속을 만들었습니다." , "경기 약속을 확정했습니다."
         TextView tvDate;
         TextView tvTime;
         TextView tvPlace;

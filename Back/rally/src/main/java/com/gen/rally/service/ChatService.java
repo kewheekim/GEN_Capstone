@@ -3,10 +3,8 @@ package com.gen.rally.service;
 import com.gen.rally.dto.ChatMessageDto;
 import com.gen.rally.dto.ChatRoomDto;
 import com.gen.rally.dto.ChatRoomListDto;
-import com.gen.rally.entity.ChatMessage;
-import com.gen.rally.entity.ChatRoom;
-import com.gen.rally.entity.Game;
-import com.gen.rally.entity.User;
+import com.gen.rally.dto.MatchRequestInfoDto;
+import com.gen.rally.entity.*;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.ChatMessageRepository;
@@ -29,7 +27,6 @@ import java.util.stream.Collectors;
 public class ChatService {
     private final SimpMessagingTemplate template;
     private final ChatRoomRepository chatRoomRepository;
-    private final GameRepository gameRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
 
@@ -97,10 +94,11 @@ public class ChatService {
         }
     }
 
-    // 채팅방 입장
-    public ResponseEntity<List<ChatRoomDto>> enter(Long roomId, Long userId){
+    // 채팅방 입장, 정보 가져오기
+    public ChatRoomDto enter(Long roomId, Long userId){
         ChatRoom room = chatRoomRepository.findById(roomId)
                         .orElseThrow(()-> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
+
         Long user1Id = room.getUser1().getId();
         Long user2Id = room.getUser2().getId();
 
@@ -108,14 +106,47 @@ public class ChatService {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
-        User user1 = room.getUser1();
-        User user2 = room.getUser2();
+        User me = user1Id.equals(userId) ? room.getUser1() : room.getUser2();
+        User opponent = user1Id.equals(userId) ? room.getUser2() : room.getUser1();
 
-        ChatRoomDto dto1 = new ChatRoomDto(user1.getId(), user1.getName(), user1.getImageUrl());
-        ChatRoomDto dto2 = new ChatRoomDto(user2.getId(), user2.getName(), user2.getImageUrl());
-        List<ChatRoomDto> participants = List.of(dto1, dto2);
+        Game game = room.getGame();
+        if (game == null) {
+            throw new CustomException(ErrorCode.GAME_NOT_FOUND);
+        }
 
-        return ResponseEntity.ok(participants);
+        MatchRequest req1 = game.getRequestId1();
+        MatchRequest req2 = game.getRequestId2();
+
+        MatchRequest myRequest = user1Id.equals(userId) ? req1 : req2;
+        MatchRequest opponentRequest = user1Id.equals(userId) ? req2 : req1;
+
+        MatchRequestInfoDto myReqInfo = createMatchRequestInfo(myRequest);
+        MatchRequestInfoDto opponentReqInfo = createMatchRequestInfo(opponentRequest);
+
+        return new ChatRoomDto(
+                opponent.getId(),
+                opponent.getName(),
+                opponent.getImageUrl(),
+                myReqInfo,
+                opponentReqInfo
+        );
+    }
+
+    // 매칭 요청 정보 dto 생성 메서드
+    private MatchRequestInfoDto createMatchRequestInfo(MatchRequest request) {
+        if (request == null) {
+            return null;
+        }
+        String timeRange = String.format("%02d:00~%02d:00", request.getStartTime(), request.getEndTime());
+
+        MatchRequestInfoDto dto = new MatchRequestInfoDto();
+        dto.setPlace(request.getPlace());
+        dto.setDate(request.getGameDate().toString());
+        dto.setTimeRange(timeRange);
+        dto.setGameStyle(request.getGameStyle());
+        dto.setGameType(request.getGameType());
+
+        return dto;
     }
 
     // 이전 메시지 조회

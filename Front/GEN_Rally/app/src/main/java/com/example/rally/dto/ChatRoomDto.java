@@ -4,13 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class ChatRoomDto {
-    private Long id;
-    private String name;
-    private String profileUrl;
+    private Long opponentId;
+    private String opponentName;
+    private String opponentProfileUrl;
 
-    public ChatRoomDto(Long id, String name, String profileUrl) {
-        this.id = id;
-        this.name = name;
-        this.profileUrl = profileUrl;
-    }
+    private MatchRequestInfoDto myRequestInfo;
+    private MatchRequestInfoDto opponentRequestInfo;
 }

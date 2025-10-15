@@ -34,13 +34,13 @@ public class ChatViewModel extends ViewModel {
             .toFormatter();
 
     // 채팅방 입장 시 호출하여 참가자 프로필 정보를 캐싱
-    public void cacheParticipantProfiles(List<ChatRoomDto> participants) {
-        // 기존 캐시를 비우거나 (선택적)
-        // profileCache.clear();
-
-        for (ChatRoomDto dto : participants) {
-            // 참가자 ID를 키로 사용하여 Map에 저장
-            profileCache.put(dto.getId(), dto);
+    public void cacheParticipantProfiles(ChatRoomDto chatRoomDetails) {
+        if (chatRoomDetails == null) {
+            return;
+        }
+        Long opponentId = chatRoomDetails.getOpponentId();
+        if (opponentId != null) {
+            profileCache.put(opponentId, chatRoomDetails);
         }
     }
 
