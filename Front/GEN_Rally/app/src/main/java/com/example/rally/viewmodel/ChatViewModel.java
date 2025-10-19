@@ -8,7 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.rally.dto.ChatMessageDto;
+import com.example.rally.dto.ChatMessageRequest;
 import com.example.rally.dto.ChatRoomDto;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -27,6 +29,16 @@ import java.util.Map;
 public class ChatViewModel extends ViewModel {
     private final Map<Long, ChatRoomDto> profileCache = new HashMap<>();
     private final MutableLiveData<List<ChatMessage>> messages = new MutableLiveData<>(new ArrayList<>());
+
+    private final Gson gson = new Gson();
+
+    private static class JsonPayload {
+        private String type;
+        private Map<String, String> data;
+
+        public String getType() { return type; }
+        public Map<String, String> getData() { return data; }
+    }
 
     private static final DateTimeFormatter SERVER_DATETIME_FORMATTER = new DateTimeFormatterBuilder()
             .append(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
@@ -66,10 +78,9 @@ public class ChatViewModel extends ViewModel {
             }
 
             finalMessageList.add(newMsg);
-            lastTimestamp = currentTimestamp; // 현재 메시지의 타임스탬프를 다음 비교를 위해 저장
+            lastTimestamp = currentTimestamp;
         }
 
-        // LiveData 업데이트 (RecyclerView에 데이터 표시)
         messages.setValue(finalMessageList);
     }
 
@@ -151,8 +162,23 @@ public class ChatViewModel extends ViewModel {
         return sdf.format(new Date(timeMillis));    }
 
     private ChatMessage convertDtoToMessage(ChatMessageDto dto, Long myUserId, long timestamp) {
-        int viewType = dto.getSenderId().equals(myUserId) ?
-                ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
+        int viewType;
+        boolean isMyMessage = dto.getSenderId().equals(myUserId);
+
+        if (dto.getType() != null && dto.getType().toString().equals("MATCH_CARD")) {
+            viewType = isMyMessage ?
+                    ChatMessage.VIEW_TYPE_MATCH_SENT :
+                    ChatMessage.VIEW_TYPE_MATCH_RECEIVED;
+        } else {
+            // 일반 메시지
+            viewType = dto.getSenderId().equals(myUserId) ?
+                    ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
+        }
+
+        ChatMessage.MatchInfo matchInfo = null;
+        if (viewType == ChatMessage.VIEW_TYPE_MATCH_SENT || viewType == ChatMessage.VIEW_TYPE_MATCH_RECEIVED) {
+            matchInfo = parseCardJson(dto.getContent());
+        }
 
         return new ChatMessage(
                 dto.getId(),
@@ -161,12 +187,123 @@ public class ChatViewModel extends ViewModel {
                 timestamp,
                 dto.getSenderId(),
                 formatTime(timestamp),
-                null
+                matchInfo
         );
     }
 
     public LiveData<List<ChatMessage>> getMessages() { return messages; }
     public ChatRoomDto getProfile(Long senderId) {
         return profileCache.get(senderId);
+    }
+
+    public void sendMatchCardMessage(Long chatRoomId, Long senderId, String title, String date, String time, String place) {
+        final String status = "CREATED";
+        String contentJson = createCardJson(title, date, time, place, status);
+
+        ChatMessageRequest request = new ChatMessageRequest();
+        request.setSenderId(senderId);
+        request.setContent(contentJson);
+
+        long currentTime = System.currentTimeMillis();
+        ChatMessage cardMessage = createCardMessage(
+                null,
+                senderId,
+                status,
+                title,
+                date,
+                time,
+                place,
+                currentTime
+        );
+        addLocally(cardMessage);
+    }
+
+    public String createCardJson(String title, String date, String time, String place, String status) {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("type", "MATCH_CARD");
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title", title);
+        data.put("date", date);
+        data.put("time", time);
+        data.put("place", place);
+        data.put("status", status);
+
+        payload.put("data", data);
+
+        return gson.toJson(payload);
+    }
+
+    private ChatMessage.MatchInfo parseCardJson(String contentJson) {
+        Long tempId = System.currentTimeMillis();
+
+        try {
+            // JSON 문자열 전체 구조를 JsonPayload로 파싱
+            JsonPayload payload = gson.fromJson(contentJson, JsonPayload.class);
+            if (payload == null || payload.getData() == null) return null;
+
+            Map<String, String> data = payload.getData();
+
+            // MatchInfo 객체에 필요한 데이터를 Map에서 추출
+            return new ChatMessage.MatchInfo(
+                    String.valueOf(tempId),
+                    null,
+                    data.get("status"),
+                    data.get("title"),
+                    data.get("date"),
+                    data.get("time"),
+                    data.get("place")
+            );
+        } catch (Exception e) {
+            // 파싱 실패 시, null 반환하여 카드 뷰를 띄우지 않도록 처리
+            Log.e("ChatViewModel", "경기 카드 JSON 파싱 오류: " + contentJson, e);
+            return null;
+        }
+    }
+
+    private ChatMessage createCardMessage(Long messageId, Long senderId, String status, String title, String date, String time, String place, long timestamp) {
+
+        ChatMessage.MatchInfo matchInfo = new ChatMessage.MatchInfo(
+                String.valueOf(timestamp), // tempId
+                senderId,
+                status,
+                title,
+                date,
+                time,
+                place
+        );
+
+        return new ChatMessage(
+                messageId,
+                ChatMessage.VIEW_TYPE_MATCH_SENT,
+                title,
+                timestamp,
+                senderId,
+                formatTime(timestamp),
+                matchInfo
+        );
+    }
+
+    private void addLocally(ChatMessage newMsg) {
+        List<ChatMessage> currentList = messages.getValue() == null ?
+                new ArrayList<>() : messages.getValue();
+        List<ChatMessage> updatedList = new ArrayList<>(currentList);
+
+        Long newMsgTimestamp = newMsg.getTimestamp();
+        ChatMessage lastMessage = null;
+
+        for (int i = currentList.size() - 1; i >= 0; i--) {
+            if (currentList.get(i).getViewType() != ChatMessage.VIEW_TYPE_DATE) {
+                lastMessage = currentList.get(i);
+                break;
+            }
+        }
+
+        if (lastMessage == null || !isSameDay(lastMessage.getTimestamp(), newMsgTimestamp)) {
+            updatedList.add(ChatMessage.dateLabel(formatDateLabel(newMsgTimestamp)));
+        }
+
+        updatedList.add(newMsg);
+        messages.postValue(updatedList);
     }
 }

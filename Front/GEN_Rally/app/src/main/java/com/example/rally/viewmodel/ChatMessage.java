@@ -11,7 +11,8 @@ public class ChatMessage {
         public static final int VIEW_TYPE_SENT = 1; // 내가 보냄
         public static final int VIEW_TYPE_RECEIVED = 2; // 남이 보냄
         public static final int VIEW_TYPE_DATE = 3; // 날짜
-        public static final int VIEW_TYPE_MATCH_CARD = 4;
+        public static final int VIEW_TYPE_MATCH_SENT = 4;
+        public static final int VIEW_TYPE_MATCH_RECEIVED = 5;
 
         private final Long messageId;
         private final int viewType;
@@ -71,12 +72,19 @@ public class ChatMessage {
 
         // 경기 약속 카드
         public static class MatchInfo {
+            public final String tempId;
+            public final Long senderId;
+
+            public final String status; // CREATED 또는 CONFIRMED
             public final String title;
             public final String dateText;
             public final String timeText;
             public final String place;
 
-            public MatchInfo(String title, String dateText, String timeText, String place) {
+            public MatchInfo(String tempId, Long senderId, String status, String title, String dateText, String timeText, String place) {
+                this.tempId = tempId;
+                this.senderId = senderId;
+                this.status = status;
                 this.title = title;
                 this.dateText = dateText;
                 this.timeText = timeText;

@@ -5,12 +5,15 @@ import com.gen.rally.dto.ChatRoomDto;
 import com.gen.rally.dto.ChatRoomListDto;
 import com.gen.rally.dto.MatchRequestInfoDto;
 import com.gen.rally.entity.*;
+import com.gen.rally.enums.MessageType;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.ChatMessageRepository;
 import com.gen.rally.repository.ChatRoomRepository;
 import com.gen.rally.repository.GameRepository;
 import com.gen.rally.repository.UserRepository;
+import com.nimbusds.jose.shaded.gson.Gson;
+import com.nimbusds.jose.shaded.gson.annotations.SerializedName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.gen.rally.enums.MessageType.TEXT;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,16 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
+    private final Gson gson = new Gson();
+
+    private static class MessagePayload {
+        @SerializedName("type")
+        private String type;
+        @SerializedName("data")
+        private Object data;
+
+        public String getType() { return type; }
+    }
 
     // 채팅방 목록 조회
     public List<ChatRoomListDto> findRoomsByUser(Long userId) {
@@ -177,13 +192,25 @@ public class ChatService {
         User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        MessageType messageType = TEXT; // 기본값
+        try {
+            MessagePayload payload = gson.fromJson(content, MessagePayload.class);
+            if (payload != null && "MATCH_CARD".equals(payload.getType())) {
+                messageType = MessageType.MATCH_CARD;
+            }
+        } catch (Exception e) {
+
+        }
+
         ChatMessage message = ChatMessage.create(room, sender, content);
+        message.setMessageType(messageType);
         chatMessageRepository.save(message);
 
         ChatMessageDto payload = ChatMessageDto.builder()
                 .id(message.getId())
                 .roomId(room.getId())
                 .senderId(sender.getId())
+                .type(messageType)
                 .content(message.getContent())
                 .createdAt(message.getCreatedAt())
                 .build();
