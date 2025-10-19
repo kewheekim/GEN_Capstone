@@ -14,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -43,7 +45,7 @@ import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
 // CHAT_002
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCardClickListener {
 
     private static final String BASE_URL = "ws://10.0.2.2:8080/stomp";
     private static final String SUBSCRIBE_URL = "/sub/dm/";
@@ -51,9 +53,18 @@ public class ChatActivity extends AppCompatActivity {
 
     public static final String ROOM_ID = "extra_room_id";
     public static final String MY_USER_ID = "extra_my_user_id";
+    private String opponentName;
+    private String matchDate;
+    private String matchStyle;
+    private String matchType;
+    private String myTimeRange;
+    private String myPlace;
+    private String opponentTimeRange;
+    private String opponentPlace;
 
     private StompClient stompClient;
     private ApiService apiService;
+    private ActivityResultLauncher<Intent> promiseLauncher;
 
     private Disposable lifecycleDisposable;
     private Disposable topicDisposable;
@@ -96,13 +107,28 @@ public class ChatActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         findViewByIdViews();
 
-        adapter = new ChatAdapter(this, viewModel );
+        adapter = new ChatAdapter(this, viewModel, this);
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
         rvChat.setLayoutManager(layoutManager);
         rvChat.setAdapter(adapter);
 
         setupKeyboardListener();
+
+        promiseLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+
+                        String finalDate = data.getStringExtra("final_date");
+                        String finalStartTime = data.getStringExtra("final_start_time");
+                        String finalEndTime = data.getStringExtra("final_end_time");
+                        String finalPlaceName = data.getStringExtra("final_location_name");
+
+                        sendMatchCard(finalDate, finalStartTime, finalEndTime, finalPlaceName);
+                    }
+                });
 
         btnSend.setOnClickListener(v -> trySend());
         observeViewModel();
@@ -114,7 +140,40 @@ public class ChatActivity extends AppCompatActivity {
 
         btnPromise = findViewById(R.id.btn_promise);
 
-        btnPromise.setOnClickListener();
+        // 약속 잡기로 넘어갈 때 요청 정보 같이 넘기기
+        btnPromise.setOnClickListener(v->{
+            Intent intent = new Intent(ChatActivity.this, ChatPromiseActivity.class);
+
+            intent.putExtra("opponent_name", opponentName);
+            intent.putExtra("match_date", matchDate);
+            intent.putExtra("match_type", matchType);
+            intent.putExtra("match_style", matchStyle);
+            intent.putExtra("my_time", myTimeRange);
+            intent.putExtra("my_place", myPlace);
+            intent.putExtra("opponent_time",opponentTimeRange);
+            intent.putExtra("opponent_place",opponentPlace);
+
+            promiseLauncher.launch(intent);
+        });
+    }
+
+    // ChatAdapter.OnCardClickListener 인터페이스 구현
+    @Override
+    public void onCardClick(ChatMessage message) {
+        if (message.getViewType() == ChatMessage.VIEW_TYPE_MATCH_RECEIVED) {
+
+            ChatMessage.MatchInfo info = message.getMatchInfo();
+
+            if (info != null && "CREATED".equals(info.status)) {
+                // 내가 확정 메시지를 보내는 로직 실행
+                sendConfirmCard(info);
+            } else {
+                Toast.makeText(this, "이미 확정되었거나 생성된 카드가 아닙니다.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // 내가 보낸 카드는 클릭해도 아무 동작 안 함
+            Toast.makeText(this, "내가 만든 약속 카드는 확정할 수 없습니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void findViewByIdViews() {
@@ -243,8 +302,22 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ChatRoomDto> call, Response<ChatRoomDto> response) {
                         if(response.isSuccessful() && response.body() != null) {
-                            viewModel.cacheParticipantProfiles(response.body());
-                            bindMatchRequestData(response.body());
+                            ChatRoomDto data = response.body();
+                            viewModel.cacheParticipantProfiles(data);
+                            bindMatchRequestData(data);
+
+                            if (data.getMyRequestInfo() != null) {
+                                opponentName = data.getOpponentName();
+                                opponentTimeRange = data.getOpponentRequestInfo().getTimeRange();
+                                opponentPlace = data.getOpponentRequestInfo().getPlace();
+                                myTimeRange = data.getMyRequestInfo().getTimeRange();
+                                myPlace = data.getMyRequestInfo().getPlace();
+                                matchDate = data.getMyRequestInfo().getDate();
+                                matchStyle = data.getMyRequestInfo().getGameStyle();
+                                matchType = data.getMyRequestInfo().getGameType();
+                            } else {
+                                Log.w("ChatActivity", "내 매칭 요청 정보가 없습니다.");
+                            }
                         }else{
                             Log.d("failed to load user", "code=" + response.code());
                         }
@@ -261,14 +334,10 @@ public class ChatActivity extends AppCompatActivity {
     // 상단 매칭 요청 정보 확인을 위한 매핑 메서드
     private void bindMatchRequestData(ChatRoomDto data) {
 
-        Log.d("MatchDataBind", "전달받은 DTO: " + data.toString());
-        Log.d("MatchDataBind", "상대방 이름: " + data.getOpponentName());
-        Log.d("MatchDataBind", "내 요청 정보: " + data.getMyRequestInfo());
         TextView nicknameTextView = findViewById(R.id.tv_nickname);
         nicknameTextView.setText(data.getOpponentName());
 
         if (data.getMyRequestInfo() != null) {
-            Log.d("MatchDataBind", "내 요청 정보 != null. 매핑 시작");
             TextView timeMe = findViewById(R.id.tv_time_me);
             TextView placeMe = findViewById(R.id.tv_place_me);
 
@@ -330,6 +399,64 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    // 경기 카드 생성
+    private void sendMatchCard(String date, String startTime, String endTime, String place) {
+        String title = "경기 약속을 만들었습니다.";
+        String timeRange = startTime + " ~ " + endTime;
+        String contentJson = viewModel.createCardJson(title, date, timeRange, place, "CREATED");
+
+        ChatMessageRequest req = new ChatMessageRequest();
+        req.setSenderId(myUserId);
+        req.setContent(contentJson);
+        String json = gson.toJson(req);
+
+        try {
+            stompClient.send(SEND_URL + roomId, json).subscribe(() -> {
+                Log.d("ChatActivity", "경기 카드 전송 성공!");
+            }, throwable -> {
+                Log.e("ChatActivity", "경기 카드 전송 실패", throwable);
+                runOnUiThread(() -> Toast.makeText(this, "경기 카드 전송 실패", Toast.LENGTH_SHORT).show());
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "STOMP 전송 예외 발생", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // 경기 확정 카드
+    private void sendConfirmCard(ChatMessage.MatchInfo info) {
+        // 확정 타이틀 및 상태로 JSON 재생성
+        String confirmTitle = "경기 약속을 확정했습니다.";
+        final String status = "CONFIRMED";
+
+        // 기존 카드 정보를 재사용하고 상태만 CONFIRMED로 변경
+        String contentJson = viewModel.createCardJson(
+                confirmTitle,
+                info.dateText,
+                info.timeText,
+                info.place,
+                status
+        );
+
+        ChatMessageRequest req = new ChatMessageRequest();
+        req.setSenderId(myUserId);
+        req.setContent(contentJson);
+        String json = gson.toJson(req);
+
+        // STOMP 전송
+        try {
+            stompClient.send(SEND_URL + roomId, json).subscribe(() -> {
+                Log.d("ChatActivity", "경기 확정 카드 전송 성공!");
+            }, throwable -> {
+                Log.e("ChatActivity", "경기 확정 카드 전송 실패", throwable);
+                runOnUiThread(() -> Toast.makeText(this, "경기 확정 전송 실패", Toast.LENGTH_SHORT).show());
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void scrollToBottom() {
         int count = adapter.getItemCount();
         if (count > 0) {

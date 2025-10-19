@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="6dp">
+            android:gravity="center">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="38dp"
@@ -126,8 +126,7 @@
                 android:text="19:00~21:00"
                 android:textColor="@color/black_text"
                 style="@style/Text.Regular12"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginStart="20dp"/>
 
             <TextView
                 android:id="@+id/tv_place_me"
@@ -136,8 +135,7 @@
                 android:layout_weight="1.2"
                 android:text="망원 다목적 체육관"
                 android:textColor="@color/black_text"
-                style="@style/Text.Regular12"
-                android:layout_marginTop="4dp"/>
+                style="@style/Text.Regular12"/>
         </LinearLayout>
 
         <View
@@ -151,7 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp">
+            android:gravity="center">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="38dp"
@@ -177,8 +175,7 @@
                 android:text="20:00~21:00"
                 android:textColor="@color/black_text"
                 style="@style/Text.Regular12"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginStart="20dp"/>
 
             <TextView
                 android:id="@+id/tv_place_you"
@@ -187,14 +184,13 @@
                 android:layout_weight="1.2"
                 android:text="망원 다목적 체육관"
                 android:textColor="@color/black_text"
-                style="@style/Text.Regular12"
-                android:layout_marginTop="4dp"/>
+                style="@style/Text.Regular12"/>
         </LinearLayout>
 
     </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-
+    <!-- 아래 텍스트 정보 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -397,7 +393,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         />
 
-
+    <!-- 지도 -->
     <fragment
         android:id="@+id/map_container"
         android:name="com.google.android.gms.maps.SupportMapFragment"

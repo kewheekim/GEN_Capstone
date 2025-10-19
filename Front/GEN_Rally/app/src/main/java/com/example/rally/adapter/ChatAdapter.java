@@ -25,12 +25,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<ChatMessage> items = new ArrayList<>();
     private final int maxBubbleWidthPx;
     private final ChatViewModel viewModel;
+    public interface OnCardClickListener {
+        void onCardClick(ChatMessage message);
+    }
 
-    public ChatAdapter(Context context, ChatViewModel viewModel) {
+    // 필드 추가
+    private final OnCardClickListener cardClickListener;
+
+    public ChatAdapter(Context context, ChatViewModel viewModel, OnCardClickListener listener) {
         this.context = context;
         int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         this.maxBubbleWidthPx = (int) (screenWidth * 0.63f);
         this.viewModel = viewModel;
+        this.cardClickListener = listener;
     }
     @Override
     public int getItemViewType(int position) {
@@ -50,8 +57,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         } else if(viewType== ChatMessage.VIEW_TYPE_DATE) { // 날짜 구분
             View v = inf.inflate(R.layout.item_chat_date, parent, false);
             return new DateVH(v);
-        } else { // 경기 카드
-            View v = inf.inflate(R.layout.item_chat_card, parent, false);
+        } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_RECEIVED) {
+            View v = inf.inflate(R.layout.item_chat_card_you, parent, false);
+            return new CardVH(v);
+        } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_SENT) {
+            View v = inf.inflate(R.layout.item_chat_card_me, parent, false);
+            return new CardVH(v);
+        } else {
+            View v = inf.inflate(R.layout.item_chat_card_you, parent, false);
             return new CardVH(v);
         }
     }
@@ -82,6 +95,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         } else if (holder instanceof DateVH) {
             DateVH vh = (DateVH) holder;
             vh.tvDate.setText(m.getContent());
+        } else if (holder instanceof CardVH){
+            CardVH vh = (CardVH) holder;
+            ChatMessage.MatchInfo info = m.getMatchInfo();
+
+            if (info != null) {
+                if ("CONFIRMED".equals(info.status)) {
+                    vh.tvCardTitle.setText("경기 약속을 확정했습니다.");
+                } else {
+                    vh.tvCardTitle.setText("경기 약속을 만들었습니다.");
+                }
+
+                vh.tvDate.setText(info.dateText);
+                vh.tvTime.setText(info.timeText);
+                vh.tvPlace.setText(info.place);
+
+                vh.itemView.setOnClickListener(v -> {
+                    if (cardClickListener != null) {
+                        cardClickListener.onCardClick(m);
+                    }
+                });
+            }
         }
     }
 
