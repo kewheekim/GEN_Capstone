@@ -1,5 +1,6 @@
 package com.gen.rally.entity;
 
+import com.gen.rally.enums.MessageType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,9 @@ public class ChatMessage {
     private Long id;
 
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType;
 
     @ManyToOne(fetch=FetchType.LAZY, optional=false)
     @JoinColumn(name="chat_room_id")
