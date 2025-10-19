@@ -1,6 +1,7 @@
 package com.gen.rally.dto;
 
 import com.gen.rally.entity.ChatMessage;
+import com.gen.rally.enums.MessageType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class ChatMessageDto {
     private Long id;
     private Long roomId;
     private Long senderId;
+    private MessageType type;
     private String content;
     private LocalDateTime createdAt;
 
@@ -23,6 +25,7 @@ public class ChatMessageDto {
                 message.getId(),
                 message.getChatRoom().getId(),
                 message.getSender().getId(),
+                message.getMessageType(),
                 message.getContent(),
                 message.getCreatedAt()
         );
