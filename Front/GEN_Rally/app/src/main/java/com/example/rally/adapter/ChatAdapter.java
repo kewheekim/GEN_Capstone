@@ -59,13 +59,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             return new DateVH(v);
         } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_RECEIVED) {
             View v = inf.inflate(R.layout.item_chat_card_you, parent, false);
-            return new CardVH(v);
+            return new CardReceivedVH(v);
         } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_SENT) {
             View v = inf.inflate(R.layout.item_chat_card_me, parent, false);
-            return new CardVH(v);
+            return new CardSentVH(v);
         } else {
             View v = inf.inflate(R.layout.item_chat_card_you, parent, false);
-            return new CardVH(v);
+            return new CardReceivedVH(v);
         }
     }
 
@@ -95,8 +95,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         } else if (holder instanceof DateVH) {
             DateVH vh = (DateVH) holder;
             vh.tvDate.setText(m.getContent());
-        } else if (holder instanceof CardVH){
-            CardVH vh = (CardVH) holder;
+        } else if (holder instanceof CardSentVH){
+            CardSentVH vh = (CardSentVH) holder;
             ChatMessage.MatchInfo info = m.getMatchInfo();
 
             if (info != null) {
@@ -109,6 +109,37 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 vh.tvDate.setText(info.dateText);
                 vh.tvTime.setText(info.timeText);
                 vh.tvPlace.setText(info.place);
+                vh.tvSentTime.setText(m.getFormattedTime());
+
+                vh.itemView.setOnClickListener(v -> {
+                    if (cardClickListener != null) {
+                        cardClickListener.onCardClick(m);
+                    }
+                });
+            }
+        } else if (holder instanceof CardReceivedVH) {
+            CardReceivedVH vh = (CardReceivedVH) holder;
+            ChatMessage.MatchInfo info = m.getMatchInfo();
+
+            if (info != null) {
+                if ("CONFIRMED".equals(info.status)) {
+                    vh.tvCardTitle.setText("경기 약속을 확정했습니다.");
+                } else {
+                    vh.tvCardTitle.setText("경기 약속을 만들었습니다.");
+                }
+
+                vh.tvDate.setText(info.dateText);
+                vh.tvTime.setText(info.timeText);
+                vh.tvPlace.setText(info.place);
+                vh.tvReceivedTime.setText(m.getFormattedTime());
+
+                ChatRoomDto profile = viewModel.getProfile(m.getSenderId());
+                if (profile != null) {
+                    Glide.with(context)
+                            .load(profile.getOpponentProfileUrl())
+                            .into(vh.ivProfile);
+                    vh.tvNickname.setText(profile.getOpponentName());
+                }
 
                 vh.itemView.setOnClickListener(v -> {
                     if (cardClickListener != null) {
@@ -175,18 +206,41 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
-    // 약속 잡기 카드
-    static class CardVH extends RecyclerView.ViewHolder {
+    // 약속 잡기 카드: 보냄
+    static class CardSentVH extends RecyclerView.ViewHolder {
         TextView tvCardTitle; // "경기 약속을 만들었습니다." , "경기 약속을 확정했습니다."
         TextView tvDate;
         TextView tvTime;
         TextView tvPlace;
-        CardVH(@NonNull View itemView) {
+        TextView tvSentTime;
+        CardSentVH(@NonNull View itemView) {
             super(itemView);
             tvCardTitle = itemView.findViewById(R.id.tv_card_title);
             tvDate = itemView.findViewById(R.id.tv_card_date);
             tvTime = itemView.findViewById(R.id.tv_card_time);
             tvPlace = itemView.findViewById(R.id.tv_card_place);
+            tvSentTime = itemView.findViewById(R.id.tv_sent_time);
+        }
+    }
+
+    // 약속 잡기 카드: 받음
+    static class CardReceivedVH extends RecyclerView.ViewHolder {
+        TextView tvCardTitle; // "경기 약속을 만들었습니다." , "경기 약속을 확정했습니다."
+        TextView tvDate;
+        TextView tvTime;
+        TextView tvPlace;
+        TextView tvReceivedTime;
+        ImageView ivProfile;
+        TextView tvNickname;
+        CardReceivedVH(@NonNull View itemView) {
+            super(itemView);
+            tvCardTitle = itemView.findViewById(R.id.tv_card_title);
+            tvDate = itemView.findViewById(R.id.tv_card_date);
+            tvTime = itemView.findViewById(R.id.tv_card_time);
+            tvPlace = itemView.findViewById(R.id.tv_card_place);
+            tvReceivedTime = itemView.findViewById(R.id.tv_received_time);
+            ivProfile = itemView.findViewById(R.id.iv_profile);
+            tvNickname = itemView.findViewById(R.id.tv_nickname);
         }
     }
 
