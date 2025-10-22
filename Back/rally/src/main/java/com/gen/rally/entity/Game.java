@@ -15,8 +15,12 @@ public class Game {
     private Long gameId;
 
     @ManyToOne
-    @JoinColumn(name = "request_id")
-    private MatchRequest requestId;
+    @JoinColumn(name = "request_id1")
+    private MatchRequest requestId1; // 요청은 두 개이므로, 두 개의 아이디로 관리
+
+    @ManyToOne
+    @JoinColumn(name = "request_id2")
+    private MatchRequest requestId2;
 
     @ManyToOne
     @JoinColumn(name = "user_id1")
