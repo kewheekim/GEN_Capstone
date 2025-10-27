@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:background="@color/green_active">
+
+    <TextView
+        android:layout_width="230dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="매칭 성공!"
+        android:fontFamily="@font/kimm_bold"
+        android:textSize="40dp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="133dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_match_inform"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아어려워요님과 매칭되었어요"
+        style="@style/Text.Semibold20"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="210dp"
+        />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_opponent_profile"
+        android:layout_width="138dp"
+        android:layout_height="138dp"
+        android:src="@drawable/profile_image_male"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="78dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_inform"
+        app:shapeAppearanceOverlay="@style/RoundedProfileImage"
+        />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_my_profile"
+        android:layout_width="138dp"
+        android:layout_height="138dp"
+        android:src="@drawable/profile_image_female1"
+        android:layout_marginStart="201dp"
+        android:layout_marginTop="113dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_inform"
+        app:shapeAppearanceOverlay="@style/RoundedProfileImage"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_thunder"
+        android:layout_marginTop="78dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_inform"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="채팅을 통해 경기를 확정지어보세요!"
+        style="@style/Text.Semibold20"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/btn_go_chat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        />
+
+    <android.widget.Button
+        android:id="@+id/btn_go_chat"
+        android:layout_width="364dp"
+        android:layout_height="54dp"
+        style="@style/FlatButton"
+        android:background="@drawable/bg_view_active2"
+        android:text="채팅하기"
+        android:textColor="@color/green_active"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="48dp"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
