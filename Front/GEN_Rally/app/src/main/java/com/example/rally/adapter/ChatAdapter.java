@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
+    private final Long currentUserId;
     private List<ChatMessage> items = new ArrayList<>();
     private final int maxBubbleWidthPx;
     private final ChatViewModel viewModel;
@@ -32,16 +34,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     // 필드 추가
     private final OnCardClickListener cardClickListener;
 
-    public ChatAdapter(Context context, ChatViewModel viewModel, OnCardClickListener listener) {
+    public ChatAdapter(Context context, Long currentUserId, ChatViewModel viewModel, OnCardClickListener listener) {
         this.context = context;
         int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         this.maxBubbleWidthPx = (int) (screenWidth * 0.63f);
         this.viewModel = viewModel;
         this.cardClickListener = listener;
+        this.currentUserId = currentUserId;
     }
     @Override
     public int getItemViewType(int position) {
-        return items.get(position).getViewType();
+        return items.get(position).getFinalViewType(currentUserId);
     }
 
     @NonNull
@@ -57,15 +60,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         } else if(viewType== ChatMessage.VIEW_TYPE_DATE) { // 날짜 구분
             View v = inf.inflate(R.layout.item_chat_date, parent, false);
             return new DateVH(v);
-        } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_RECEIVED) {
-            View v = inf.inflate(R.layout.item_chat_card_you, parent, false);
-            return new CardReceivedVH(v);
-        } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_SENT) {
+
+        } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_SENT) { // 내가 보낸 카드
             View v = inf.inflate(R.layout.item_chat_card_me, parent, false);
             return new CardSentVH(v);
-        } else {
-            View v = inf.inflate(R.layout.item_chat_card_you, parent, false);
-            return new CardReceivedVH(v);
+        }else if (viewType == ChatMessage.VIEW_TYPE_MATCH_RECEIVED_CREATED) {
+            View v = inf.inflate(R.layout.item_chat_card_you_make, parent, false);
+            return new CardReceivedCreatedVH(v);
+        } else if (viewType == ChatMessage.VIEW_TYPE_MATCH_RECEIVED_CONFIRMED) {
+            View v = inf.inflate(R.layout.item_chat_card_you_confirm, parent, false);
+            return new CardReceivedConfirmedVH(v);
+        }  else {
+            View v = inf.inflate(R.layout.item_chat_card_you_confirm, parent, false);
+            return new CardReceivedConfirmedVH(v);
         }
     }
 
@@ -95,58 +102,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         } else if (holder instanceof DateVH) {
             DateVH vh = (DateVH) holder;
             vh.tvDate.setText(m.getContent());
-        } else if (holder instanceof CardSentVH){
-            CardSentVH vh = (CardSentVH) holder;
-            ChatMessage.MatchInfo info = m.getMatchInfo();
-
-            if (info != null) {
-                if ("CONFIRMED".equals(info.status)) {
-                    vh.tvCardTitle.setText("경기 약속을 확정했습니다.");
-                } else {
-                    vh.tvCardTitle.setText("경기 약속을 만들었습니다.");
-                }
-
-                vh.tvDate.setText(info.dateText);
-                vh.tvTime.setText(info.timeText);
-                vh.tvPlace.setText(info.place);
-                vh.tvSentTime.setText(m.getFormattedTime());
-
-                vh.itemView.setOnClickListener(v -> {
-                    if (cardClickListener != null) {
-                        cardClickListener.onCardClick(m);
-                    }
-                });
-            }
-        } else if (holder instanceof CardReceivedVH) {
-            CardReceivedVH vh = (CardReceivedVH) holder;
-            ChatMessage.MatchInfo info = m.getMatchInfo();
-
-            if (info != null) {
-                if ("CONFIRMED".equals(info.status)) {
-                    vh.tvCardTitle.setText("경기 약속을 확정했습니다.");
-                } else {
-                    vh.tvCardTitle.setText("경기 약속을 만들었습니다.");
-                }
-
-                vh.tvDate.setText(info.dateText);
-                vh.tvTime.setText(info.timeText);
-                vh.tvPlace.setText(info.place);
-                vh.tvReceivedTime.setText(m.getFormattedTime());
-
-                ChatRoomDto profile = viewModel.getProfile(m.getSenderId());
-                if (profile != null) {
-                    Glide.with(context)
-                            .load(profile.getOpponentProfileUrl())
-                            .into(vh.ivProfile);
-                    vh.tvNickname.setText(profile.getOpponentName());
-                }
-
-                vh.itemView.setOnClickListener(v -> {
-                    if (cardClickListener != null) {
-                        cardClickListener.onCardClick(m);
-                    }
-                });
-            }
+        } else if (holder instanceof CardSentVH) {
+            ((CardSentVH) holder).bind(m, cardClickListener);
+        } else if (holder instanceof CardReceivedCreatedVH) {
+            ((CardReceivedCreatedVH) holder).bind(context, m, viewModel, cardClickListener);
+        } else if (holder instanceof CardReceivedConfirmedVH) {
+            ((CardReceivedConfirmedVH) holder).bind(context, m, viewModel, cardClickListener);
         }
     }
 
@@ -206,13 +167,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
-    // 약속 잡기 카드: 보냄
     static class CardSentVH extends RecyclerView.ViewHolder {
-        TextView tvCardTitle; // "경기 약속을 만들었습니다." , "경기 약속을 확정했습니다."
+        TextView tvCardTitle;
         TextView tvDate;
         TextView tvTime;
         TextView tvPlace;
         TextView tvSentTime;
+
         CardSentVH(@NonNull View itemView) {
             super(itemView);
             tvCardTitle = itemView.findViewById(R.id.tv_card_title);
@@ -221,18 +182,95 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             tvPlace = itemView.findViewById(R.id.tv_card_place);
             tvSentTime = itemView.findViewById(R.id.tv_sent_time);
         }
+        public void bind(ChatMessage m, ChatAdapter.OnCardClickListener cardClickListener) {
+            ChatMessage.MatchInfo info = m.getMatchInfo();
+            if (info != null) {
+                // 상태에 따라 타이틀 텍스트만 변경 (버튼은 XML에서 제거)
+                if ("CONFIRMED".equals(info.status)) {
+                    tvCardTitle.setText("경기 약속을 확정했습니다.");
+                } else {
+                    tvCardTitle.setText("경기 약속을 만들었습니다."); // CREATED 상태
+                }
+
+                tvDate.setText(info.dateText);
+                tvTime.setText(info.timeText);
+                tvPlace.setText(info.place);
+                tvSentTime.setText(m.getFormattedTime());
+
+                // 상세 페이지 이동 등의 로직만 bind (버튼 클릭 X)
+                itemView.setOnClickListener(v -> {
+                    if (cardClickListener != null) {
+                        cardClickListener.onCardClick(m);
+                    }
+                });
+            }
+        }
     }
 
-    // 약속 잡기 카드: 받음
-    static class CardReceivedVH extends RecyclerView.ViewHolder {
-        TextView tvCardTitle; // "경기 약속을 만들었습니다." , "경기 약속을 확정했습니다."
+    // 약속 잡기 카드: 남이 보냄 (버튼 O)
+    static class CardReceivedCreatedVH extends RecyclerView.ViewHolder {
+        TextView tvCardTitle;
         TextView tvDate;
         TextView tvTime;
         TextView tvPlace;
         TextView tvReceivedTime;
         ImageView ivProfile;
         TextView tvNickname;
-        CardReceivedVH(@NonNull View itemView) {
+        Button tvConfirmButton; // 버튼이 레이아웃에 있다면 추가
+
+        CardReceivedCreatedVH(@NonNull View itemView) {
+            super(itemView);
+            tvCardTitle = itemView.findViewById(R.id.tv_card_title);
+            tvDate = itemView.findViewById(R.id.tv_card_date);
+            tvTime = itemView.findViewById(R.id.tv_card_time);
+            tvPlace = itemView.findViewById(R.id.tv_card_place);
+            tvReceivedTime = itemView.findViewById(R.id.tv_received_time);
+            ivProfile = itemView.findViewById(R.id.iv_profile);
+            tvNickname = itemView.findViewById(R.id.tv_nickname);
+            tvConfirmButton = itemView.findViewById(R.id.btn_match_confirm);
+        }
+
+        public void bind(Context context, ChatMessage m, ChatViewModel viewModel, ChatAdapter.OnCardClickListener cardClickListener) {
+            ChatMessage.MatchInfo info = m.getMatchInfo();
+
+            if (info != null) {
+                tvCardTitle.setText("경기 약속을 만들었습니다.");
+                tvDate.setText(info.dateText);
+                tvTime.setText(info.timeText);
+                tvPlace.setText(info.place);
+                tvReceivedTime.setText(m.getFormattedTime());
+
+                // 프로필 정보 바인딩
+                ChatRoomDto profile = viewModel.getProfile(m.getSenderId());
+                if (profile != null) {
+                    Glide.with(context)
+                            .load(profile.getOpponentProfileUrl())
+                            .into(ivProfile);
+                    tvNickname.setText(profile.getOpponentName());
+                }
+
+                // 확정 가능 카드는 클릭 시 확정 로직이나 상세 페이지 이동 로직이 수행되어야 합니다.
+                itemView.setOnClickListener(v -> {
+                    if (cardClickListener != null) {
+                        // ChatActivity의 onCardClick 메서드가 호출되어 확정 로직을 실행합니다.
+                        cardClickListener.onCardClick(m);
+                    }
+                });
+            }
+        }
+    }
+
+    // 경기 확정 카드: 남이 보냄 (버튼 X)
+    static class CardReceivedConfirmedVH extends RecyclerView.ViewHolder {
+        TextView tvCardTitle;
+        TextView tvDate;
+        TextView tvTime;
+        TextView tvPlace;
+        TextView tvReceivedTime;
+        ImageView ivProfile;
+        TextView tvNickname;
+
+        CardReceivedConfirmedVH(@NonNull View itemView) {
             super(itemView);
             tvCardTitle = itemView.findViewById(R.id.tv_card_title);
             tvDate = itemView.findViewById(R.id.tv_card_date);
@@ -242,7 +280,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             ivProfile = itemView.findViewById(R.id.iv_profile);
             tvNickname = itemView.findViewById(R.id.tv_nickname);
         }
+
+        public void bind(Context context, ChatMessage m, ChatViewModel viewModel, ChatAdapter.OnCardClickListener cardClickListener) {
+            ChatMessage.MatchInfo info = m.getMatchInfo();
+
+            if (info != null) {
+                tvCardTitle.setText("경기 약속을 확정했습니다.");
+                tvDate.setText(info.dateText);
+                tvTime.setText(info.timeText);
+                tvPlace.setText(info.place);
+                tvReceivedTime.setText(m.getFormattedTime());
+
+                ChatRoomDto profile = viewModel.getProfile(m.getSenderId());
+                if (profile != null) {
+                    Glide.with(context)
+                            .load(profile.getOpponentProfileUrl())
+                            .into(ivProfile);
+                    tvNickname.setText(profile.getOpponentName());
+                }
+            }
+        }
     }
+
 
     // DiffUtil
     static class ChatDiffCallback extends DiffUtil.Callback {

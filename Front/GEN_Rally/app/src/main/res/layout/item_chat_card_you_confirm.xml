@@ -53,7 +53,7 @@
                 android:id="@+id/tv_card_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="경기 약속을 만들었습니다."
+                android:text="경기 약속을 확정했습니다."
                 android:textColor="@color/white"
                 style="@style/Text.Semibold16"
                 android:layout_marginStart="16dp"

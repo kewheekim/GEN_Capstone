@@ -66,8 +66,6 @@ public class ChatViewModel extends ViewModel {
         Long lastTimestamp = null; // 이전 메시지의 타임스탬프 (날짜 비교용)
 
         for (ChatMessageDto dto : dtos) {
-            int viewType = dto.getSenderId().equals(myUserId) ?
-                    ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
             long currentTimestamp = convertToTimestamp(dto.getCreatedAt());
 
             ChatMessage newMsg = convertDtoToMessage(dto, myUserId, currentTimestamp);
@@ -88,9 +86,6 @@ public class ChatViewModel extends ViewModel {
     public void addIncomingMessage(ChatMessageDto dto, Long myUserId) {
         List<ChatMessage> currentList = messages.getValue() == null ?
                 new ArrayList<>() : messages.getValue();
-
-        int viewType = dto.getSenderId().equals(myUserId) ?
-                ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
 
         long timestamp = convertToTimestamp(dto.getCreatedAt());
 
@@ -164,20 +159,27 @@ public class ChatViewModel extends ViewModel {
     private ChatMessage convertDtoToMessage(ChatMessageDto dto, Long myUserId, long timestamp) {
         int viewType;
         boolean isMyMessage = dto.getSenderId().equals(myUserId);
+        ChatMessage.MatchInfo matchInfo = null;
 
         if (dto.getType() != null && dto.getType().toString().equals("MATCH_CARD")) {
-            viewType = isMyMessage ?
-                    ChatMessage.VIEW_TYPE_MATCH_SENT :
-                    ChatMessage.VIEW_TYPE_MATCH_RECEIVED;
-        } else {
-            // 일반 메시지
-            viewType = dto.getSenderId().equals(myUserId) ?
-                    ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
-        }
-
-        ChatMessage.MatchInfo matchInfo = null;
-        if (viewType == ChatMessage.VIEW_TYPE_MATCH_SENT || viewType == ChatMessage.VIEW_TYPE_MATCH_RECEIVED) {
             matchInfo = parseCardJson(dto.getContent());
+
+            if (matchInfo != null) {
+                if (isMyMessage) {
+                    viewType = ChatMessage.VIEW_TYPE_MATCH_SENT;
+                } else {
+                    if ("CONFIRMED".equals(matchInfo.status)) {
+                        viewType = ChatMessage.VIEW_TYPE_MATCH_RECEIVED_CONFIRMED; // 8
+                    } else {
+                        viewType = ChatMessage.VIEW_TYPE_MATCH_RECEIVED_CREATED; // 7
+                    }
+                }
+            } else {
+                viewType = isMyMessage ? ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
+            }
+
+        } else {
+            viewType = isMyMessage ? ChatMessage.VIEW_TYPE_SENT : ChatMessage.VIEW_TYPE_RECEIVED;
         }
 
         return new ChatMessage(

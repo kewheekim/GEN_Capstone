@@ -11,8 +11,11 @@ public class ChatMessage {
         public static final int VIEW_TYPE_SENT = 1; // 내가 보냄
         public static final int VIEW_TYPE_RECEIVED = 2; // 남이 보냄
         public static final int VIEW_TYPE_DATE = 3; // 날짜
-        public static final int VIEW_TYPE_MATCH_SENT = 4;
-        public static final int VIEW_TYPE_MATCH_RECEIVED = 5;
+
+        public static final int VIEW_TYPE_MATCH_SENT = 5;
+        public static final int VIEW_TYPE_MATCH_RECEIVED_CREATED = 7; // 남이 보낸, 약속 만듦 (버튼 O)
+        public static final int VIEW_TYPE_MATCH_RECEIVED_CONFIRMED = 8; // 남이 보낸, 약속 확정 (버튼 X)
+
 
         private final Long messageId;
         private final int viewType;
@@ -91,4 +94,28 @@ public class ChatMessage {
                 this.place = place;
             }
         }
+
+    public int getFinalViewType(Long userId) {
+        if (viewType == VIEW_TYPE_DATE) {
+            return VIEW_TYPE_DATE;
+        }
+
+        if (matchInfo != null) {
+            boolean isMe = this.senderId != null && this.senderId.equals(userId);
+
+            if (isMe) {
+                // 내가 보낸 모든 카드: 상태와 무관하게 VIEW_TYPE_MATCH_SENT
+                return VIEW_TYPE_MATCH_SENT;
+            } else {
+                // 남이 보낸 카드: 상태에 따라 2가지
+                if ("CONFIRMED".equals(matchInfo.status)) {
+                    return VIEW_TYPE_MATCH_RECEIVED_CONFIRMED;
+                } else {
+                    // CREATED 상태
+                    return VIEW_TYPE_MATCH_RECEIVED_CREATED;
+                }
+            }
+        }
+        return this.viewType;
+    }
 }

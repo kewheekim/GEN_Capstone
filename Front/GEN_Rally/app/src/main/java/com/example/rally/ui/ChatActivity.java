@@ -107,7 +107,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
         viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         findViewByIdViews();
 
-        adapter = new ChatAdapter(this, viewModel, this);
+        adapter = new ChatAdapter(this, myUserId, viewModel, this);
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
         rvChat.setLayoutManager(layoutManager);
@@ -160,7 +160,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
     // ChatAdapter.OnCardClickListener 인터페이스 구현
     @Override
     public void onCardClick(ChatMessage message) {
-        if (message.getViewType() == ChatMessage.VIEW_TYPE_MATCH_RECEIVED) {
+        if (message.getViewType() == ChatMessage.VIEW_TYPE_MATCH_RECEIVED_CREATED) {
 
             ChatMessage.MatchInfo info = message.getMatchInfo();
 
