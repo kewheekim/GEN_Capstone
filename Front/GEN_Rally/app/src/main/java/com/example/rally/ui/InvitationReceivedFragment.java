@@ -61,7 +61,7 @@ public class InvitationReceivedFragment extends Fragment {
                             Long myRequestId = item.getMyRequestId();
                             Long opponentRequestId = item.getOpponentRequestId();
 
-                            ApiService api = RetrofitClient.getClient(BuildConfig.API_BASE_URL).create(ApiService.class);
+                            ApiService api = RetrofitClient.getSecureClient( requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
                             detailCall = api.getMatchRequestDetails(myRequestId, opponentRequestId);
                             detailCall.enqueue(new Callback<MatchRequestDetails>() {
                                 @Override public void onResponse(Call<MatchRequestDetails> call, Response<MatchRequestDetails> resp) {

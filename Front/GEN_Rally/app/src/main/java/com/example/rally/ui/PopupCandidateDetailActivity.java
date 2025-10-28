@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.rally.R;
 import com.example.rally.dto.CandidateResponseDto;
 
@@ -52,7 +54,9 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(user.getProfileImage())
                     .placeholder(R.drawable.ic_default_profile)
-                    .circleCrop()
+                    .apply(new RequestOptions()
+                            .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
+                            .placeholder(R.drawable.ic_default_profile))
                     .into(profileImg);
         }
         else {

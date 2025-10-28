@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
@@ -33,12 +35,10 @@ import retrofit2.Response;
 public class InvitationDetailsActivity extends AppCompatActivity {
     private Call<MatchRequestDetails> detailCall;
     ImageButton btnBack;
-    TextView tvDateType;
-    TextView tvMyTime;
-    TextView tvMyPlace;
+    TextView tvDateType, tvMyTime, tvMyPlace, tvName;
     ImageView profileImg;
-    TextView tvName;
     ImageView ivGender;
+    ImageView ivProfile;
     TextView tvWin;
     TextView tvTime;
     TextView tvTimeState;
@@ -65,6 +65,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         profileImg = findViewById(R.id.iv_profile);
         tvName = findViewById(R.id.tv_opponent_name);
         tvWin = findViewById(R.id.tv_win_rate);
+        ivProfile = findViewById(R.id.iv_profile);
         ivGender = findViewById(R.id.iv_gender);
         tvTime = findViewById(R.id.tv_time);
         tvTimeState = findViewById(R.id.tv_time_status);
@@ -109,7 +110,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
                 return;
             }
             btnAccept.setEnabled(false);
-            ApiService api = RetrofitClient.getClient(BuildConfig.API_BASE_URL).create(ApiService.class);
+            ApiService api = RetrofitClient.getSecureClient( this, BuildConfig.API_BASE_URL).create(ApiService.class);
             InvitationAcceptRequest body = new InvitationAcceptRequest(invitationId);
 
             api.acceptInvitation(body).enqueue(new Callback<InvitationAcceptResponse>() {
@@ -122,8 +123,11 @@ public class InvitationDetailsActivity extends AppCompatActivity {
                                 "매칭 수락 완료! 게임ID: " + data.getGameId(), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(InvitationDetailsActivity.this, MatSuccessActivity.class);
-                        intent.putExtra("game_id", data.getGameId());
-                        intent.putExtra("room_id", data.getRoomId());
+                        intent.putExtra("game_id",          data.getGameId());
+                        intent.putExtra("room_id",          data.getRoomId());
+                        intent.putExtra("user_profile",     data.getUserProfile());
+                        intent.putExtra("opponent_profile", data.getOpponentProfile());
+                        intent.putExtra("opponent_name",    data.getOpponentName());
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
@@ -159,11 +163,12 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         if (opponent.getName() != null) tvName.setText(opponent.getName());
         // 프로필 이미지
         if (opponent.getProfileImage() != null && !opponent.getProfileImage().isEmpty()) {
-            Glide.with(InvitationDetailsActivity.this)
+            Glide.with(this)
                     .load(opponent.getProfileImage())
-                    .placeholder(R.drawable.ic_default_profile)
-                    .circleCrop()
-                    .into(profileImg);
+                    .apply(new RequestOptions()
+                            .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
+                            .placeholder(R.drawable.ic_default_profile))
+                    .into(ivProfile);
         } else {
             if ("아어려워요".equals(opponent.getName())) {
                 profileImg.setImageResource(R.drawable.profile_image_male);

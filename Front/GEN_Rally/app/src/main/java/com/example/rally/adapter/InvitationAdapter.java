@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -13,6 +14,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.rally.R;
 import com.example.rally.dto.InvitationItem;
 import com.google.android.material.card.MaterialCardView;
@@ -47,13 +51,10 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
 
     static class VH extends RecyclerView.ViewHolder {
         MaterialCardView speechCard;
-        final TextView tvState;
-        final TextView tvDateType;
-        final TextView tvRequest;
-        final View btnConfirm;
+        final TextView tvState,  tvDateType, tvRequest, tvRefusal;
+        final View btnConfirm, divider;
+        final ImageView ivProfile;
         final ImageButton btnMore;
-        final View divider;
-        final TextView tvRefusal;
 
         VH(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +62,7 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
             tvState    = itemView.findViewById(R.id.tv_state);
             tvDateType = itemView.findViewById(R.id.tv_date_type);
             tvRequest  = itemView.findViewById(R.id.tv_request);
+            ivProfile = itemView.findViewById(R.id.iv_profile);
             btnConfirm = itemView.findViewById(R.id.btn_confirm);
             tvRefusal = itemView.findViewById(R.id.tv_refusal);
             btnMore    = itemView.findViewById(R.id.btn_more);
@@ -111,6 +113,14 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
                         case "거절":      stateText = "거절 완료"; break;
                         default:                    stateText = stateText; break;
                     }
+                    // 프로필 이미지 로딩
+                    Glide.with(itemView.getContext())
+                            .load(item.getOpponentProfileImage())
+                            .placeholder(R.drawable.ic_default_profile)
+                            .apply(new RequestOptions()
+                                    .transform(new RoundedCorners((int) (10 * itemView.getResources().getDisplayMetrics().density)))
+                                    .placeholder(R.drawable.ic_default_profile))
+                            .into(ivProfile);
                 }
                 if (tvState != null)
                     tvState.setText(stateText);
