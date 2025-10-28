@@ -2,6 +2,8 @@ package com.example.rally.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.rally.R;
 import com.example.rally.dto.CandidateItem;
 import com.example.rally.dto.CandidateResponseDto;
@@ -188,7 +192,9 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Glide.with(itemView.getContext())
                     .load(user.getProfileImage())
                     .placeholder(R.drawable.ic_default_profile)
-                    .circleCrop()
+                    .apply(new RequestOptions()
+                            .transform(new RoundedCorners((int) (10 * itemView.getResources().getDisplayMetrics().density)))
+                            .placeholder(R.drawable.ic_default_profile))
                     .into(profileImage);
 
             // 프로필 이미지 하드코딩

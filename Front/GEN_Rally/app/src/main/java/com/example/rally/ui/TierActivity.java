@@ -48,7 +48,7 @@ public class TierActivity extends AppCompatActivity {
         int howLong    = getIntent().getIntExtra("howLong", -1);
 
         final ApiService apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(), BuildConfig.API_BASE_URL)
+                .getSecureClient( this, BuildConfig.API_BASE_URL)
                 .create(ApiService.class);
 
         TierAssessRequest req = new TierAssessRequest();

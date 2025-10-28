@@ -37,7 +37,7 @@ public class UserService {
         user.setLoginType(LoginType.NORMAL);
         userRepository.save(user);
 
-        String subject = String.valueOf(user.getId());
+        String subject =user.getUserId();
 
         String accessToken  = jwtProvider.generateAccessToken(subject);
         String refreshToken = jwtProvider.generateRefreshToken(subject);
@@ -96,17 +96,17 @@ public class UserService {
         user.setSkill(score);
 
         if(totalScore>=80.0){
-            response.setTier(Tier.valueOf("상급자1"));
-            user.setTier(Tier.valueOf("상급자1"));
+            response.setTier(Tier.상급자1);
+            user.setTier(Tier.상급자1);
         }else if(totalScore>=60.0){
-            response.setTier(Tier.valueOf("중급자1"));
-            user.setTier(Tier.valueOf("중급자1"));
+            response.setTier(Tier.중급자1);
+            user.setTier(Tier.중급자1);
         }else if(totalScore>=40.0){
-            response.setTier(Tier.valueOf("초보자1"));
-            user.setTier(Tier.valueOf("초보자1"));
+            response.setTier(Tier.초보자1);
+            user.setTier(Tier.초보자1);
         }else {
-            response.setTier(Tier.valueOf("입문자1"));
-            user.setTier(Tier.valueOf("입문자1"));
+            response.setTier(Tier.입문자1);
+            user.setTier(Tier.입문자1);
         }
         userRepository.save(user);
         return response;
