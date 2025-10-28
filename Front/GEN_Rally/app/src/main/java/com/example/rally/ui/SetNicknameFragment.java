@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
@@ -106,7 +107,7 @@ public class SetNicknameFragment extends Fragment {
         etNickname.addTextChangedListener(watcher);
 
         btnNext.setOnClickListener(v -> {
-            ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
+            ApiService apiService = RetrofitClient.getClient(BuildConfig.API_BASE_URL).create(ApiService.class);
             String nickname = etNickname.getText().toString().trim();
 
             if (!isValidName(nickname)) {

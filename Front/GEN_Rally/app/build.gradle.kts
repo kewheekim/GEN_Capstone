@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "com.example.rally"
     compileSdk = 35
+    buildFeatures { buildConfig = true}
 
     defaultConfig {
         applicationId = "com.example.rally"
@@ -16,6 +17,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_BASE_URL", "\"http://172.19.8.237:8080/\"")
     }
 
     buildTypes {

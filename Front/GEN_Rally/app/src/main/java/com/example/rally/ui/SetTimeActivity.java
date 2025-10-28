@@ -42,7 +42,7 @@ public class SetTimeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_time);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_back);
+        Toolbar toolbar = findViewById(R.id.toolbar_go);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());

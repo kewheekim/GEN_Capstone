@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:id="@+id/btn_x"
-            android:src="@drawable/icon_x"
+            android:src="@drawable/ic_x"
             android:contentDescription=" "
             android:background="@color/white"
             android:layout_gravity="center_vertical|end" />

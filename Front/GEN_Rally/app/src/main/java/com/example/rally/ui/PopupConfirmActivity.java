@@ -28,11 +28,11 @@ public class PopupConfirmActivity extends AppCompatActivity {
         Button backBtn          = findViewById(R.id.btn_back);
         Button goBtn            = findViewById(R.id.go_btn);
 
-        TextView tvDate         = findViewById(R.id.tv_date);
+        TextView tvDate         = findViewById(R.id.tv_date_type);
         TextView tvTime         = findViewById(R.id.tv_time);
-        TextView tvPlaceName    = findViewById(R.id.tv_location);
+        TextView tvPlaceName    = findViewById(R.id.tv_opponent_place);
 
-        TextView tvType = findViewById(R.id.tv_type);
+        TextView tvType = findViewById(R.id.tv_opponent_style);
         TextView tvStyle = findViewById(R.id.tv_style);
 
         Intent prev = getIntent();
@@ -97,7 +97,7 @@ public class PopupConfirmActivity extends AppCompatActivity {
 
         // 확인버튼 클릭 시 api/match/request API 호출
         goBtn.setOnClickListener(v -> {
-            MatchRequestDto matchRequest = new MatchRequestDto("user001", gameType, gameStyle,
+            MatchRequestDto matchRequest = new MatchRequestDto(gameType, gameStyle,
                     sameGender, date, startHour, endHour, placeName, latitude, longitude);
             Intent intent = new Intent(PopupConfirmActivity.this, LoadingActivity.class);
             intent.putExtra("matchRequest", matchRequest);

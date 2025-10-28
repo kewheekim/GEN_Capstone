@@ -13,8 +13,6 @@ import com.example.rally.dto.MatchRequestDto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class CandidateNullActivity extends AppCompatActivity {
     @Override
@@ -23,10 +21,10 @@ public class CandidateNullActivity extends AppCompatActivity {
         setContentView(R.layout.activity_candidate_null);
 
         // ui
-        TextView tvDate = findViewById(R.id.tv_date);
+        TextView tvDate = findViewById(R.id.tv_date_type);
         TextView tvTime = findViewById(R.id.tv_time);
-        TextView tvPlaceName    = findViewById(R.id.tv_location);
-        TextView tvType = findViewById(R.id.tv_type);
+        TextView tvPlaceName    = findViewById(R.id.tv_opponent_place);
+        TextView tvType = findViewById(R.id.tv_opponent_style);
         TextView tvStyle = findViewById(R.id.tv_style);
         Button btnRestart = findViewById(R.id.btn_restart);
         Button btnHome = findViewById(R.id.btn_home);

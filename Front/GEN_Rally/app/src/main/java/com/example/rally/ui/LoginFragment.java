@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
@@ -69,7 +70,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void login(GeneralLoginRequest request){
-        ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
+        ApiService apiService = RetrofitClient.getClient(BuildConfig.API_BASE_URL).create(ApiService.class);
 
         apiService.login(request).enqueue(new Callback<GeneralLoginResponse>() {
             @Override

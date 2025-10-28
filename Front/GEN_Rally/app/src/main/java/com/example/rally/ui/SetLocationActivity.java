@@ -53,7 +53,7 @@ public class SetLocationActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_back);
+        Toolbar toolbar = findViewById(R.id.toolbar_go);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());

@@ -19,7 +19,7 @@
             android:layout_height="48dp"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/icon_x"
+            android:src="@drawable/ic_x"
             android:contentDescription="뒤로가기"
             android:background="@color/white" />
 

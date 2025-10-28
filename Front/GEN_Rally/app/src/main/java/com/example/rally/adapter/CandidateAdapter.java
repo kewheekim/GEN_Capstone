@@ -28,10 +28,12 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final Map<Integer, Integer> tierHeaderMap;
     private final int firstTierHeader;   // 구분선 표시용
+    private final long requestId;
 
-    public CandidateAdapter(List<CandidateItem> items, Map<Integer, Integer> tierHeaderMap) {
+    public CandidateAdapter(List<CandidateItem> items, Map<Integer, Integer> tierHeaderMap, long requestId) {
         this.items = items;
         this.tierHeaderMap = tierHeaderMap;
+        this.requestId = requestId;
 
         int first = -1;
         for (int i = 0; i < items.size(); i++) {
@@ -73,7 +75,7 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
         else {
             CandidateResponseDto user = ((CandidateItem.UserCard) item).user;
-            ((UserCardViewHolder) holder).bind(user);
+            ((UserCardViewHolder) holder).bind(user, requestId);
         }
     }
 
@@ -82,8 +84,6 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemCount() {
         return items.size();
     }
-
-    // ViewHolder 예시
     static class TierHeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView tierImage;
         MaterialCardView speechCard;
@@ -169,10 +169,10 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             sameTimeIcon = itemView.findViewById(R.id.iv_time_status);
             sameTimeText = itemView.findViewById(R.id.tv_time_status);
             samePlaceIcon = itemView.findViewById(R.id.iv_location_status);
-            samePlaceText = itemView.findViewById(R.id.tv_location_status);
+            samePlaceText = itemView.findViewById(R.id.tv_place_status);
         }
 
-        void bind(CandidateResponseDto user) {
+        void bind(CandidateResponseDto user, long requestId) {
             userName.setText(user.getName());
 
             // 성별 아이콘
@@ -223,6 +223,7 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 Context context = v.getContext();
                 Intent intent = new Intent(context, PopupCandidateDetailActivity.class);
                 intent.putExtra("user", user); // Serializable 객체 전달
+                intent.putExtra("requestId", requestId);
                 context.startActivity(intent);
             });
         }

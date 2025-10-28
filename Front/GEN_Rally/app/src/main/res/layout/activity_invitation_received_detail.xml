@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_default"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.InvitationDetailsActivity">
+
+    <include
+        android:id="@+id/toolbar_back"
+        layout="@layout/layout_toolbar_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_user"
+        android:layout_width="match_parent"
+        android:layout_height="136dp"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        android:background="@color/green_select">
+        <TextView
+            android:id="@+id/tv_date_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="center"
+            android:text="4월 21일(월) 단식 경기"
+            android:textColor="@color/black_text"
+            style="@style/Text.Semibold24" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date_type"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="center"
+            android:text="나의 희망 시간"
+            android:textColor="@color/gray_text"
+            style="@style/Text.Medium14"
+            />
+        <TextView
+            android:id="@+id/tv_my_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date_type"
+            android:layout_marginTop="36dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="center"
+            android:text="19:00~21:00"
+            android:textColor="@color/black_text"
+            style="@style/Text.Medium16"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date_type"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="108dp"
+            android:gravity="center"
+            android:text="나의 희망 장소"
+            android:textColor="@color/gray_text"
+            style="@style/Text.Medium14"
+            />
+        <TextView
+            android:id="@+id/tv_my_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date_type"
+            android:layout_marginTop="36dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="108dp"
+            android:gravity="center"
+            android:text="망원 다목적 체육관"
+            android:textColor="@color/black_text"
+            style="@style/Text.Medium16" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="637dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_user"
+        android:layout_marginTop="8dp"
+        android:paddingStart="25dp"
+        android:paddingBottom="24dp"
+        android:background="@color/white">
+
+        <!--프로필 사진-->
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:src="@drawable/ic_default_profile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_opponent_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:text="닉네임"
+            android:textColor="@color/black_text"
+            style="@style/Text.Bold20"
+            app:layout_constraintStart_toEndOf="@+id/iv_profile"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/win_container"
+            android:layout_width="128dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="16dp"
+            app:cardBackgroundColor="@color/green_select"
+            app:strokeColor="@color/green_active"
+            app:strokeWidth="1dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_opponent_name"
+            app:layout_constraintLeft_toRightOf="@+id/iv_profile"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            >
+            <TextView
+                android:id="@+id/tv_win_rate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="최근 5경기 승률 00%"
+                android:textColor="@color/green_active"
+                style="@style/Text.Regular12"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <ImageView
+            android:id="@+id/iv_gender"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_gender_male"
+            app:layout_constraintStart_toEndOf="@id/tv_opponent_name"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="4dp"
+            />
+
+        <!-- 희망 시간 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="희망 시간"
+            style="@style/Text.Medium14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_profile"
+            android:layout_marginTop="20dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20:00~21:00"
+            style="@style/Text.Semibold18"
+            android:textColor="@color/black_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_profile"
+            android:layout_marginTop="46dp"
+            />
+
+        <ImageView
+            android:id="@+id/ic_time"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_circlehalf"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time"
+            android:layout_marginTop="12.5dp"
+            />
+        <TextView
+            android:id="@+id/tv_time_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시간이 일부 겹쳐요"
+            style="@style/Text.Medium14"
+            android:textColor="@color/pink"
+            app:layout_constraintLeft_toRightOf="@+id/ic_time"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="4dp"
+            />
+
+        <!-- 희망 장소 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="희망 장소"
+            style="@style/Text.Medium14"
+            android:textColor="@color/black_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time_status"
+            android:layout_marginTop="24dp"
+            />
+        <TextView
+            android:id="@+id/tv_opponent_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="망원 다목적 체육관"
+            style="@style/Text.Semibold18"
+            android:textColor="@color/black_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time_status"
+            android:layout_marginTop="50dp"
+            />
+        <ImageView
+            android:id="@+id/ic_place"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_circle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_opponent_place"
+            android:layout_marginTop="12.5dp"
+            />
+        <TextView
+            android:id="@+id/tv_place_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="위치가 동일해요"
+            style="@style/Text.Medium14"
+            android:textColor="@color/green_active"
+            app:layout_constraintLeft_toRightOf="@+id/ic_place"
+            app:layout_constraintTop_toBottomOf="@+id/tv_opponent_place"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="4dp"
+            />
+
+        <!-- 경기 스타일 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="경기 스타일"
+            style="@style/Text.Medium14"
+            android:textColor="@color/black_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_place_status"
+            android:layout_marginTop="24dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_opponent_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="열심히 경기해요"
+            style="@style/Text.Semibold18"
+            android:textColor="@color/black_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_place_status"
+            android:layout_marginTop="50dp"
+            />
+
+        <!-- 매너 지수 -->
+        <TextView
+            android:id="@+id/tv_manner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="매너 지수"
+            style="@style/Text.Medium14"
+            android:textColor="@color/black_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_opponent_style"
+            android:layout_marginTop="20dp"
+            />
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="120dp"
+            android:layout_height="24dp"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:rating="4"
+            android:isIndicator="true"
+            android:progressDrawable="@drawable/rb_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_manner"
+            android:layout_marginTop="4dp" />
+
+        <!-- 티어 이미지-->
+        <ImageView
+            android:id="@+id/iv_tier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_tier_silver1"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="238dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/rating_bar"
+            android:layout_marginStart="31dp"
+            />
+
+        <android.widget.Button
+            android:id="@+id/btn_reject"
+            style="@style/FlatButton"
+            android:layout_width="177dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_next_button_inactive"
+            android:text="아쉽지만 거절할게요"
+            android:textSize="18sp"
+            android:textColor="@color/gray_text"
+            app:layout_constraintTop_toBottomOf="@id/rating_bar"
+            android:layout_marginTop="118dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/pretendard_variable"
+            />
+        <android.widget.Button
+            android:id="@+id/btn_accept"
+            style="@style/FlatButton"
+            android:layout_width="177dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_next_button_active"
+            android:text="수락할게요"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="@id/btn_reject"
+            android:layout_marginStart="11dp"
+            app:layout_constraintTop_toBottomOf="@id/rating_bar"
+            android:layout_marginTop="118dp"
+            android:fontFamily="@font/pretendard_variable"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,7 @@ package com.gen.rally.enums;
 import java.util.Arrays;
 
 public enum State {
-    대기(0), 요청중(1), 수락(2), 취소(3), 실력진단대기(4), 실력진단완료(5);
+    대기(0), 요청중(1), 수락(2), 취소(3), 거절(4), 경기확정(5);
 
     private final int code;
     State(int code) { this.code = code; }

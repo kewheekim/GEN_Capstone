@@ -7,7 +7,6 @@ import lombok.Getter;
 
 @Getter
 public class MatchRequestDto implements Serializable {
-    private String userId;
     private int gameType;
     private int gameStyle;
     private boolean sameGender;
@@ -20,10 +19,9 @@ public class MatchRequestDto implements Serializable {
     private double latitude;
     private double longitude;
 
-    public MatchRequestDto(String userId, int gameType, int gameStyle, boolean sameGender,
+    public MatchRequestDto(int gameType, int gameStyle, boolean sameGender,
                            LocalDate date, int startTime, int endTime, String place,double lat, double lon) {
 
-        this.userId=userId;
         this.gameType=gameType;
         this.gameStyle = gameStyle;
         this.sameGender=sameGender;

@@ -27,26 +27,26 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_popup_candidate_detail);
 
         user = (CandidateResponseDto) getIntent().getSerializableExtra("user");
-
+        long requestId = getIntent().getLongExtra("requestId", -1);
         // ui
-        ImageButton xBtn = findViewById(R.id.btn_x);
+        ImageButton btnX = findViewById(R.id.btn_x);
         ImageView profileImg = findViewById(R.id.iv_profile);
-        TextView nickname = findViewById(R.id.tv_nickname);
-        ImageView genderIcon = findViewById(R.id.iv_gender); // 성별 이미지
-        TextView winRate = findViewById(R.id.tv_win_rate);
-        TextView time = findViewById(R.id.tv_time);
-        TextView timeStatus = findViewById(R.id.tv_time_status);
-        ImageView timeIcon = findViewById(R.id.ic_time);
-        TextView location = findViewById(R.id.tv_location);
-        TextView locationStatus = findViewById(R.id.tv_location_status);
-        ImageView locationIcon = findViewById(R.id.ic_location);
-        TextView style = findViewById(R.id.tv_type);
-        ImageView tier = findViewById(R.id.iv_tier);
-        Button requestBtn = findViewById(R.id.btn_request);
+        TextView tvName = findViewById(R.id.tv_nickname);
+        ImageView ivGender = findViewById(R.id.iv_gender);
+        TextView tvWin = findViewById(R.id.tv_win_rate);
+        TextView tvTime = findViewById(R.id.tv_time);
+        TextView tvTimeState = findViewById(R.id.tv_time_status);
+        ImageView ivTime = findViewById(R.id.ic_time);
+        TextView tvPlace = findViewById(R.id.tv_opponent_place);
+        TextView tvPlaceState = findViewById(R.id.tv_place_status);
+        ImageView ivPlace = findViewById(R.id.ic_place);
+        TextView tvStyle = findViewById(R.id.tv_opponent_style);
+        ImageView ivTier = findViewById(R.id.iv_tier);
+        Button btnRequest = findViewById(R.id.btn_request);
         RatingBar ratingBar = findViewById(R.id.rating_bar);
 
         // 3. 데이터 바인딩
-        nickname.setText(user.getName());
+        tvName.setText(user.getName());
 
         if (user.getProfileImage() != null) {
             Glide.with(this)
@@ -66,39 +66,39 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         }
 
         if (user.getGender() == 0) {
-            genderIcon.setImageResource(R.drawable.ic_gender_male);
+            ivGender.setImageResource(R.drawable.ic_gender_male);
         } else {
-            genderIcon.setImageResource(R.drawable.ic_gender_female);
+            ivGender.setImageResource(R.drawable.ic_gender_female);
         }
 
-        winRate.setText(String.format("최근 5경기 승률 %.0f%%", user.getWinningRate()));
-        time.setText(user.getTime());
+        tvWin.setText(String.format("최근 5경기 승률 %.0f%%", user.getWinningRate()));
+        tvTime.setText(user.getTime());
 
         if (user.isSameTime()) {
-            timeStatus.setText("시간이 동일해요");
-            timeStatus.setTextColor(getColor(R.color.green_active));
-            timeIcon.setImageResource(R.drawable.ic_circle);
+            tvTimeState.setText("시간이 동일해요");
+            tvTimeState.setTextColor(getColor(R.color.green_active));
+            ivTime.setImageResource(R.drawable.ic_circle);
         } else {
-            timeStatus.setText("시간이 일부 겹쳐요");
-            timeStatus.setTextColor(getColor(R.color.pink));
-            timeIcon.setImageResource(R.drawable.ic_circlehalf);
+            tvTimeState.setText("시간이 일부 겹쳐요");
+            tvTimeState.setTextColor(getColor(R.color.pink));
+            ivTime.setImageResource(R.drawable.ic_circlehalf);
         }
 
-        location.setText(user.getPlace());
+        tvPlace.setText(user.getPlace());
 
         if (user.isSamePlace()) {
-            locationStatus.setText("위치가 동일해요");
-            locationStatus.setTextColor(getColor(R.color.green_active));
-            locationIcon.setImageResource(R.drawable.ic_circle);
+            tvPlaceState.setText("위치가 동일해요");
+            tvPlaceState.setTextColor(getColor(R.color.green_active));
+            ivPlace.setImageResource(R.drawable.ic_circle);
         } else {
-            locationStatus.setText(String.format("%.1fkm 떨어져 있어요", user.getDistance()));
-            locationStatus.setTextColor(getColor(R.color.pink));
-            locationIcon.setImageResource(R.drawable.ic_circlehalf);
+            tvPlaceState.setText(String.format("%.1fkm 떨어져 있어요", user.getDistance()));
+            tvPlaceState.setTextColor(getColor(R.color.pink));
+            ivPlace.setImageResource(R.drawable.ic_circlehalf);
         }
 
         // 경기 스타일 (예시 매핑)
         String[] gameStyleMap = {"상관없어요", "편하게 즐겨요", "열심히 경기해요"};
-        style.setText(gameStyleMap[user.getGameStyle()]);
+        tvStyle.setText(gameStyleMap[user.getGameStyle()]);
 
         // 매너 지수
         if(user.getMannerScore()!=0) {
@@ -117,10 +117,10 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
                 //tier.setImageResource(R.drawble.ic_tier_bronze3);
                 break;
             case 3:
-                 tier.setImageResource(R.drawable.ic_tier_silver1);
+                 ivTier.setImageResource(R.drawable.ic_tier_silver1);
                  break;
             case 4:
-                 tier.setImageResource(R.drawable.ic_tier_silver2);
+                 ivTier.setImageResource(R.drawable.ic_tier_silver2);
                  break;
             case 5:
                 //tier.setImageResource(R.drawable.ic_tier_silver3);
@@ -148,12 +148,15 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         }
 
         // X 버튼: 닫기
-        xBtn.setOnClickListener(v -> finish());
+        btnX.setOnClickListener(v -> finish());
 
         // 매칭 요청 버튼
-        requestBtn.setOnClickListener(v -> {
+        btnRequest.setOnClickListener(v -> {
             Intent intent = new Intent(PopupCandidateDetailActivity.this, PopupInviteActivity.class);
-            intent.putExtra("partnerName", user.getName());
+            intent.putExtra("opponentId", user.getUserId());
+            intent.putExtra("opponentName", user.getName());
+            intent.putExtra("opponentRequestId", user.getRequestId());
+            intent.putExtra("myRequestId", requestId);
             startActivity(intent);
         });
     }

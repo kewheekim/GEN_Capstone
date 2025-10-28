@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include
-        android:id="@+id/toolbar_back"
+        android:id="@+id/toolbar_go"
         layout="@layout/layout_toolbar_back"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +18,7 @@
         android:textColor="@color/black_text"
         style="@style/Text.Semibold22"
         android:lineSpacingExtra="8dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_gender_male_big"
         android:background="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="173dp"
         android:layout_marginStart="82dp"/>
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_gender_female_big"
         android:background="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="165dp"
         android:layout_marginStart="260dp"/>
@@ -53,7 +53,7 @@
         android:text="남성"
         style="@style/Text.Semibold20"
         android:textColor="@color/gray_nav_bar"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="289dp"
         android:layout_marginStart="105dp"
@@ -65,7 +65,7 @@
         android:text="여성"
         style="@style/Text.Semibold20"
         android:textColor="@color/gray_nav_bar"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="289dp"
         android:layout_marginStart="273dp"

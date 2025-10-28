@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:background="@color/green_active">
         <include
-            android:id="@+id/toolbar_back"
+            android:id="@+id/toolbar_go"
             layout="@layout/layout_toolbar_back"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

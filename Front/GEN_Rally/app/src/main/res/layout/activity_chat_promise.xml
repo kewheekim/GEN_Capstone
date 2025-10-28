@@ -22,7 +22,7 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/icon_x"
+            android:src="@drawable/ic_x"
             android:background="?attr/selectableItemBackgroundBorderless"/>
 
     </androidx.appcompat.widget.Toolbar>

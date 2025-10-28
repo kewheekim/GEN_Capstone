@@ -33,7 +33,7 @@ public class CandidateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_candidate_result);
 
-        Intent prev = getIntent();
+        long requestId = getIntent().getLongExtra("requestId", -1);
         MatchRequestDto userInput = (MatchRequestDto)getIntent().getSerializableExtra("userInput");
 
         LocalDate gameDate= LocalDate.parse(userInput.getGameDate());
@@ -43,11 +43,11 @@ public class CandidateActivity extends AppCompatActivity {
         @SuppressWarnings("unchecked")
         ArrayList<CandidateResponseDto> candidates = (ArrayList<CandidateResponseDto>) getIntent().getSerializableExtra("candidates");
 
-        TextView tvDate= findViewById(R.id.tv_date);
+        TextView tvDate= findViewById(R.id.tv_date_type);
         tvDate.setText(formattedDate);
         TextView tvTime= findViewById(R.id.tv_time);
         tvTime.setText(userInput.getStartTime()+":00 ~ "+userInput.getEndTime()+":00");
-        TextView tvLocation= findViewById(R.id.tv_location);
+        TextView tvLocation= findViewById(R.id.tv_opponent_place);
         tvLocation.setText(userInput.getPlace());
 
         // 리사이클러뷰에 전달할 데이터 가공
@@ -92,7 +92,7 @@ public class CandidateActivity extends AppCompatActivity {
         // RecyclerView에 어댑터 연결
         RecyclerView recyclerView=findViewById(R.id.rv_candidates);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CandidateAdapter(displayList, tierHeaderMap));
+        recyclerView.setAdapter(new CandidateAdapter(displayList, tierHeaderMap, requestId));
 
         // 뒤로가기 버튼 동작 막기
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

@@ -23,23 +23,26 @@ public class Game {
     private MatchRequest requestId2;
 
     @ManyToOne
-    @JoinColumn(name = "user_id1")
+    @JoinColumn(name = "user_id1", referencedColumnName =  "user_id")
     private User user1;
 
     @ManyToOne
-    @JoinColumn(name = "user_id2")
+    @JoinColumn(name = "user_id2", referencedColumnName =  "user_id")
     private User user2;
 
     private LocalDate date;
     private String time;
     private String place;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state")
     private State state;
     @Enumerated(EnumType.STRING)
+    @Column(name = "game_type")
     private GameType gameType;
 
     @ManyToOne
-    @JoinColumn(name = "winner")
+    @JoinColumn(name = "winner", referencedColumnName = "user_id")
     private User winner;
     // @@ score 필드 추가하기
 }

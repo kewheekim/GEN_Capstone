@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 public class CandidateResponseDto  implements Serializable {
+    private long requestId;
     private String userId;
     private String name;
     private String profileImage;
@@ -25,7 +26,6 @@ public class CandidateResponseDto  implements Serializable {
     @SerializedName("samePlace")
     private boolean samePlace;
     private double distance;
-
     private int gameStyle;
     private double mannerScore;
 }

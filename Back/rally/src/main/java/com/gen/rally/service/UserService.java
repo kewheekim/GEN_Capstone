@@ -108,6 +108,7 @@ public class UserService {
             response.setTier(Tier.valueOf("입문자1"));
             user.setTier(Tier.valueOf("입문자1"));
         }
+        userRepository.save(user);
         return response;
     }
 
