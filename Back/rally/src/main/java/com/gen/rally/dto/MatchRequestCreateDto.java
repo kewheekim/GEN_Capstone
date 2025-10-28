@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Getter @Setter
 @NoArgsConstructor
 public class MatchRequestCreateDto {
-    private String userId;
     private int gameType;
     private int gameStyle;
     private boolean sameGender;
