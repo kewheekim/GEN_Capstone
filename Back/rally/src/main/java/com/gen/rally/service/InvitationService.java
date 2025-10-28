@@ -91,6 +91,7 @@ public class InvitationService {
 
         User me  = inv.getReceiver();
         User opp = inv.getSender();
+        String myId = me.getUserId();
         String myProfile =   me.getImageUrl();
         String opponentProfile = opp.getImageUrl();
         String opponentName = opp.getName();
@@ -101,6 +102,7 @@ public class InvitationService {
             return new InvitationAcceptResponse(
                     existing.getGameId(),
                     room != null ? room.getId() : null,
+                    myId,
                     myProfile,
                     opponentProfile,
                     opponentName
@@ -134,6 +136,7 @@ public class InvitationService {
         return new InvitationAcceptResponse(
                 game.getGameId(),
                 room.getId(),
+                myId,
                 myProfile,
                 opponentProfile,
                 opponentName

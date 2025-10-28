@@ -119,12 +119,11 @@ public class InvitationDetailsActivity extends AppCompatActivity {
                     btnAccept.setEnabled(true);
                     if (resp.isSuccessful() && resp.body() != null) {
                         InvitationAcceptResponse data = resp.body();
-                        Toast.makeText(InvitationDetailsActivity.this,
-                                "매칭 수락 완료! 게임ID: " + data.getGameId(), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(InvitationDetailsActivity.this, MatSuccessActivity.class);
                         intent.putExtra("game_id",          data.getGameId());
                         intent.putExtra("room_id",          data.getRoomId());
+                        intent.putExtra("user_id", data.getUserId());
                         intent.putExtra("user_profile",     data.getUserProfile());
                         intent.putExtra("opponent_profile", data.getOpponentProfile());
                         intent.putExtra("opponent_name",    data.getOpponentName());
