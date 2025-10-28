@@ -373,6 +373,7 @@ class ScoreActivity : ComponentActivity() {
                                            intent.putExtra("healthData", payload)
                                         }
                                         startActivity(intent)
+                                        finish()
                                     }
                                 }
                             )

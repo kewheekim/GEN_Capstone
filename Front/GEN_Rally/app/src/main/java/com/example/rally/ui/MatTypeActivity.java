@@ -3,7 +3,6 @@ package com.example.rally.ui;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,7 +23,7 @@ public class MatTypeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_type);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_back);
+        Toolbar toolbar = findViewById(R.id.toolbar_go);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 

@@ -7,7 +7,8 @@ import lombok.Setter;
 // 추천 후보 반환 형식
 @Getter
 @Setter
-public class CandidatesResponseDto {
+public class CandidateResponseDto {
+    private long requestId;
     private String userId;
     private String name;
     private String profileImage;
@@ -28,7 +29,8 @@ public class CandidatesResponseDto {
     private double mannerScore;
 
     // MatchRequest 엔티티 -> CandidatesResponseDto로 변환
-    public CandidatesResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap, int isSameTier) {
+    public CandidateResponseDto(MatchRequest request, MatchRequestCreateDto userInput, double distance, double winningRate, int skillGap, int isSameTier) {
+        this.requestId = request.getRequestId();
         this.userId = request.getUser().getUserId();
         this.name = request.getUser().getName();
         this.profileImage = request.getUser().getImageUrl();

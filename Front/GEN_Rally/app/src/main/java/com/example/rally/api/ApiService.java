@@ -1,5 +1,6 @@
 package com.example.rally.api;
 
+import com.example.rally.dto.CandidateResponseDto;
 import com.example.rally.dto.ChatMessageDto;
 import com.example.rally.dto.ChatRoomDto;
 import com.example.rally.dto.ChatRoomListDto;
@@ -9,6 +10,15 @@ import com.example.rally.dto.EvaluationCreateRequest;
 import com.example.rally.dto.GeneralLoginRequest;
 import com.example.rally.dto.GeneralLoginResponse;
 import com.example.rally.dto.GeneralSignupRequest;
+import com.example.rally.dto.InvitationAcceptRequest;
+import com.example.rally.dto.InvitationAcceptResponse;
+import com.example.rally.dto.InvitationItem;
+import com.example.rally.dto.MatchFoundItem;
+import com.example.rally.dto.MatchInvite;
+import com.example.rally.dto.MatchInviteResponse;
+import com.example.rally.dto.MatchRequestDetails;
+import com.example.rally.dto.MatchRequestDto;
+import com.example.rally.dto.MatchSeekingItem;
 import com.example.rally.dto.SignupResponse;
 import com.example.rally.dto.TierAssessRequest;
 import com.example.rally.dto.TierAssessResponse;
@@ -58,4 +68,39 @@ public interface ApiService {
     @Headers("Requires-Auth: true")
     @POST("/api/rooms/{roomId}/read")
     Call<ResponseBody> markChatRoomAsRead(@Path("roomId") Long roomId);
+
+    @Headers("Requires-Auth: true")
+    @POST("/api/invitation/invite")
+    Call<MatchInviteResponse> sendInvitation( @Body MatchInvite body);
+
+    @Headers("Requires-Auth: true")
+    @GET("/api/invitation/received")
+    Call<List<InvitationItem>> getReceivedInvitations();
+
+    @Headers("Requires-Auth: true")
+    @GET("/api/invitation/sent")
+    Call<List<InvitationItem>> getSentInvitations();
+
+    @Headers("Requires-Auth: true")
+    @GET("/api/match/found")
+    Call<List<MatchFoundItem>> getFoundMatches();
+    @Headers("Requires-Auth: true")
+    @GET("/api/match/seeking")
+    Call<List<MatchSeekingItem>> getSeekingMatches ();
+
+    @Headers("Requires-Auth: true")
+    @GET("/api/match/details")
+    Call<MatchRequestDetails> getMatchRequestDetails(@Query("myRequestId") Long myRequestId, @Query("opponentRequestId") Long opponentRequestId );
+
+    @Headers("Requires-Auth: true")
+    @POST("/api/match/request")
+    Call<Long> requestMatch(@Body MatchRequestDto requestDto);
+
+    @Headers("Requires-Auth: true")
+    @POST("/api/match/candidates")
+    Call<List<CandidateResponseDto>> getCandidates(@Body MatchRequestDto requestDto);
+
+    @Headers("Requires-Auth: true")
+    @POST("/api/invitation/accept")
+    Call<InvitationAcceptResponse> acceptInvitation(@Body InvitationAcceptRequest body);
 }

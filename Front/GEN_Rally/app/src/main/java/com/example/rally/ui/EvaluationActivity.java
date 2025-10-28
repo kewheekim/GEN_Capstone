@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +19,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// MAT_FB_001
 public class EvaluationActivity extends AppCompatActivity {
-
     private RatingBar ratingBar;
     private EditText etCompliment;
     private Button btnNext;
@@ -91,7 +92,7 @@ public class EvaluationActivity extends AppCompatActivity {
             );
 
             ApiService api = RetrofitClient
-                    .getClient("http://172.19.46.132:8080/")
+                    .getClient(BuildConfig.API_BASE_URL)
                     .create(ApiService.class);
 
             api.createEvaluation(body).enqueue(new Callback<Void>() {

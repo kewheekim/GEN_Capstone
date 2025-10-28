@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
@@ -96,7 +97,7 @@ public class SetPrimaryFragment extends Fragment {
         storage = FirebaseStorage.getInstance().getReference();
 
         final ApiService apiService = RetrofitClient
-                .getClient("http://10.0.2.2:8080/")
+                .getClient(BuildConfig.API_BASE_URL)
                 .create(ApiService.class);
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include
-        android:id="@+id/toolbar_back"
+        android:id="@+id/toolbar_go"
         layout="@layout/layout_toolbar_back"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,7 +17,7 @@
         android:text="경기 상대를 매칭받을 때,\n가장 중요하게 생각하는 건 무엇인가요?"
         style="@style/Text.Semibold22"
         android:textColor="@color/black_text"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
@@ -29,7 +29,7 @@
         android:text="더 고려해서 매칭해드릴게요\n나중에 언제든지 변경할 수 있어요"
         style="@style/Text.Medium14"
         android:textColor="@color/gray_text"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="102dp"
         android:layout_marginStart="24dp"
@@ -39,7 +39,7 @@
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_back"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="174dp"
         android:layout_marginHorizontal="24dp"

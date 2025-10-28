@@ -52,7 +52,7 @@
                 android:src="@drawable/ic_calendar_s" />
 
             <TextView
-                android:id="@+id/tv_date"
+                android:id="@+id/tv_date_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -94,7 +94,7 @@
                 android:src="@drawable/ic_location_s" />
 
             <TextView
-                android:id="@+id/tv_location"
+                android:id="@+id/tv_opponent_place"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -120,7 +120,7 @@
                 android:src="@drawable/ic_gamestyle_s" />
 
             <TextView
-                android:id="@+id/tv_type"
+                android:id="@+id/tv_opponent_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

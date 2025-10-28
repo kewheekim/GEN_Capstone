@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
@@ -213,7 +214,7 @@ public class SignupFragment extends Fragment {
 
     // 서버에 ID 중복 체크 요청
     private void checkIdDuplicate(CheckIdRequest request) {
-        ApiService apiService = RetrofitClient.getClient("http://10.0.2.2:8080/").create(ApiService.class);
+        ApiService apiService = RetrofitClient.getClient(BuildConfig.API_BASE_URL).create(ApiService.class);
         final String requestedId = request.getUserId();
 
         apiService.checkUserId(request).enqueue(new Callback<ResponseBody>() {

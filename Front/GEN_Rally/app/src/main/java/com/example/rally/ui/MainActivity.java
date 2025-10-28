@@ -52,23 +52,18 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        // 다른 액티비티에서 mainActivity로 전환
+        // 다른 액티비티에서 MainActivity로 전환
         String target = getIntent().getStringExtra("navigateTo");
         Log.d("MainActivity", "navigateTo="+target);
 
         if (target != null && target.equals("matching")) {
-            MatchRequestDto userInput = (MatchRequestDto) getIntent().getSerializableExtra("userInput");
-            Log.d("MainActivity", "userInput' getPlace="+userInput.getPlace());
-
-            MatchFragment fragment = MatchFragment.newInstance(userInput);
+            MatchFragment fragment = MatchFragment.newInstance(1);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .commit();
-            // 하단 내비게이션 ui
+                    .replace(R.id.fragment_container, fragment).commit();
+            // 하단 내비게이션
             bottomNav.getMenu().findItem(R.id.navigation_matching).setChecked(true);
             return;
         }
-
         bottomNav.setSelectedItemId(R.id.navigation_home);
     }
 
@@ -81,12 +76,22 @@ public class MainActivity extends AppCompatActivity {
         MatchRequestDto userInput = (MatchRequestDto) intent.getSerializableExtra("userInput");
 
         if ("matching".equals(target) && userInput != null) {
-            MatchFragment fragment = MatchFragment.newInstance(userInput);
+            MatchFragment fragment = MatchFragment.newInstance(1);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commit();
 
             bottomNav.getMenu().findItem(R.id.navigation_matching).setChecked(true);
+        }
+        // 매칭 > 받은/보낸 요청 > 보낸 요청 탭
+        if ("invitation_sent".equals(target)) {
+            // MatchFragment  매칭 > 받은/보낸 요청 탭 열기
+            Fragment fragment = MatchFragment.newInstance(2, "sent");
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+            bottomNav.getMenu().findItem(R.id.navigation_matching).setChecked(true);
+            return;
         }
     }
 }

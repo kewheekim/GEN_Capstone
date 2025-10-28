@@ -7,63 +7,52 @@
     android:fitsSystemWindows="true"
     android:background="@color/bg_default"
     >
-
     <include
-        android:id="@+id/toolbar_back"
-        layout="@layout/layout_toolbar"
+        android:id="@+id/toolbar_alert"
+        layout="@layout/layout_toolbar_tab"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/tv_reserved"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="예약된 매칭"
-        style="@style/Text.Semibold16"
-        android:textColor="@color/gray_nav_bar"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_match"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_alert"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabIndicatorHeight="0dp"
+        app:tabRippleColor="@android:color/transparent"
+
+        app:tabTextAppearance="@style/MatchTabText"
+        app:tabTextColor="@color/match_tab_item_color"
+        app:tabSelectedTextColor="@color/black_text">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="83dp"
+            android:layout_height="27dp"
+            android:text="찾은 매칭"/>
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="102dp"
+            android:layout_height="27dp"
+        android:text="찾고있는 매칭"/>
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="102dp"
+            android:layout_height="27dp"
+        android:text="받은/보낸 요청"/>
+</com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tab_match"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="43dp"
-        />
-
-    <TextView
-        android:id="@+id/tv_searching"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="찾고 있는 매칭"
-        style="@style/Text.Semibold16"
-        android:textColor="@color/black_text"
-        app:layout_constraintLeft_toRightOf="@id/tv_reserved"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="39dp"
-        />
-
-    <TextView
-        android:id="@+id/tv_request"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="받은/보낸 요청"
-        style="@style/Text.Semibold16"
-        android:textColor="@color/gray_nav_bar"
-        app:layout_constraintLeft_toRightOf="@id/tv_searching"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_back"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="29dp"
-        />
-
-    <include
-        android:layout_width="364dp"
-        android:layout_height="280dp"
-        android:layout_marginTop="36dp"
-        layout="@layout/item_match_card"
-        app:layout_constraintTop_toBottomOf="@id/tv_searching"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
+        app:layout_constraintEnd_toEndOf="parent" />
     <android.widget.Button
         android:id="@+id/btn_start"
         style="@style/FlatButton"

@@ -106,7 +106,7 @@
                     android:src="@drawable/ic_circle" />
 
                 <TextView
-                    android:id="@+id/tv_location_status"
+                    android:id="@+id/tv_place_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"

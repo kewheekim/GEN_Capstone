@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
@@ -47,7 +48,7 @@ public class TierActivity extends AppCompatActivity {
         int howLong    = getIntent().getIntExtra("howLong", -1);
 
         final ApiService apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(),"http://10.0.2.2:8080/")
+                .getSecureClient(getApplicationContext(), BuildConfig.API_BASE_URL)
                 .create(ApiService.class);
 
         TierAssessRequest req = new TierAssessRequest();

@@ -1,7 +1,6 @@
 package com.gen.rally.service;
 
-import com.gen.rally.dto.CandidatesResponseDto;
-import com.gen.rally.dto.MatchRequestCreateDto;
+import com.gen.rally.dto.*;
 import com.gen.rally.entity.*;
 import com.gen.rally.enums.GameStyle;
 import com.gen.rally.enums.GameType;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,9 +22,10 @@ public class MatchRequestService {
     private final MatchRequestRepository matchRequestRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
+    DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일(E)");
 
-    public Long createMatchRequest(MatchRequestCreateDto dto) {
-        User user = userRepository.findByUserId(dto.getUserId())
+    public Long createMatchRequest(String userId, MatchRequestCreateDto dto) {
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자"));
 
         MatchRequest matchRequest = new MatchRequest();
@@ -50,9 +51,8 @@ public class MatchRequestService {
         return saved.getRequestId();
     }
 
-    public List<CandidatesResponseDto> findCandidates(MatchRequestCreateDto userInput) {
-        User user = userRepository.findByUserId(userInput.getUserId()).orElseThrow();
-        GameStyle enumGameStyle = GameStyle.fromCode(userInput.getGameStyle());       // one-hot 인코딩 사용하기 위한 enum 변환
+    public List<CandidateResponseDto> findCandidates(String userId, MatchRequestCreateDto userInput) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
 
 //        // 1. 과거에 사용자가 동일한 날짜, 겹치는 시간의 신청을 했는지 확인
 //        List<MatchRequest> duplicates = matchRequestRepository.findOverlappingRequests(
@@ -68,6 +68,7 @@ public class MatchRequestService {
 //        }
 
         List<MatchRequest> candidates = matchRequestRepository.findAll().stream()
+                .filter(r -> !r.getUser().getUserId().equals(user.getUserId()))
                 // (1)  대기 상태이고 날짜, 경기 유형 일치
                 .filter(r -> r.getGameDate().equals(userInput.getGameDate()) && r.getGameType().getCode() == userInput.getGameType() && r.getState()==State.대기)
 
@@ -139,9 +140,84 @@ public class MatchRequestService {
                         isSameTier = -1;    // 사용자보다 하위 티어
                     }
 
-                    return new CandidatesResponseDto(r, userInput, distance, winningRate, skillGap, isSameTier);
+                    return new CandidateResponseDto(r, userInput, distance, winningRate, skillGap, isSameTier);
                 })
                 .collect(Collectors.toList());
+    }
+
+    public MatchRequestDetails getMatchRequestDetails(String userId, Long myRequestId, Long opponentRequestId) {
+        MatchRequest my = matchRequestRepository.findByRequestId(myRequestId)
+                .stream()
+                .max(Comparator.comparing(MatchRequest::getCreatedAt))
+                .orElseThrow(() -> new IllegalStateException("내 대기 요청이 없습니다."));
+
+        MatchRequest opponent = matchRequestRepository.findByRequestId(opponentRequestId)
+                .orElseThrow(() -> new IllegalArgumentException("상대 요청이 없습니다."));
+
+        double distance = haversine(my.getLatitude(), my.getLongitude(), opponent.getLatitude(), opponent.getLongitude());
+
+        int overlappedHours = overlappedHours( my.getStartTime(), my.getEndTime(), opponent.getStartTime(), opponent.getEndTime());
+
+        double winningRate = 0.0;
+        int skillGap = 0;
+        if (opponent.getGameType().getCode() == 0) {
+            winningRate = calculateWinningRate(opponent.getUser().getUserId());
+        } else {
+            skillGap = Math.abs(opponent.getUser().getSkill() - my.getUser().getSkill());
+        }
+
+        int isSameTier = (my.getUser().getTier() == opponent.getUser().getTier()) ? 1 : (my.getUser().getTier().getCode() < opponent.getUser().getTier().getCode()) ? 0 : -1;
+
+        MatchRequestInfoDto myInfo = toMyInfoDto(my);
+
+        MatchRequestCreateDto myInput = new MatchRequestCreateDto();
+        myInput.setGameType(my.getGameType().getCode());
+        myInput.setGameStyle(my.getGameStyle().getCode());
+        myInput.setSameGender(my.isSameGender());
+        myInput.setGameDate(my.getGameDate());
+        myInput.setStartTime(my.getStartTime());
+        myInput.setEndTime(my.getEndTime());
+        myInput.setPlace(my.getPlace());
+        myInput.setLatitude(my.getLatitude());
+        myInput.setLongitude(my.getLongitude());
+
+        var opponentDto = new CandidateResponseDto(opponent, myInput, distance, winningRate, skillGap, isSameTier);
+        return MatchRequestDetails.builder()
+                .my(myInfo)
+                .opponent(opponentDto)
+                .build();
+    }
+    private MatchRequestInfoDto toMyInfoDto(MatchRequest r) {
+        MatchRequestInfoDto dto = new MatchRequestInfoDto();
+        dto.setPlace(r.getPlace());
+        dto.setDate(r.getGameDate() != null ? r.getGameDate().toString() : null);
+        dto.setTimeRange(timeFormat(r.getStartTime(), r.getEndTime()));
+        dto.setGameStyle(r.getGameStyle());
+        dto.setGameType(r.getGameType());
+        return dto;
+    }
+    public List<MatchSeekingItem> findSeekingMatchByUser(String userId) {
+        var states = java.util.List.of(State.대기, State.요청중);
+        List<MatchRequest> list =
+                matchRequestRepository.findByUserAndStates(userId, states);
+
+        return list.stream().map(r -> new MatchSeekingItem(
+                r.getRequestId(),
+                r.getGameDate() != null ? r.getGameDate().format(formatter) : null,
+                r.getGameType() != null ? r.getGameType().name() : null,
+                timeFormat(r.getStartTime(), r.getEndTime()),
+                r.getPlace(),
+                r.getState() != null ? r.getState().name() : null,
+                r.getCreatedAt().toString()
+        )).collect(Collectors.toList());
+    }
+
+    private String timeFormat (int h1, int h2) {  return String.format("%02d:00~%02d:00", h1, h2); }
+
+    private int overlappedHours(int s1, int e1, int s2, int e2) {
+        int start = Math.max(s1, s2);
+        int end = Math.min(e1, e2);
+        return Math.max(0, end - start);
     }
 
     // cosine 유사도
@@ -169,11 +245,10 @@ public class MatchRequestService {
 
     // 최근 5경기 승률 계산
     private double calculateWinningRate(String userId) {
-        List<Game> games = gameRepository.findRecentGamesByUserId(userId, PageRequest.of(0, 5));
+        var games = gameRepository.findRecentGamesByUserId(userId, PageRequest.of(0, 5));
         long wins = games.stream()
-                .filter(g -> g.getWinner().getUserId().equals(userId))
+                .filter(g -> g.getWinner() != null && g.getWinner().getUserId().equals(userId))
                 .count();
-
         return games.isEmpty() ? 0.0 : (wins * 100.0 / games.size());
     }
 }
