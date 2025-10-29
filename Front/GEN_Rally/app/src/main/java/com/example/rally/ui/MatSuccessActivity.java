@@ -56,7 +56,7 @@ public class MatSuccessActivity extends AppCompatActivity {
                 .load(myProfileUrl)
                 .error(R.drawable.ic_default_profile)
                 .apply(new RequestOptions()
-                        .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
+                        .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
                 .placeholder(R.drawable.ic_default_profile))
                 .into(ivMyProfile);
 
@@ -64,7 +64,7 @@ public class MatSuccessActivity extends AppCompatActivity {
                 .load(opponentProfileUrl)
                 .error(R.drawable.ic_default_profile)
                 .apply(new RequestOptions()
-                        .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
+                        .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
                         .placeholder(R.drawable.ic_default_profile))
                 .into(ivOpponentProfile);
 

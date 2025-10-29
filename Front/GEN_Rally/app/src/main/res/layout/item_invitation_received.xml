@@ -43,16 +43,16 @@
         android:text="10월 12일(일) 단식 경기"
         android:textColor="@color/gray_text"
         style="@style/Text.Medium14" />
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_default_profile"
-        app:cardCornerRadius="8dp"
+        android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@+id/speech_card"
         android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:scaleType="centerCrop" />
+        android:src="@drawable/ic_default_profile"
+        app:shapeAppearanceOverlay="@style/RoundedProfileImage"/>
     <TextView
         android:id="@+id/tv_request"
         android:layout_width="wrap_content"

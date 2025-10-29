@@ -53,10 +53,8 @@
 
     <ImageView
         android:id="@+id/double_icon"
-        android:layout_width="122dp"
-        android:layout_height="130dp"
-
-        android:layout_marginEnd="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_singles"
         app:layout_constraintBottom_toBottomOf="@id/rectangle_single"
@@ -125,11 +123,9 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_double"
+        android:src="@drawable/ic_doubles"
         app:layout_constraintTop_toTopOf="@id/rectangle_double"
         app:layout_constraintEnd_toEndOf="@id/rectangle_double"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="22.5dp"
         />
 
     <include

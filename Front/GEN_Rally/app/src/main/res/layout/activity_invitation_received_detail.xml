@@ -93,15 +93,16 @@
         android:background="@color/white">
 
         <!--프로필 사진-->
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_profile"
             android:layout_width="68dp"
             android:layout_height="68dp"
-            android:src="@drawable/ic_default_profile"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="16dp"
-            />
+            android:src="@drawable/ic_default_profile"
+            app:shapeAppearanceOverlay="@style/RoundedProfileImage"/>
 
         <TextView
             android:id="@+id/tv_opponent_name"
@@ -117,7 +118,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/win_container"
-            android:layout_width="128dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
             android:layout_marginStart="16dp"
@@ -131,13 +132,13 @@
             >
             <TextView
                 android:id="@+id/tv_win_rate"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="최근 5경기 승률 00%"
                 android:textColor="@color/green_active"
-                style="@style/Text.Regular12"/>
-
+                style="@style/Text.Regular12"
+                android:paddingHorizontal="10dp"/>
         </com.google.android.material.card.MaterialCardView>
 
         <ImageView
@@ -301,6 +302,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/rating_bar"
             android:layout_marginStart="31dp"
+            android:alpha="0.6"
             />
 
         <android.widget.Button

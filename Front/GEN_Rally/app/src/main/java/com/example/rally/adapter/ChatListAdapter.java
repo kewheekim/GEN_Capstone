@@ -103,7 +103,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatRo
             tvContent.setText(room.getLastMessage());
             Glide.with(context)
                     .load(room.getOpponentProfileImageUrl())
-                    .placeholder(R.drawable.ic_user_profile)
+                    .placeholder(R.drawable.ic_default_profile1)
                     .into(ivProfile);
 
             if(room.getUnreadCount()>0){

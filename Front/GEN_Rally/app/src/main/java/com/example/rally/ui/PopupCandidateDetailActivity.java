@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -55,7 +56,7 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
                     .load(user.getProfileImage())
                     .placeholder(R.drawable.ic_default_profile)
                     .apply(new RequestOptions()
-                            .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
+                            .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
                             .placeholder(R.drawable.ic_default_profile))
                     .into(profileImg);
         }

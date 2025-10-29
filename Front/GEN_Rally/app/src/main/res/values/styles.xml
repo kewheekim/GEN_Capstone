@@ -70,13 +70,9 @@
         <item name="android:backgroundDimAmount">0.5</item>
         <item name="materialButtonStyle">@style/MyGreenButton</item>
     </style>
-    <style name="RoundedImage">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">32dp</item>
-    </style>
     <style name="RoundedProfileImage">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20dp</item>
+        <item name="cornerSize">16dp</item>
     </style>
 
     <style name="RoundedChatProfileImage">

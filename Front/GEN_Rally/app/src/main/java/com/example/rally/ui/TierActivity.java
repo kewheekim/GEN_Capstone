@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import retrofit2.Response;
 public class TierActivity extends AppCompatActivity {
 
     private TextView tvName, tvTier;
-    private ImageView ivTier;
+    private FrameLayout frameTier;
     private Button btnNext;
 
     @Override
@@ -38,7 +39,7 @@ public class TierActivity extends AppCompatActivity {
 
         tvName = findViewById(R.id.tv_name);
         tvTier = findViewById(R.id.tv_tier);
-        ivTier = findViewById(R.id.iv_tier);
+        frameTier = findViewById(R.id.iv_tier);
         btnNext = findViewById(R.id.btn_next);
 
         int canService = getIntent().getIntExtra("canService", -1);
@@ -73,6 +74,10 @@ public class TierActivity extends AppCompatActivity {
                         if(response.isSuccessful() && response.body()!=null){
                             TierAssessResponse body = response.body();
                             tvTier.setText(body.getTier());
+                            switch (body.getTier()) {
+                                case "초보자1" :
+                                    frameTier.setBackgroundResource(R.drawable.ic_tier_silver1_eff); break;
+                            }
                             tvName.setText(body.getNickname()+"님은");
                         } else {
                             // 401이면 토큰 만료/부재 가능

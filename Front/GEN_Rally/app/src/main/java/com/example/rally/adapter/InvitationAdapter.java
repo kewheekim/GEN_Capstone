@@ -118,7 +118,7 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
                             .load(item.getOpponentProfileImage())
                             .placeholder(R.drawable.ic_default_profile)
                             .apply(new RequestOptions()
-                                    .transform(new RoundedCorners((int) (10 * itemView.getResources().getDisplayMetrics().density)))
+                                    .transform(new RoundedCorners((int) ( 24 * itemView.getResources().getDisplayMetrics().density)))
                                     .placeholder(R.drawable.ic_default_profile))
                             .into(ivProfile);
                 }

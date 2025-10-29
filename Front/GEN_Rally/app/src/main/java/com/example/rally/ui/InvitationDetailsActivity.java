@@ -165,20 +165,14 @@ public class InvitationDetailsActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(opponent.getProfileImage())
                     .apply(new RequestOptions()
-                            .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
-                            .placeholder(R.drawable.ic_default_profile))
+                            .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
+                            .placeholder(R.drawable.ic_default_profile)
+                            .centerCrop())
                     .into(ivProfile);
         } else {
-            if ("아어려워요".equals(opponent.getName())) {
-                profileImg.setImageResource(R.drawable.profile_image_male);
-            } else if ("흠냐링".equals(opponent.getName())) {
-                profileImg.setImageResource(R.drawable.profile_image_female1);
-            } else if ("안세영이되".equals(opponent.getName())) {
-                profileImg.setImageResource(R.drawable.profile_image_female2);
-            } else {
                 profileImg.setImageResource(R.drawable.ic_default_profile);
             }
-        }
+
         // 성별
         if (opponent.getGender() == 0) {
             ivGender.setImageResource(R.drawable.ic_gender_male);
@@ -186,8 +180,11 @@ public class InvitationDetailsActivity extends AppCompatActivity {
             ivGender.setImageResource(R.drawable.ic_gender_female);
         }
         // 승률
-        double wr = opponent.getWinningRate(); // 0.0 ~ 100.0 가정
-        tvWin.setText(String.format("최근 5경기 승률 %.0f%%", wr));
+        double wr = opponent.getWinningRate();
+        if( wr != 0)
+            tvWin.setText(String.format("최근 5경기 승률 %.0f%%", wr));
+        else
+            tvWin.setText("최근 경기 기록 없음");
         // 시간
         if (opponent.getTime() != null) tvTime.setText(opponent.getTime());
         if (opponent.isSameTime()) {
@@ -226,6 +223,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         switch (opponent.getTier()) {
             case 3:  ivTier.setImageResource(R.drawable.ic_tier_silver1); break;
             case 4:  ivTier.setImageResource(R.drawable.ic_tier_silver2); break;
+            case 5: ivTier.setImageResource(R.drawable.ic_tier_silver3); break;
             default: ivTier.setImageResource(R.drawable.ic_tier_silver1);
         }
 

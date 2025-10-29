@@ -93,20 +93,24 @@ public class UserService {
         TierAssessResponse response = new TierAssessResponse();
         response.setScore(score);
         response.setNickname(user.getName());
-        user.setSkill(score);
+
 
         if(totalScore>=80.0){
             response.setTier(Tier.상급자1);
             user.setTier(Tier.상급자1);
+            user.setSkill(85);
         }else if(totalScore>=60.0){
             response.setTier(Tier.중급자1);
             user.setTier(Tier.중급자1);
+            user.setSkill(60);
         }else if(totalScore>=40.0){
             response.setTier(Tier.초보자1);
             user.setTier(Tier.초보자1);
+            user.setSkill(35);
         }else {
             response.setTier(Tier.입문자1);
             user.setTier(Tier.입문자1);
+            user.setSkill(24);
         }
         userRepository.save(user);
         return response;

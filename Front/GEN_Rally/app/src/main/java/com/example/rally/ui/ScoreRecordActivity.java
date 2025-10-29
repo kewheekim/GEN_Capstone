@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.websocket.RealtimeClient;
 import com.example.rally.api.websocket.WsRealtimeClient;
@@ -65,7 +66,9 @@ public class ScoreRecordActivity extends AppCompatActivity {
         viewModel.prepareSet(setNumber, firstServer);
 
         // web socket
-        String url = "ws://172.19.6.104:8080/ws-score?gameId=" + gameId;
+        String baseUrl = BuildConfig.API_BASE_URL;
+        baseUrl = baseUrl.replace("http://", "").replace("https://", "").replaceAll("/$", "");
+        String url = "ws://" + baseUrl + "/ws-score?gameId=" + gameId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/game."+gameId, json -> {
             runOnUiThread(() -> {

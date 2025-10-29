@@ -46,7 +46,6 @@
         app:shapeAppearanceOverlay="@style/RoundedProfileImage"
         />
 
-
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_my_profile"
         android:layout_width="138dp"
@@ -60,7 +59,7 @@
         />
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="192dp"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_thunder"
         android:layout_marginTop="78dp"
@@ -94,8 +93,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="48dp"
         />
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

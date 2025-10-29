@@ -193,7 +193,7 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .load(user.getProfileImage())
                     .placeholder(R.drawable.ic_default_profile)
                     .apply(new RequestOptions()
-                            .transform(new RoundedCorners((int) (10 * itemView.getResources().getDisplayMetrics().density)))
+                            .transform(new RoundedCorners((int) (24 * itemView.getResources().getDisplayMetrics().density)))
                             .placeholder(R.drawable.ic_default_profile))
                     .into(profileImage);
 

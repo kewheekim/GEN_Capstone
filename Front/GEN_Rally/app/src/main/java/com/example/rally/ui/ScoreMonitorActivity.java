@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -76,7 +77,9 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
         // websocket 연결
         gameId = intent.getStringExtra("gameId");
-        String url = "ws://172.19.6.104:8080/ws-score?gameId=" + gameId;
+        String baseUrl = BuildConfig.API_BASE_URL;
+        baseUrl = baseUrl.replace("http://", "").replace("https://", "").replaceAll("/$", "");
+        String url = "ws://" + baseUrl + "/ws-score?gameId=" + gameId;
         client = new WsRealtimeClient(url);
         client.subscribe("/topic/game."+gameId, json -> {
             runOnUiThread( () -> {

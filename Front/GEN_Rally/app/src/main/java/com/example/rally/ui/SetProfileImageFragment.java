@@ -119,9 +119,9 @@ public class SetProfileImageFragment extends Fragment {
             int id = item.getItemId();
             if(id == R.id.normal_profile){
                 // 기본 프로필 설정
-                imgView.setImageResource(R.drawable.ic_user);
+                imgView.setImageResource(R.drawable.ic_default_profile1);
 
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_user_profile);
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_profile1);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 selectedImage = baos.toByteArray();
