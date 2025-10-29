@@ -10,7 +10,7 @@ import lombok.Setter;
 public class InvitationAcceptResponse {
     Long gameId;
     Long roomId;
-    String userId;
+    Long userId;
     String userProfile;
     String opponentProfile;
     String opponentName;

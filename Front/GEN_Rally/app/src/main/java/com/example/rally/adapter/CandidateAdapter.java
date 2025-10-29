@@ -20,6 +20,7 @@ import com.example.rally.dto.CandidateItem;
 import com.example.rally.dto.CandidateResponseDto;
 import com.example.rally.ui.PopupCandidateDetailActivity;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 import java.util.Map;
@@ -157,7 +158,7 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     static class UserCardViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView profileImage;
+        ShapeableImageView profileImage;
         TextView userName;
         ImageView genderIcon;
         ImageView sameTimeIcon;
@@ -189,21 +190,14 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // 프로필 이미지 로딩
+            int sizePx = (int) (56 * itemView.getResources().getDisplayMetrics().density);
             Glide.with(itemView.getContext())
                     .load(user.getProfileImage())
                     .placeholder(R.drawable.ic_default_profile)
-                    .apply(new RequestOptions()
-                            .transform(new RoundedCorners((int) (24 * itemView.getResources().getDisplayMetrics().density)))
-                            .placeholder(R.drawable.ic_default_profile))
+                    .error(R.drawable.ic_default_profile)
+                    .centerCrop()
+                    .override(sizePx, sizePx)
                     .into(profileImage);
-
-            // 프로필 이미지 하드코딩
-            if(user.getName().equals("아어려워요"))
-                profileImage.setImageResource(R.drawable.profile_image_male);
-            else if(user.getName().equals("흠냐링"))
-                profileImage.setImageResource(R.drawable.profile_image_female1);
-            else if(user.getName().equals("안세영이되"))
-                profileImage.setImageResource(R.drawable.profile_image_female2);
 
             // 시간 상태
             if(user.isSameTime()) {

@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.rally.R;
 import com.google.android.material.imageview.ShapeableImageView;
 
+//
 public class MatSuccessActivity extends AppCompatActivity {
 
     private ShapeableImageView ivMyProfile, ivOpponentProfile;
@@ -56,29 +57,29 @@ public class MatSuccessActivity extends AppCompatActivity {
                 .load(myProfileUrl)
                 .error(R.drawable.ic_default_profile)
                 .apply(new RequestOptions()
-                        .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
-                .placeholder(R.drawable.ic_default_profile))
+                        .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
+                        .placeholder(R.drawable.ic_default_profile))
                 .into(ivMyProfile);
 
         Glide.with(this)
                 .load(opponentProfileUrl)
                 .error(R.drawable.ic_default_profile)
                 .apply(new RequestOptions()
-                        .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
+                        .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
                         .placeholder(R.drawable.ic_default_profile))
                 .into(ivOpponentProfile);
 
         btnGoChat.setOnClickListener(v -> {
+
             if (roomId == null || roomId <= 0) {
                 Toast.makeText(this, "채팅방 정보가 없습니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // todo: ChatActivity 연결
-             Intent chat = new Intent(this, ChatActivity.class);
-             chat.putExtra(ChatActivity.ROOM_ID, roomId);
-             chat.putExtra(ChatActivity.MY_USER_ID, userId);
-             startActivity(chat);
+            Intent chat = new Intent(this, ChatActivity.class);
+            chat.putExtra(ChatActivity.ROOM_ID, roomId);
+            chat.putExtra(ChatActivity.MY_USER_ID, userId);
+            startActivity(chat);
 
             Toast.makeText(this,
                     "roomId=" + roomId + "채팅 화면 이동",

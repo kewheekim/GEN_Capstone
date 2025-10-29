@@ -94,7 +94,7 @@
         android:textColor="@color/black_text"
         style="@style/Text.Medium14"
         android:visibility="gone"/>
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile"
         android:layout_width="48dp"
         android:layout_height="48dp"

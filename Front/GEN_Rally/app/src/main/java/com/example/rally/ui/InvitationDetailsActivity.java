@@ -32,6 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// MAT_REC_002
 public class InvitationDetailsActivity extends AppCompatActivity {
     private Call<MatchRequestDetails> detailCall;
     ImageButton btnBack;
@@ -162,12 +163,13 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         if (opponent.getName() != null) tvName.setText(opponent.getName());
         // 프로필 이미지
         if (opponent.getProfileImage() != null && !opponent.getProfileImage().isEmpty()) {
+            int sizePx = (int) (68 * getResources().getDisplayMetrics().density);
             Glide.with(this)
                     .load(opponent.getProfileImage())
-                    .apply(new RequestOptions()
-                            .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
-                            .placeholder(R.drawable.ic_default_profile)
-                            .centerCrop())
+                    .error(R.drawable.ic_default_profile)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_default_profile1)
+                    .override(sizePx, sizePx)
                     .into(ivProfile);
         } else {
                 profileImg.setImageResource(R.drawable.ic_default_profile);

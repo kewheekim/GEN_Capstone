@@ -75,8 +75,14 @@ public class TierActivity extends AppCompatActivity {
                             TierAssessResponse body = response.body();
                             tvTier.setText(body.getTier());
                             switch (body.getTier()) {
+                                case "입문자1" :
+                                    frameTier.setBackgroundResource(R.drawable.ic_tier_bronze1_eff); break;
                                 case "초보자1" :
                                     frameTier.setBackgroundResource(R.drawable.ic_tier_silver1_eff); break;
+                                case "중급자1" :
+                                    frameTier.setBackgroundResource(R.drawable.ic_tier_gold1_eff); break;
+                                case "상급자1" :
+                                    frameTier.setBackgroundResource(R.drawable.ic_tier_dia1_eff); break;
                             }
                             tvName.setText(body.getNickname()+"님은");
                         } else {

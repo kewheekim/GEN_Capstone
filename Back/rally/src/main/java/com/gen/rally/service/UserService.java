@@ -110,7 +110,7 @@ public class UserService {
         }else {
             response.setTier(Tier.입문자1);
             user.setTier(Tier.입문자1);
-            user.setSkill(24);
+            user.setSkill(11);
         }
         userRepository.save(user);
         return response;

@@ -52,22 +52,17 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         tvName.setText(user.getName());
 
         if (user.getProfileImage() != null) {
-            Glide.with(this)
+            int sizePx = (int) (68 * getResources().getDisplayMetrics().density);
+            Glide.with(profileImg)
                     .load(user.getProfileImage())
-                    .placeholder(R.drawable.ic_default_profile)
-                    .apply(new RequestOptions()
-                            .transform(new RoundedCorners((int) (24 * getResources().getDisplayMetrics().density)))
-                            .placeholder(R.drawable.ic_default_profile))
+                    .placeholder(R.drawable.ic_default_profile1)
+                    .error(R.drawable.ic_default_profile1)
+                    .centerCrop()
+                    .override(sizePx, sizePx)
                     .into(profileImg);
         }
         else {
-            // 프로필 이미지 하드코딩
-            if(user.getName().equals("아어려워요"))
-                profileImg.setImageResource(R.drawable.profile_image_male);
-            else if(user.getName().equals("흠냐링"))
-                profileImg.setImageResource(R.drawable.profile_image_female1);
-            else if(user.getName().equals("안세영이되"))
-                profileImg.setImageResource(R.drawable.profile_image_female2);
+            profileImg.setImageResource(R.drawable.ic_default_profile);
         }
 
         if (user.getGender() == 0) {
@@ -76,7 +71,12 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
             ivGender.setImageResource(R.drawable.ic_gender_female);
         }
 
-        tvWin.setText(String.format("최근 5경기 승률 %.0f%%", user.getWinningRate()));
+        double wr = user.getWinningRate();
+        if( wr != 0)
+            tvWin.setText(String.format("최근 5경기 승률 %.0f%%", wr));
+        else
+            tvWin.setText("최근 경기 기록 없음");
+
         tvTime.setText(user.getTime());
 
         if (user.isSameTime()) {

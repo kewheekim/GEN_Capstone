@@ -91,7 +91,7 @@ public class InvitationService {
 
         User me  = inv.getReceiver();
         User opp = inv.getSender();
-        String myId = me.getUserId();
+        Long myId = me.getId();
         String myProfile =   me.getImageUrl();
         String opponentProfile = opp.getImageUrl();
         String opponentName = opp.getName();

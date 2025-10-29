@@ -26,10 +26,10 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
     public interface OnItemClickListener {
         void onItemClick(@NonNull InvitationItem item);
         void onMoreClick(@NonNull InvitationItem item);
-        void onConfirmClick(@NonNull InvitationItem item); // “요청내용 확인하기” 등
+        void onConfirmClick(@NonNull InvitationItem item);
     }
 
-    private final boolean isSent;          // true: 보낸 요청 / false: 받은 요청
+    private final boolean isSent;  // true: 보낸 요청 / false: 받은 요청
     private final int itemLayoutRes;
     @NonNull private final OnItemClickListener listener;
 
@@ -111,15 +111,16 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
                             tvState.setTextColor(ContextCompat.getColor(ctx, R.color.green_active));
                             break;
                         case "거절":      stateText = "거절 완료"; break;
-                        default:                    stateText = stateText; break;
+                        default: break;
                     }
                     // 프로필 이미지 로딩
+                    int sizePx = (int) (48 * itemView.getResources().getDisplayMetrics().density);
                     Glide.with(itemView.getContext())
                             .load(item.getOpponentProfileImage())
-                            .placeholder(R.drawable.ic_default_profile)
-                            .apply(new RequestOptions()
-                                    .transform(new RoundedCorners((int) ( 24 * itemView.getResources().getDisplayMetrics().density)))
-                                    .placeholder(R.drawable.ic_default_profile))
+                            .placeholder(R.drawable.ic_default_profile1)
+                            .error(R.drawable.ic_default_profile)
+                            .centerCrop()
+                            .override(sizePx, sizePx)
                             .into(ivProfile);
                 }
                 if (tvState != null)
