@@ -24,7 +24,7 @@ public class MatSuccessActivity extends AppCompatActivity {
 
     private Long gameId;
     private Long roomId;
-    private String userId;
+    private Long userId;
     private String myProfileUrl;
     private String opponentProfileUrl;
     private String opponentName;
@@ -42,7 +42,7 @@ public class MatSuccessActivity extends AppCompatActivity {
         Intent it = getIntent();
         gameId  =  it.getLongExtra("game_id", -1L);
         roomId= it.getLongExtra("room_id", -1L);
-        userId = it.getStringExtra("user_id");
+        userId = it.getLongExtra("user_id", -1L);
         myProfileUrl = it.getStringExtra("user_profile");
         opponentProfileUrl = it.getStringExtra("opponent_profile");
         opponentName = it.getStringExtra("opponent_name");
