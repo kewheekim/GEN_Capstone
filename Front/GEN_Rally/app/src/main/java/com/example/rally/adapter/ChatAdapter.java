@@ -163,7 +163,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         TextView tvDate;
         DateVH(@NonNull View itemView) {
             super(itemView);
-            tvDate = itemView.findViewById(R.id.tv_date);
+            tvDate = itemView.findViewById(R.id.tv_date_type);
         }
     }
 

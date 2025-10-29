@@ -47,7 +47,7 @@ import ua.naiksoftware.stomp.StompClient;
 // CHAT_002
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCardClickListener {
 
-    private static final String BASE_URL = "ws://10.0.2.2:8080/stomp";
+    private static final String BASE_URL = "ws://172.19.8.237:8080/stomp";
     private static final String SUBSCRIBE_URL = "/sub/dm/";
     private static final String SEND_URL = "/pub/dm/";
 
@@ -87,7 +87,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
         setContentView(R.layout.activity_chat);
 
         apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(),"http://10.0.2.2:8080/")
+                .getSecureClient(getApplicationContext(),"http://172.19.8.237:8080/")
                 .create(ApiService.class);
 
         Intent it = getIntent();
