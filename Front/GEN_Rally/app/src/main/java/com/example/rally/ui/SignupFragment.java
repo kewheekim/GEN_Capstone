@@ -64,16 +64,6 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        // 포커스 변경 시 유효성 검사 & 에러 표시
-        etSetId.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                String id = etSetId.getText().toString().trim();
-                boolean valid = isValidId(id);
-                etSetId.setActivated(!valid);
-                tvSetId.setTextColor(valid ? defaultLabel : Color.RED);
-            }
-        });
-
         // id 중복확인 필수
         etSetId.addTextChangedListener(new TextWatcher() {
             @Override public void afterTextChanged(Editable s) {
@@ -82,18 +72,38 @@ public class SignupFragment extends Fragment {
                 // 아이디가 바뀌면 중복확인 무효화
                 if (!current.equals(lastCheckedId)) {
                     doubleCheck = false;
-
-                    tvSetId.setTextColor(Color.parseColor("red"));
-                    tvSetId.setText("아이디 중복확인을 해주세요.");
-
-                    // Next 버튼 즉시 반영되도록 다시 계산
-                    String pw = etSetPw.getText().toString().trim();
-                    String confirmPw = etConfirmPw.getText().toString().trim();
-                    boolean valid = isValidId(current) && isValidPassword(pw) && pw.equals(confirmPw) && doubleCheck;
-                    btnNext.setEnabled(valid);
-                    btnNext.setTextColor(valid ? Color.WHITE : Color.parseColor("#AAAAAA"));
                 }
+
+                if (current.isEmpty()) {
+                    tvSetId.setText(" "); // 비어있을 땐 메시지 없음
+                    tvSetId.setTextColor(defaultLabel);
+                    etSetId.setActivated(false);
+                } else if (current.length() < 6) {
+                    tvSetId.setText("6자 이상 입력해 주세요.");
+                    tvSetId.setTextColor(Color.RED);
+                    etSetId.setActivated(true);
+                } else if (!isValidId(current)) {
+                    tvSetId.setText("6~20자 영문, 숫자만 사용 가능합니다.");
+                    tvSetId.setTextColor(Color.RED);
+                    etSetId.setActivated(true);
+                } else if (!doubleCheck) {
+                    tvSetId.setText("아이디 중복확인을 해주세요.");
+                    tvSetId.setTextColor(Color.RED);
+                    etSetId.setActivated(false);
+                } else {
+                    tvSetId.setText("사용 가능한 아이디입니다.");
+                    tvSetId.setTextColor(Color.parseColor("#2ABA72"));
+                    etSetId.setActivated(false);
+                }
+
+
+                String pw = etSetPw.getText().toString().trim();
+                String confirmPw = etConfirmPw.getText().toString().trim();
+                boolean valid = isValidId(current) && isValidPassword(pw) && pw.equals(confirmPw) && doubleCheck;
+                btnNext.setEnabled(valid);
+                btnNext.setTextColor(valid ? Color.WHITE : Color.parseColor("#AAAAAA"));
             }
+
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
