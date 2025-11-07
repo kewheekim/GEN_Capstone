@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chat_card"
+    android:layout_width="258dp"
+    android:layout_height="127dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:background="@drawable/selector_rectangle"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_opponent_score"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                style="@style/Text.Semibold20"
+                android:text="1"
+                android:textSize="36dp"
+                android:textColor="@color/gray_text"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                style="@style/Text.Semibold20"
+                android:text=":"
+                android:textSize="36dp"
+                android:textColor="@color/gray_nav_bar"
+                />
+
+            <TextView
+                android:id="@+id/tv_my_score"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                app:layout_constraintStart_toEndOf="@id/tv_opponent_score"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="10dp"
+                style="@style/Text.Semibold20"
+                android:text="2"
+                android:textSize="36dp"
+                android:textColor="@color/green_active"
+                />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_opponent_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/profile_image_male"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_style_single"
+            app:layout_constraintEnd_toEndOf="@id/iv_opponent_profile"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="-30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="6dp"
+            />
+
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="62dp">
+
+            <TextView
+                android:id="@+id/tv_record_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                style="@style/Text.Medium14"
+                android:text="00:50:15"
+                android:textColor="@color/black_text"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:text="시간"
+                style="@style/Text.Medium12"
+                android:textColor="#757575"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="62dp"
+            android:layout_marginStart="78dp">
+
+            <TextView
+                android:id="@+id/tv_record_walk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                style="@style/Text.Medium14"
+                android:text="3,230"
+                android:textColor="@color/black_text"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:text="걸음"
+                style="@style/Text.Medium12"
+                android:textColor="#757575"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="62dp">
+
+            <TextView
+                android:id="@+id/tv_record_kcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                style="@style/Text.Medium14"
+                android:text="204"
+                android:textColor="@color/black_text"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:text="kcal"
+                style="@style/Text.Medium12"
+                android:textColor="#757575"
+                />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
