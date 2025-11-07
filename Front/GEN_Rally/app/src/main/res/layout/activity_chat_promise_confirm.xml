@@ -182,21 +182,9 @@
             android:text="20:00"
             style="@style/Text.Regular16"
             app:layout_constraintTop_toBottomOf="@id/tv_promise_date"
-            app:layout_constraintEnd_toStartOf="@+id/btn_select_start_time"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="12dp"
-            />
-
-        <ImageButton
-            android:id="@+id/btn_select_start_time"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_down"
-            app:layout_constraintTop_toBottomOf="@id/tv_promise_date"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             />
 
         <View
@@ -227,21 +215,9 @@
             android:text="21:00"
             style="@style/Text.Regular16"
             app:layout_constraintTop_toBottomOf="@id/tv_promise_start_time"
-            app:layout_constraintEnd_toStartOf="@+id/btn_select_end_time"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="12dp"
-            />
-
-        <ImageButton
-            android:id="@+id/btn_select_end_time"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_down"
-            app:layout_constraintTop_toBottomOf="@id/tv_promise_start_time"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             />
 
         <View
@@ -272,21 +248,9 @@
             android:text="망원 다목적 체육관"
             style="@style/Text.Regular16"
             app:layout_constraintTop_toBottomOf="@id/tv_promise_end_time"
-            app:layout_constraintEnd_toStartOf="@+id/btn_select_end_time"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="12dp"
-            />
-
-        <ImageButton
-            android:id="@+id/btn_select_place"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_search"
-            app:layout_constraintTop_toBottomOf="@id/tv_promise_end_time"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             />
 
         <!-- 지도 -->
@@ -306,7 +270,7 @@
 
 
         <android.widget.Button
-            android:id="@+id/btn_finish"
+            android:id="@+id/btn_confirm"
             style="@style/FlatButton"
             android:layout_width="364dp"
             android:layout_height="54dp"

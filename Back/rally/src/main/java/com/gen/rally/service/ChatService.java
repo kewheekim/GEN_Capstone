@@ -1,11 +1,9 @@
 package com.gen.rally.service;
 
-import com.gen.rally.dto.ChatMessageDto;
-import com.gen.rally.dto.ChatRoomDto;
-import com.gen.rally.dto.ChatRoomListDto;
-import com.gen.rally.dto.MatchRequestInfoDto;
+import com.gen.rally.dto.*;
 import com.gen.rally.entity.*;
 import com.gen.rally.enums.MessageType;
+import com.gen.rally.enums.State;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.ChatMessageRepository;
@@ -33,6 +31,7 @@ public class ChatService {
     private final SimpMessagingTemplate template;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final Gson gson = new Gson();
 
@@ -180,6 +179,22 @@ public class ChatService {
 
         return dtos;
     }
+
+    // 게임 정보 확정
+    public String confirm(MatchConfirmDto dto){
+        ChatRoom room = chatRoomRepository.findById(dto.getRoomId())
+                .orElseThrow(()-> new CustomException(ErrorCode.CHATROOM_NOT_FOUND));
+        Game game = gameRepository.findById(room.getGame().getGameId())
+                .orElseThrow(()-> new CustomException(ErrorCode.GAME_NOT_FOUND));
+
+        game.setTime(dto.getTime());
+        game.setPlace(dto.getPlace());
+        game.setState(State.경기확정);
+        gameRepository.save(game);
+
+        return "경기가 확정되었습니다.";
+    }
+
 
     // 메시지 전송
     public ChatMessage send(Long roomId, Long senderId, String content){

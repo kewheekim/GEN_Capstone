@@ -30,8 +30,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public interface OnCardClickListener {
         void onCardClick(ChatMessage message);
     }
-
-    // 필드 추가
     private final OnCardClickListener cardClickListener;
 
     public ChatAdapter(Context context, Long currentUserId, ChatViewModel viewModel, OnCardClickListener listener) {
@@ -185,11 +183,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         public void bind(ChatMessage m, ChatAdapter.OnCardClickListener cardClickListener) {
             ChatMessage.MatchInfo info = m.getMatchInfo();
             if (info != null) {
-                // 상태에 따라 타이틀 텍스트만 변경 (버튼은 XML에서 제거)
                 if ("CONFIRMED".equals(info.status)) {
                     tvCardTitle.setText("경기 약속을 확정했습니다.");
                 } else {
-                    tvCardTitle.setText("경기 약속을 만들었습니다."); // CREATED 상태
+                    tvCardTitle.setText("경기 약속을 만들었습니다.");
                 }
 
                 tvDate.setText(info.dateText);
@@ -197,7 +194,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 tvPlace.setText(info.place);
                 tvSentTime.setText(m.getFormattedTime());
 
-                // 상세 페이지 이동 등의 로직만 bind (버튼 클릭 X)
                 itemView.setOnClickListener(v -> {
                     if (cardClickListener != null) {
                         cardClickListener.onCardClick(m);
@@ -216,7 +212,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         TextView tvReceivedTime;
         ImageView ivProfile;
         TextView tvNickname;
-        Button tvConfirmButton; // 버튼이 레이아웃에 있다면 추가
+        Button tvConfirmButton;
 
         CardReceivedCreatedVH(@NonNull View itemView) {
             super(itemView);
@@ -249,10 +245,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     tvNickname.setText(profile.getOpponentName());
                 }
 
-                // 확정 가능 카드는 클릭 시 확정 로직이나 상세 페이지 이동 로직이 수행되어야 합니다.
-                itemView.setOnClickListener(v -> {
+                tvConfirmButton.setOnClickListener(v -> {
                     if (cardClickListener != null) {
-                        // ChatActivity의 onCardClick 메서드가 호출되어 확정 로직을 실행합니다.
                         cardClickListener.onCardClick(m);
                     }
                 });
@@ -298,6 +292,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                             .into(ivProfile);
                     tvNickname.setText(profile.getOpponentName());
                 }
+                itemView.setOnClickListener(v -> {
+                    if (cardClickListener != null) {
+                        cardClickListener.onCardClick(m);
+                    }
+                });
             }
         }
     }
