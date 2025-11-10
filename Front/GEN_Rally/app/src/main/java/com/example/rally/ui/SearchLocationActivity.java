@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +40,11 @@ public class SearchLocationActivity extends AppCompatActivity {
         etSearch = findViewById(R.id.et_search_query);
         rvResults = findViewById(R.id.rv_results);
         rvResults.setLayoutManager(new LinearLayoutManager(this));
+
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
 
         // Places API 초기화
         if (!Places.isInitialized()) {
