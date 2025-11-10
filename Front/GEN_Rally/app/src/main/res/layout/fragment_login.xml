@@ -6,19 +6,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include
-        android:id="@+id/toolbar_go"
-        layout="@layout/layout_toolbar_back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_phrase"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_go"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="42dp"
         android:layout_marginStart="24dp"
