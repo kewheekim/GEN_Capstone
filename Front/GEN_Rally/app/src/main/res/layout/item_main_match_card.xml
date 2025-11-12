@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="364dp"
+    android:layout_height="232dp"
+    android:background="@drawable/bg_match_card"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageButton
+        android:id="@+id/btn_start_game"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/bg_game_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/tv_match_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="4월 21일 (월)"
+        style="@style/Text.Semibold16"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_match_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_date"
+        android:text="20:00 - 21:30"
+        android:textSize="28dp"
+        android:textColor="@color/black_text"
+        android:fontFamily="@font/kimm_bold"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:src="@drawable/ic_map_fill"
+        app:tint="@color/gray_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_time"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_time"
+        android:text="경기 장소"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_text"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="42dp"
+        />
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:src="@drawable/ic_matching"
+        app:tint="@color/gray_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_time"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="189dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_time"
+        android:text="경기 방식"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_text"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="207dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_match_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_time"
+        android:text="망원 다목적 체육관"
+        style="@style/Text.Medium14"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_match_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_time"
+        android:text="단식 | 열심히 경기해요"
+        style="@style/Text.Medium14"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="189dp"
+        />
+
+    <ImageView
+        android:id="@+id/iv_opponent_profile"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/profile_image_male"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="13dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/iv_opponent_profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="경기 상대"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_text"
+        android:layout_marginStart="17dp"
+        android:layout_marginBottom="43dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_opponent_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/iv_opponent_profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="아어려워요"
+        style="@style/Text.Medium14"
+        android:layout_marginStart="17dp"
+        android:layout_marginBottom="19dp"
+        />
+
+    <ImageButton
+        android:id="@+id/btn_chat"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        style="@style/FlatButton"
+        android:background="@drawable/bg_chat_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="15dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
