@@ -47,7 +47,7 @@ import ua.naiksoftware.stomp.StompClient;
 // CHAT_002
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCardClickListener {
 
-    private static final String BASE_URL = "ws://10.0.2.2:8080/stomp";
+    private static final String BASE_URL = "ws://192.168.219.41:8080/stomp";
     private static final String SUBSCRIBE_URL = "/sub/dm/";
     private static final String SEND_URL = "/pub/dm/";
 
@@ -65,7 +65,6 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
     private StompClient stompClient;
     private ApiService apiService;
     private ActivityResultLauncher<Intent> promiseLauncher;
-    private ActivityResultLauncher<Intent> confirmLauncher;
 
     private Disposable lifecycleDisposable;
     private Disposable topicDisposable;
@@ -88,7 +87,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
         setContentView(R.layout.activity_chat);
 
         apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(),"http://10.0.2.2:8080/")
+                .getSecureClient(getApplicationContext(),"http://172.19.8.237:8080/")
                 .create(ApiService.class);
 
         Intent it = getIntent();
@@ -130,20 +129,6 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
                         sendMatchCard(finalDate, finalStartTime, finalEndTime, finalPlaceName);
                     }
                 });
-        confirmLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Intent data = result.getData();
-
-                        String finalDate = data.getStringExtra("match_info_date");
-                        String finalTime = data.getStringExtra("match_info_time");
-                        String finalPlace = data.getStringExtra("match_info_place");
-
-                        sendConfirmCard(finalDate, finalTime, finalPlace);
-                    }
-                });
-
 
         btnSend.setOnClickListener(v -> trySend());
         observeViewModel();
@@ -175,43 +160,20 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
     // ChatAdapter.OnCardClickListener 인터페이스 구현
     @Override
     public void onCardClick(ChatMessage message) {
-        ChatMessage.MatchInfo info = message.getMatchInfo();
-
-        if(info==null){
-            Toast.makeText(this, "경기 정보가 없습니다.", Toast.LENGTH_SHORT).show();
-            Log.e("ChatActivity", "Match Info is null");
-        }
         if (message.getViewType() == ChatMessage.VIEW_TYPE_MATCH_RECEIVED_CREATED) {
-            if ("CREATED".equals(info.status)) {
-                Intent it = new Intent(this, ChatPromiseConfirmActivity.class);
 
-                // 매칭 정보 전달
-                it.putExtra("opponent_name", opponentName);
-                it.putExtra("match_type", matchType);
-                it.putExtra("match_style", matchStyle);
-                it.putExtra("match_info_date", info.dateText);
-                it.putExtra("match_info_time", info.timeText);
-                it.putExtra("match_info_place", info.place);
-                it.putExtra(ROOM_ID, roomId);
-                it.putExtra(MY_USER_ID, myUserId);
+            ChatMessage.MatchInfo info = message.getMatchInfo();
 
-                confirmLauncher.launch(it);
-
-            }
-        } else if (message.getViewType() == ChatMessage.VIEW_TYPE_MATCH_SENT || message.getViewType() == ChatMessage.VIEW_TYPE_MATCH_RECEIVED_CONFIRMED){
-
-                Intent it = new Intent(this, ChatPromiseDetailActivity.class);
-                it.putExtra("opponent_name", opponentName);
-                it.putExtra("match_type", matchType);
-                it.putExtra("match_style", matchStyle);
-                it.putExtra("match_info_date", info.dateText);
-                it.putExtra("match_info_time", info.timeText);
-                it.putExtra("match_info_place", info.place);
-                startActivity(it);
+            if (info != null && "CREATED".equals(info.status)) {
+                // 내가 확정 메시지를 보내는 로직 실행
+                sendConfirmCard(info);
             } else {
-                // 내가 보낸 카드는 클릭해도 아무 동작 안 함
-                Toast.makeText(this, "내가 만든 약속 카드는 확정할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "이미 확정되었거나 생성된 카드가 아닙니다.", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            // 내가 보낸 카드는 클릭해도 아무 동작 안 함
+            Toast.makeText(this, "내가 만든 약속 카드는 확정할 수 없습니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void findViewByIdViews() {
@@ -241,6 +203,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
         viewModel.getMessages().observe(this, messages -> {
             // ViewModel에서 날짜 라벨까지 처리된 최종 리스트를 받아서 Adapter에 제출
             adapter.submitList(messages);
+            // 새 메시지가 추가되면 맨 아래로 스크롤
             scrollToBottom();
         });
     }
@@ -283,7 +246,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
             stompClient.send(SEND_URL + roomId, json).subscribe(() -> {
                 // 전송 성공: 실제 저장/브로드캐스트는 서버에서 처리 -> 서버에서 내려오는 메시지를 받아 sync 함
             }, throwable -> {
-                // 전송 실패
+                // 전송 실패: 사용자에게 알리고(또는 재시도 큐에 넣기)
                 Log.e("ChatActivity", "STOMP send error", throwable);
                 runOnUiThread(() -> Toast.makeText(this, "메시지 전송 실패", Toast.LENGTH_SHORT).show());
             });
@@ -462,15 +425,17 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
     }
 
     // 경기 확정 카드
-    private void sendConfirmCard(String date, String time, String place) {
+    private void sendConfirmCard(ChatMessage.MatchInfo info) {
+        // 확정 타이틀 및 상태로 JSON 재생성
         String confirmTitle = "경기 약속을 확정했습니다.";
         final String status = "CONFIRMED";
 
+        // 기존 카드 정보를 재사용하고 상태만 CONFIRMED로 변경
         String contentJson = viewModel.createCardJson(
                 confirmTitle,
-                date,
-                time,
-                place,
+                info.dateText,
+                info.timeText,
+                info.place,
                 status
         );
 

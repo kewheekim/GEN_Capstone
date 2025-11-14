@@ -29,7 +29,7 @@ import retrofit2.Response;
 
 // CHAT_001
 public class ChatListActivity extends AppCompatActivity {
-    private static final String BASE_URL = "ws://10.0.2.2:8080/stomp";
+    private static final String BASE_URL = "ws://192.168.219.41:8080/stomp";
     private ChatListAdapter adapter;
     private ApiService apiService;
     private RecyclerView chatList;
@@ -63,7 +63,7 @@ public class ChatListActivity extends AppCompatActivity {
         }
 
         apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(),"http://10.0.2.2:8080/")
+                .getSecureClient(getApplicationContext(),"http://172.19.8.237:8080/")
                 .create(ApiService.class);
 
         toolbar = findViewById(R.id.toolbar);
