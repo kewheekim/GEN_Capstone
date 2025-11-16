@@ -1,9 +1,17 @@
 package com.example.rally.ui;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,6 +24,8 @@ import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
 import com.example.rally.dto.MatchSeekingItem;
 import java.util.List;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,7 +33,9 @@ import retrofit2.Response;
 public class MatSeekingFragment extends Fragment {
     private RecyclerView rv;
     private MatchSeekingAdapter adapter;
+    private Dialog cancelDialog;
     private Call<List<MatchSeekingItem>> call;
+    private Call<ResponseBody> cancelCall;
 
     public MatSeekingFragment() {}
 
@@ -48,13 +60,13 @@ public class MatSeekingFragment extends Fragment {
 
         adapter = new MatchSeekingAdapter(new MatchSeekingAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(MatchSeekingItem item, int position) {
-                android.widget.Toast.makeText(requireContext(),
-                        "찾은 매칭:" + item.getRequestId(), android.widget.Toast.LENGTH_SHORT).show();
-            }
+            public void onItemClick(MatchSeekingItem item, int position) { }
+        });
+
+        adapter.setOnMoreClickListener((anchor, item, position) -> {
+            showMoreMenu(anchor, item);
         });
         rv.setAdapter(adapter);
-
         fetchSeekingMatches();
     }
 
@@ -81,10 +93,88 @@ public class MatSeekingFragment extends Fragment {
         });
     }
 
+    private void showMoreMenu(@NonNull View anchor, @NonNull MatchSeekingItem matchSeekingItem) {
+        if (!isAdded()) return;
+        PopupMenu menu = new PopupMenu(requireContext(), anchor);
+        menu.getMenuInflater().inflate(R.menu.match_option_menu, menu.getMenu());
+
+        menu.setOnMenuItemClickListener( mi -> {
+            int id= mi.getItemId();
+            if (id == R.id.match_cancel) {
+                showCancelDialog(matchSeekingItem.getRequestId());
+                return true;
+            }
+            return false;
+        });
+        menu.show();
+    }
+
+    private void showCancelDialog(@NonNull Long requestId) {
+        if(!isAdded()) return;
+        if(cancelDialog != null && cancelDialog.isShowing()) return;
+
+        Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_popup_match_cancel2);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        dialog.setCanceledOnTouchOutside(true);
+
+        ImageButton btnX = dialog.findViewById(R.id.btn_x);
+        Button btnBack = dialog.findViewById(R.id.btn_back);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+
+        View.OnClickListener dismiss = v -> dialog.dismiss();
+        btnX.setOnClickListener(dismiss);
+        btnBack.setOnClickListener(dismiss);
+
+        btnCancel.setOnClickListener( v -> {
+            if(!isAdded()) return;
+            btnCancel.setEnabled(false);
+            ApiService api = RetrofitClient
+                    .getSecureClient(requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
+
+            cancelCall = api.cancelMatchRequest(requestId);
+            cancelCall.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (!isAdded() || call.isCanceled()) return;
+
+                    btnCancel.setEnabled(true);
+
+                    if (response.isSuccessful()) {
+                        android.widget.Toast.makeText(requireContext(),
+                                "매칭 신청이 취소되었습니다.", android.widget.Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+                        fetchSeekingMatches(); // 리스트 다시 조회
+                    } else {
+                        android.widget.Toast.makeText(requireContext(),
+                                "취소 실패: " + response.code(), android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    if (!isAdded() || call.isCanceled()) return;
+                    btnCancel.setEnabled(true);
+                    android.widget.Toast.makeText(requireContext(),
+                            "네트워크 오류: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        cancelDialog = dialog;
+        dialog.show();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (call != null) { call.cancel(); call = null; }
+        if (cancelCall != null) { cancelCall.cancel(); cancelCall = null; }
         rv = null;
     }
 }

@@ -25,8 +25,8 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
 
     public interface OnItemClickListener {
         void onItemClick(@NonNull InvitationItem item);
-        void onMoreClick(@NonNull InvitationItem item);
-        void onConfirmClick(@NonNull InvitationItem item);
+        void onMoreClick(@NonNull View anchor, @NonNull InvitationItem item);
+        void onConfirmClick(@NonNull View anchor, @NonNull InvitationItem item);
     }
 
     private final boolean isSent;  // true: 보낸 요청 / false: 받은 요청
@@ -144,9 +144,9 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
             }
 
             // 거절 상태인 경우
-            boolean isRejected = "거절".equals(stateRaw);
+            boolean isRefused = "거절".equals(stateRaw);
             String reason = item.getRefusal();
-            boolean showReason = isRejected && reason != null && !reason.trim().isEmpty();
+            boolean showReason = isRefused && reason != null && !reason.trim().isEmpty();
 
             if (tvRefusal != null) {
                 if (showReason) {
@@ -163,8 +163,11 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
 
             // 클릭 이벤트
             itemView.setOnClickListener(v -> listener.onItemClick(item));
-            if (btnMore != null) btnMore.setOnClickListener(v -> listener.onMoreClick(item));
-            if (btnConfirm != null) btnConfirm.setOnClickListener(v -> listener.onConfirmClick(item));
+            if (btnMore != null) {
+                btnMore.setOnClickListener(null);
+                btnMore.setVisibility(View.GONE);
+            }
+            if (btnConfirm != null) btnConfirm.setOnClickListener(v -> listener.onConfirmClick(v, item));
         }
     }
 

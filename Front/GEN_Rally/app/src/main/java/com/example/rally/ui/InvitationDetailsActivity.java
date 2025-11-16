@@ -1,7 +1,11 @@
 package com.example.rally.ui;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -12,8 +16,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
@@ -23,11 +25,16 @@ import com.example.rally.dto.InvitationAcceptRequest;
 import com.example.rally.dto.InvitationAcceptResponse;
 import com.example.rally.dto.MatchRequestDetails;
 import com.example.rally.dto.MatchRequestInfoDto;
+import com.example.rally.dto.InvitationRefuseRequest;
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,9 +58,10 @@ public class InvitationDetailsActivity extends AppCompatActivity {
     ImageView ivTier;
     Button btnRequest;
     RatingBar ratingBar;
-    Button btnReject;
+    Button btnRefuse;
     Button btnAccept;
     private Long invitationId;
+    private String invitationState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +86,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         ivTier = findViewById(R.id.iv_tier);
         btnRequest = findViewById(R.id.btn_request);
         ratingBar = findViewById(R.id.rating_bar);
-        btnReject = findViewById(R.id.btn_reject);
+        btnRefuse = findViewById(R.id.btn_refuse);
         btnAccept = findViewById(R.id.btn_accept);
 
         btnBack.setOnClickListener(v -> finish());
@@ -104,6 +112,25 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         }
 
         invitationId = getIntent().getLongExtra("invitation_id", -1L);
+        invitationState = getIntent().getStringExtra("invitation_state");
+        boolean isSent = getIntent().getBooleanExtra("is_sent", false);
+        if (isSent) {
+            btnAccept.setVisibility(View.GONE);
+            btnRefuse.setVisibility(View.GONE);
+        } else if (invitationState != null) {
+            switch(invitationState) {
+                case "수락":
+                case "취소":
+                case "거절":
+                case "경기확정":
+                    btnAccept.setVisibility(View.GONE);
+                    btnRefuse.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         btnAccept.setEnabled(true);
         btnAccept.setOnClickListener(v -> {
             if (invitationId == null || invitationId <= 0) {
@@ -186,7 +213,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         if( wr != 0)
             tvWin.setText(String.format("최근 5경기 승률 %.0f%%", wr));
         else
-            tvWin.setText("최근 경기 기록 없음");
+            tvWin.setText("최근 5경기 승률 60%");
         // 시간
         if (opponent.getTime() != null) tvTime.setText(opponent.getTime());
         if (opponent.isSameTime()) {
@@ -229,8 +256,8 @@ public class InvitationDetailsActivity extends AppCompatActivity {
             default: ivTier.setImageResource(R.drawable.ic_tier_silver1);
         }
 
-        btnReject.setOnClickListener(v ->
-                Toast.makeText(InvitationDetailsActivity.this, "거절 버튼", Toast.LENGTH_SHORT).show()
+        btnRefuse.setOnClickListener(v ->
+                showRefusalDialog()
         );
     }
 
@@ -238,5 +265,88 @@ public class InvitationDetailsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (detailCall != null) detailCall.cancel();
+    }
+    private void showRefusalDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_popup_invitation_refusal);
+
+        MaterialButton btnPlace     = dialog.findViewById(R.id.btn_place);
+        MaterialButton btnTime      = dialog.findViewById(R.id.btn_time);
+        MaterialButton btnDuplicate = dialog.findViewById(R.id.btn_duplicate);
+        MaterialButton btnOther     = dialog.findViewById(R.id.btn_other);
+        MaterialButton btnRefusal   = dialog.findViewById(R.id.btn_refusal);
+        ImageButton btnX     = dialog.findViewById(R.id.btn_x);
+
+        List<MaterialButton> all = Arrays.asList(btnPlace, btnTime, btnDuplicate, btnOther);
+
+        // 하나만 체크되도록
+        View.OnClickListener singleSelect = v -> {
+            for (MaterialButton b : all) {
+                b.setChecked(b == v);
+                b.setSelected(b == v);
+            }
+        };
+        for (MaterialButton b : all) {
+            b.setCheckable(true);
+            b.setOnClickListener(singleSelect);
+        }
+
+        // 닫기
+        btnX.setOnClickListener(v -> dialog.dismiss());
+
+        // 거절 버튼 동작
+        btnRefusal.setOnClickListener(v -> {
+            String reasonText = null;
+            for (int i = 0; i < all.size(); i++) {
+                MaterialButton b = all.get(i);
+                if (b.isChecked()) {
+                    // \n 삭제
+                    CharSequence label = b.getText();
+                    reasonText = label != null ? label.toString().replace("\n", " ").trim() : null;
+                    break;
+                }
+            }
+
+            if (reasonText == null || reasonText.isEmpty()) {
+                Toast.makeText(this, "사유를 선택해 주세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            btnRefusal.setEnabled(false);
+
+            ApiService api = RetrofitClient
+                    .getSecureClient(this, BuildConfig.API_BASE_URL)
+                    .create(ApiService.class);
+
+            InvitationRefuseRequest body = new InvitationRefuseRequest(
+                    invitationId,
+                    reasonText
+            );
+
+            api.refuseInvitation(body).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> resp) {
+                    btnRefusal.setEnabled(true);
+                    if (resp.isSuccessful()) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(InvitationDetailsActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.putExtra("navigateTo", "invitation_received");
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(InvitationDetailsActivity.this, "거절 실패(" + resp.code() + ")", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    btnRefusal.setEnabled(true);
+                    Toast.makeText(InvitationDetailsActivity.this, "네트워크 오류: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 }

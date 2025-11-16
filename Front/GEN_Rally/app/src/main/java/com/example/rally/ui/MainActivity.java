@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.navigation_home) {
                 selected = new HomeFragment();
             } else if (id == R.id.navigation_matching) {
-                selected = new MatchFragment();
+                selected = MatchFragment.newInstance(0);
             } else if (id == R.id.navigation_record) {
                 //selected = new RecordFragment();
             } else if (id == R.id.navigation_my) {
@@ -87,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
         if ("invitation_sent".equals(target)) {
             // MatchFragment  매칭 > 받은/보낸 요청 탭 열기
             Fragment fragment = MatchFragment.newInstance(2, "sent");
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+            bottomNav.getMenu().findItem(R.id.navigation_matching).setChecked(true);
+            return;
+        }
+        // 매칭 > 받은/보낸 요청 > 받은 요청 탭
+        if ("invitation_received".equals(target)) {
+            Fragment fragment = MatchFragment.newInstance(2, "received");
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commit();

@@ -15,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.rally.R;
 import com.google.android.material.imageview.ShapeableImageView;
 
-//
+// MAT_SUC_001
 public class MatSuccessActivity extends AppCompatActivity {
 
     private ShapeableImageView ivMyProfile, ivOpponentProfile;
@@ -53,20 +53,21 @@ public class MatSuccessActivity extends AppCompatActivity {
             tvInform.setText("매칭이 성사되었어요");
         }
 
+        int sizePx = (int) (68 * getResources().getDisplayMetrics().density);
         Glide.with(this)
                 .load(myProfileUrl)
-                .error(R.drawable.ic_default_profile)
-                .apply(new RequestOptions()
-                        .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
-                        .placeholder(R.drawable.ic_default_profile))
+                .placeholder(R.drawable.ic_default_profile1)
+                .error(R.drawable.ic_default_profile1)
+                .centerCrop()
+                .override(sizePx, sizePx)
                 .into(ivMyProfile);
 
         Glide.with(this)
                 .load(opponentProfileUrl)
-                .error(R.drawable.ic_default_profile)
-                .apply(new RequestOptions()
-                        .transform(new RoundedCorners((int) (10 * getResources().getDisplayMetrics().density)))
-                        .placeholder(R.drawable.ic_default_profile))
+                .placeholder(R.drawable.ic_default_profile1)
+                .error(R.drawable.ic_default_profile1)
+                .centerCrop()
+                .override(sizePx, sizePx)
                 .into(ivOpponentProfile);
 
         btnGoChat.setOnClickListener(v -> {
@@ -80,10 +81,6 @@ public class MatSuccessActivity extends AppCompatActivity {
             chat.putExtra(ChatActivity.ROOM_ID, roomId);
             chat.putExtra(ChatActivity.MY_USER_ID, userId);
             startActivity(chat);
-
-            Toast.makeText(this,
-                    "roomId=" + roomId + "채팅 화면 이동",
-                    Toast.LENGTH_SHORT).show();
         });
     }
 }

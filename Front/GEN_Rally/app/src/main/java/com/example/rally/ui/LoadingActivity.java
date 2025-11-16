@@ -137,13 +137,19 @@ public class LoadingActivity extends AppCompatActivity {
 
         dialogView.findViewById(R.id.btn_cancel).setOnClickListener(v -> {
             dialog.dismiss();
-            // 네트워크 취소
+
+            // 콜 중단
             if (candidatesCall != null && !candidatesCall.isCanceled()) candidatesCall.cancel();
             if (requestCall != null && !requestCall.isCanceled()) requestCall.cancel();
-            // todo 생성된 요청 삭제
 
-            startActivity(new Intent(LoadingActivity.this, MainActivity.class));
-            finish();
+            if (requestId != null) {
+                ApiService service = RetrofitClient.getSecureClient(this, BuildConfig.API_BASE_URL)
+                        .create(ApiService.class);
+                // todo: 매칭 신청 취소 api 작성
+
+            } else {
+                // 홈 화면으로 이동
+            }
         });
 
         dialog.show();

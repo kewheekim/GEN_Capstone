@@ -142,4 +142,29 @@ public class InvitationService {
                 opponentName
         );
     }
+
+    @Transactional
+    public void refuse(String userId, Long invitationId, String refusal) {
+        // 요청 데이터 확인
+        MatchInvitation inv = invitationRepo.findById(invitationId)
+                .orElseThrow(()-> new CustomException(ErrorCode.MATCH_INVITATION_NOT_FOUND));
+
+        // 사용자 권한 체크
+        if(inv.getReceiver() == null || !inv.getReceiver().getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+        // 상태
+        if (inv.getState() != State.요청중) {
+            throw new CustomException(ErrorCode.INVALID_STATE);
+        }
+        // 거절 사유 업데이트
+        inv.setState(State.거절);
+        inv.setRefusal(refusal);
+        // 요청자의 매칭 신청 상태 요청중 -> 대기로 전환
+        MatchRequest req = inv.getSenderRequest();
+        if (req == null) {
+            throw new CustomException(ErrorCode.MATCH_REQUEST_NOT_FOUND);
+        }
+        req.setState(State.대기);
+    }
 }

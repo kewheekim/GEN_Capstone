@@ -24,7 +24,7 @@ public class MatchFoundAdapter extends ListAdapter<MatchFoundItem, MatchFoundAda
     public interface OnItemClickListener {
         void onItemClick(@NonNull MatchFoundItem item);
         void onChatClick(@NonNull MatchFoundItem item);
-        void onMoreClick(@NonNull MatchFoundItem item);
+        void onMoreClick(@NonNull View anchor, @NonNull MatchFoundItem item);
     }
 
     @NonNull private final OnItemClickListener listener;
@@ -95,10 +95,13 @@ public class MatchFoundAdapter extends ListAdapter<MatchFoundItem, MatchFoundAda
             // 프로필 사진 로드
             try {
                 if (item.getOpponentProfile() != null && !item.getOpponentProfile().isEmpty()) {
+                    int sizePx = (int) (48 * itemView.getResources().getDisplayMetrics().density);
                     Glide.with(ivProfile.getContext())
                             .load(item.getOpponentProfile())
                             .placeholder(R.drawable.ic_default_profile)
                             .error(R.drawable.ic_default_profile)
+                            .centerCrop()
+                            .override(sizePx, sizePx)
                             .into(ivProfile);
                 } else {
                     ivProfile.setImageResource(R.drawable.ic_default_profile);
@@ -107,9 +110,8 @@ public class MatchFoundAdapter extends ListAdapter<MatchFoundItem, MatchFoundAda
                 ivProfile.setImageResource(R.drawable.ic_default_profile);
             }
 
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
             btnChat.setOnClickListener(v -> listener.onChatClick(item));
-            btnMore.setOnClickListener(v -> listener.onMoreClick(item));
+            btnMore.setOnClickListener(v -> listener.onMoreClick(v, item));
         }
     }
 

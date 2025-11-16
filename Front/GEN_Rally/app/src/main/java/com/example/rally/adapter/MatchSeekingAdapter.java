@@ -32,6 +32,7 @@ public class MatchSeekingAdapter extends ListAdapter<MatchSeekingItem, MatchSeek
     public MatchSeekingAdapter(OnItemClickListener onItemClickListener) {
         super(new MatchSeekingDiff());
         setHasStableIds(true);
+        this.itemClickListener = onItemClickListener;
     }
 
     public void setOnItemClickListener(OnItemClickListener l) { this.itemClickListener = l; }

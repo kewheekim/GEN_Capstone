@@ -5,12 +5,16 @@ import com.gen.rally.entity.*;
 import com.gen.rally.enums.GameStyle;
 import com.gen.rally.enums.GameType;
 import com.gen.rally.enums.State;
+import com.gen.rally.exception.CustomException;
+import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.GameRepository;
+import com.gen.rally.repository.MatchInvitationRepository;
 import com.gen.rally.repository.MatchRequestRepository;
 import com.gen.rally.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MatchRequestService {
     private final MatchRequestRepository matchRequestRepository;
+    private final MatchInvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일(E)");
@@ -56,7 +61,7 @@ public class MatchRequestService {
 
 //        // 1. 과거에 사용자가 동일한 날짜, 겹치는 시간의 신청을 했는지 확인
 //        List<MatchRequest> duplicates = matchRequestRepository.findOverlappingRequests(
-//                userInput.getUserId(),
+//                userId,
 //                userInput.getGameDate(),
 //                userInput.getStartTime(),
 //                userInput.getEndTime()
@@ -64,7 +69,7 @@ public class MatchRequestService {
 //
 //        // 2. 이미 해당 조건의 신청이 있으면 에러 발생
 //        if (!duplicates.isEmpty()) {
-//            throw new IllegalStateException("동일 조건의 매칭 신청 이력이 존재합니다.");
+//            throw new CustomException(ErrorCode.CONFLICT);
 //        }
 
         List<MatchRequest> candidates = matchRequestRepository.findAll().stream()
@@ -210,6 +215,22 @@ public class MatchRequestService {
                 r.getState() != null ? r.getState().name() : null,
                 r.getCreatedAt().toString()
         )).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void cancelRequest(String userId, Long requestId) {
+        // 매칭 신청 존재 여부 확인
+        MatchRequest req = matchRequestRepository.findByRequestId(requestId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MATCH_REQUEST_NOT_FOUND));
+        // 사용자 소유권 확인
+        if (!req.getUser().getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        // 관련 매칭 invitation, request 삭제
+        invitationRepository.deleteAllByRequestId(requestId);
+        matchRequestRepository.delete(req);
+
     }
 
     private String timeFormat (int h1, int h2) {  return String.format("%02d:00~%02d:00", h1, h2); }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="352dp"
+    android:layout_height="352dp"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="0dp"
+    android:layout_gravity="center"
+    android:background="@android:color/transparent"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="22dp">
+
+        <ImageButton
+            android:id="@+id/btn_x"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_x"
+            android:contentDescription="x"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="거절 사유를 선택해주세요"
+            android:textColor="@color/black_text"
+            style="@style/Text.Semibold18"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="52dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_place"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="95dp"
+            android:paddingVertical="8dp"
+            android:text="희망 장소가\n멀어요"
+            android:textColor="@color/gray_text"
+            style="@style/Text.Medium14"
+            app:backgroundTint="@color/radio_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:rippleColor="@android:color/transparent"
+            app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+            app:strokeColor="@color/radio_stroke"
+            android:stateListAnimator="@null"
+            app:strokeWidth="1dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_time"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="95dp"
+            app:layout_constraintStart_toEndOf="@id/btn_place"
+            android:layout_marginStart="8dp"
+            android:text="희망 시간대가\n일치하지 않아요"
+            android:checkable="true"
+            app:backgroundTint="@color/radio_bg"
+            app:strokeColor="@color/radio_stroke"
+            app:strokeWidth="1dp"
+            android:textColor="@color/gray_text"
+            app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+            app:rippleColor="@android:color/transparent"
+            android:stateListAnimator="@null"
+            style="@style/Text.Medium14"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_duplicate"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:text="이미 다른\n매칭이 있어요"
+            app:layout_constraintTop_toBottomOf="@id/btn_place"
+            app:layout_constraintStart_toStartOf="parent"
+            android:checkable="true"
+            app:backgroundTint="@color/radio_bg"
+            app:strokeColor="@color/radio_stroke"
+            app:strokeWidth="1dp"
+            android:textColor="@color/gray_text"
+            app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+            app:rippleColor="@android:color/transparent"
+            android:stateListAnimator="@null"
+            style="@style/Text.Medium14"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_other"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:text="기타"
+            app:layout_constraintTop_toBottomOf="@id/btn_time"
+            app:layout_constraintStart_toEndOf="@id/btn_duplicate"
+            android:layout_marginStart="8dp"
+            android:checkable="true"
+            app:backgroundTint="@color/radio_bg"
+            app:strokeColor="@color/radio_stroke"
+            app:strokeWidth="1dp"
+            android:textColor="@color/gray_text"
+            app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+            app:rippleColor="@android:color/transparent"
+            android:stateListAnimator="@null"
+            style="@style/Text.Medium14"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_refusal"
+            android:layout_width="304dp"
+            android:layout_height="54dp"
+            android:text="요청 거절하기"
+            style="@style/Text.Medium18"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_next_button_active"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            android:stateListAnimator="@null"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

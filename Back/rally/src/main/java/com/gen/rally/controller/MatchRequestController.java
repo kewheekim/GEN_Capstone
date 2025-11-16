@@ -35,7 +35,7 @@ public class MatchRequestController {
 
     @GetMapping("/found")
     public ResponseEntity<List<MatchFoundItem>> found(@AuthenticationPrincipal CustomUserDetails userDetails ) {
-        return ResponseEntity.ok(gameService.findFound(userDetails.getUsername()));
+        return ResponseEntity.ok(gameService.findFound(userDetails.getUsername(), userDetails.getId()));
     }
     @GetMapping("/seeking")
     public ResponseEntity<List<MatchSeekingItem>> seeking(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -47,5 +47,12 @@ public class MatchRequestController {
     public ResponseEntity<MatchRequestDetails> getInvitationDetail(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam Long myRequestId, @RequestParam Long opponentRequestId
     ) {
         return ResponseEntity.ok(matchService.getMatchRequestDetails(userDetails.getUsername(), myRequestId, opponentRequestId));
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<Void> refuse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Long requestId) {
+        String userId = userDetails.getUsername();
+        matchService.cancelRequest(userDetails.getUsername(), requestId);
+        return ResponseEntity.ok().build();
     }
 }

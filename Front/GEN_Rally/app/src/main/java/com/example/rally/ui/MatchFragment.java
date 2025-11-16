@@ -46,7 +46,7 @@ public class MatchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button startBtn = view.findViewById(R.id.btn_start);
+//        Button startBtn = view.findViewById(R.id.btn_start);
         TabLayout tabs = view.findViewById(R.id.tab_match);
 
         tabs.addOnTabSelectedListener( new TabLayout.OnTabSelectedListener() {
@@ -68,53 +68,53 @@ public class MatchFragment extends Fragment {
             }
         }
 
-        Wearable.getNodeClient(requireContext()).getConnectedNodes()
-                .addOnSuccessListener(nodes -> {
-                    StringBuilder sb = new StringBuilder("connected nodes: ");
-                    for (Node n : nodes)
-                        sb.append(n.getDisplayName()).append("(").append(n.getId()).append(") ");
-                    android.util.Log.d("PhoneDL", sb.toString());
-                    android.widget.Toast.makeText(requireContext(),
-                            nodes.isEmpty() ? "연결된 워치 없음" : sb.toString(),
-                            android.widget.Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> android.util.Log.e("PhoneDL", "getConnectedNodes failed", e));
-
-        startBtn.setOnClickListener(v -> {
-            PhoneDataLayerClient.sendGameSetup(
-                    requireContext(),
-                    "match-123",
-                    "너무어려워요",
-                    "안세영이되",
-                    false,
-                    new PhoneDataLayerClient.SendCallback() {
-                        @Override
-                        public void onSuccess() {
-                            requireActivity().runOnUiThread(() ->
-                                    android.widget.Toast.makeText(requireContext(), "워치로 전송 완료", android.widget.Toast.LENGTH_SHORT).show()
-                            );
-                        }
-                        @Override
-                        public void onNoNode() {
-                            requireActivity().runOnUiThread(() ->
-                                    android.widget.Toast.makeText(requireContext(), "연결된 워치 없음", android.widget.Toast.LENGTH_SHORT).show()
-                            );
-                        }
-                        @Override
-                        public void onError(Exception e) {
-                            requireActivity().runOnUiThread(() ->
-                                    android.widget.Toast.makeText(requireContext(), "전송 실패: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show()
-                            );
-                        }
-                    }
-            );
-            startActivity(new Intent(requireContext(), ScoreMonitorActivity.class)
-                    .putExtra("gameId", "match-123")
-                    .putExtra("opponentName", "너무어려워요")
-                    .putExtra("userName", "안세영이되")
-                    .putExtra("localIsUser1", false)
-            );
-        });
+//        Wearable.getNodeClient(requireContext()).getConnectedNodes()
+//                .addOnSuccessListener(nodes -> {
+//                    StringBuilder sb = new StringBuilder("connected nodes: ");
+//                    for (Node n : nodes)
+//                        sb.append(n.getDisplayName()).append("(").append(n.getId()).append(") ");
+//                    android.util.Log.d("PhoneDL", sb.toString());
+//                    android.widget.Toast.makeText(requireContext(),
+//                            nodes.isEmpty() ? "연결된 워치 없음" : sb.toString(),
+//                            android.widget.Toast.LENGTH_SHORT).show();
+//                })
+//                .addOnFailureListener(e -> android.util.Log.e("PhoneDL", "getConnectedNodes failed", e));
+//
+//        startBtn.setOnClickListener(v -> {
+//            PhoneDataLayerClient.sendGameSetup(
+//                    requireContext(),
+//                    "match-123",
+//                    "너무어려워요",
+//                    "안세영이되",
+//                    false,
+//                    new PhoneDataLayerClient.SendCallback() {
+//                        @Override
+//                        public void onSuccess() {
+//                            requireActivity().runOnUiThread(() ->
+//                                    android.widget.Toast.makeText(requireContext(), "워치로 전송 완료", android.widget.Toast.LENGTH_SHORT).show()
+//                            );
+//                        }
+//                        @Override
+//                        public void onNoNode() {
+//                            requireActivity().runOnUiThread(() ->
+//                                    android.widget.Toast.makeText(requireContext(), "연결된 워치 없음", android.widget.Toast.LENGTH_SHORT).show()
+//                            );
+//                        }
+//                        @Override
+//                        public void onError(Exception e) {
+//                            requireActivity().runOnUiThread(() ->
+//                                    android.widget.Toast.makeText(requireContext(), "전송 실패: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show()
+//                            );
+//                        }
+//                    }
+//            );
+//            startActivity(new Intent(requireContext(), ScoreMonitorActivity.class)
+//                    .putExtra("gameId", "match-123")
+//                    .putExtra("opponentName", "너무어려워요")
+//                    .putExtra("userName", "안세영이되")
+//                    .putExtra("localIsUser1", false)
+//            );
+//        });
     }
     private void switchTab(int position) {
         Fragment target;

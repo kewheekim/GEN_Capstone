@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatchFoundItem {
     private Long gameId;
+    private Long roomId;
+    private Long userId;
     private String opponentId;
     private String opponentProfile;
     private String opponentName;

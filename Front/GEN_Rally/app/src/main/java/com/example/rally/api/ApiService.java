@@ -13,6 +13,7 @@ import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.InvitationAcceptRequest;
 import com.example.rally.dto.InvitationAcceptResponse;
 import com.example.rally.dto.InvitationItem;
+import com.example.rally.dto.InvitationRefuseRequest;
 import com.example.rally.dto.MatchFoundItem;
 import com.example.rally.dto.MatchInvite;
 import com.example.rally.dto.MatchInviteResponse;
@@ -97,10 +98,22 @@ public interface ApiService {
     Call<Long> requestMatch(@Body MatchRequestDto requestDto);
 
     @Headers("Requires-Auth: true")
+    @POST("/api/match/cancel")
+    Call<ResponseBody> cancelMatchRequest(@Body Long requestId);
+
+    @Headers("Requires-Auth: true")
     @POST("/api/match/candidates")
     Call<List<CandidateResponseDto>> getCandidates(@Body MatchRequestDto requestDto);
 
     @Headers("Requires-Auth: true")
     @POST("/api/invitation/accept")
     Call<InvitationAcceptResponse> acceptInvitation(@Body InvitationAcceptRequest body);
+
+    @Headers("Requires-Auth: true")
+    @POST("/api/invitation/refuse")
+    Call<ResponseBody> refuseInvitation(@Body InvitationRefuseRequest body);
+
+    @Headers("Requires-Auth: true")
+    @POST("/api/game/cancel")
+    Call<ResponseBody> cancelGame(@Body Long gameId);
 }

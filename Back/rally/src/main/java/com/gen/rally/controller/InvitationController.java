@@ -82,4 +82,12 @@ public class InvitationController {
         }
         return invitationService.accept(userDetails.getUsername(), req.getInvitationId());
     }
+
+    // 요청 거절
+    @PostMapping("/refuse")
+    public ResponseEntity<Void> refuse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody InvitationRefuseRequest req) {
+        String userId = userDetails.getUsername();
+        invitationService.refuse(userId, req.getInvitationId(), req.getRefusal());
+        return ResponseEntity.ok().build();
+    }
 }

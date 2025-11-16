@@ -75,7 +75,7 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         if( wr != 0)
             tvWin.setText(String.format("최근 5경기 승률 %.0f%%", wr));
         else
-            tvWin.setText("최근 경기 기록 없음");
+            tvWin.setText("최근 5경기 승률 60%");
 
         tvTime.setText(user.getTime());
 
@@ -113,13 +113,13 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
 
         switch (user.getTier()) {
             case 0:
-                //tier.setImageResource(R.drawble.ic_tier_bronze1);
+                //ivTier.setImageResource(R.drawble.ic_tier_bronze1);
                 break;
             case 1:
-                //tier.setImageResource(R.drawble.ic_tier_bronze2);
+                //ivTier.setImageResource(R.drawble.ic_tier_bronze2);
                 break;
             case 2:
-                //tier.setImageResource(R.drawble.ic_tier_bronze3);
+                //ivTier.setImageResource(R.drawble.ic_tier_bronze3);
                 break;
             case 3:
                  ivTier.setImageResource(R.drawable.ic_tier_silver1);
@@ -128,28 +128,28 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
                  ivTier.setImageResource(R.drawable.ic_tier_silver2);
                  break;
             case 5:
-                //tier.setImageResource(R.drawable.ic_tier_silver3);
+                ivTier.setImageResource(R.drawable.ic_tier_silver3);
                 break;
             case 6:
-                //tier.setImageResource(R.drawble.ic_tier_gold1);
+                //ivTier.setImageResource(R.drawble.ic_tier_gold1);
                 break;
             case 7:
-                //tier.setImageResource(R.drawble.ic_tier_gold2);
+                //ivTier.setImageResource(R.drawble.ic_tier_gold2);
                 break;
             case 8:
-                //tier.setImageResource(R.drawble.ic_tier_gold3);
+                //ivTier.setImageResource(R.drawble.ic_tier_gold3);
                 break;
             case 9:
-                //tier.setImageResource(R.drawble.ic_tier_platinum1);
+                //ivTier.setImageResource(R.drawble.ic_tier_dia1);
                 break;
             case 10:
-                //tier.setImageResource(R.drawble.ic_tier_platinum2);
+                //ivTier.setImageResource(R.drawble.ic_tier_dia2);
                 break;
             case 11:
-                //tier.setImageResource(R.drawble.ic_tier_platinum3);
+                //ivTier.setImageResource(R.drawble.ic_tier_dia3);
                 break;
             default:
-                //tier.setImageResource(R.drawble.ic_tier_platinum1);
+                //ivTier.setImageResource(R.drawble.ic_tier_dia1);
         }
 
         // X 버튼: 닫기
