@@ -3,6 +3,7 @@ package com.gen.rally.repository;
 import com.gen.rally.entity.ChatMessage;
 import com.gen.rally.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,8 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
 
     @Query("SELECT COUNT(m) FROM ChatMessage m WHERE m.chatRoom.id = :roomId AND m.createdAt > :lastReadAt AND m.sender.id != :senderId") // 안 읽은 메시지 조회
     int countUnreadMessages(@Param("roomId") Long roomId, @Param("lastReadAt") LocalDateTime lastReadAt, @Param("senderId") Long senderId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from ChatMessage m where m.chatRoom.id = :roomId")
+    void deleteByRoomId(Long roomId);
 }

@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.adapter.ChatAdapter;
 import com.example.rally.api.ApiService;
@@ -47,7 +48,7 @@ import ua.naiksoftware.stomp.StompClient;
 // CHAT_002
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCardClickListener {
 
-    private static final String BASE_URL = "ws://172.19.8.237:8080/stomp";
+    private static final String BASE_URL = BuildConfig.WS_BASE_URL;
     private static final String SUBSCRIBE_URL = "/sub/dm/";
     private static final String SEND_URL = "/pub/dm/";
 
@@ -87,7 +88,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
         setContentView(R.layout.activity_chat);
 
         apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(),"http://172.19.8.237:8080/")
+                .getSecureClient(getApplicationContext(), BuildConfig.API_BASE_URL)
                 .create(ApiService.class);
 
         Intent it = getIntent();

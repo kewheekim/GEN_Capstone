@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.adapter.ChatListAdapter;
 import com.example.rally.api.ApiService;
@@ -29,7 +30,7 @@ import retrofit2.Response;
 
 // CHAT_001
 public class ChatListActivity extends AppCompatActivity {
-    private static final String BASE_URL = "ws://172.19.8.237:8080/stomp";
+    private static final String BASE_URL = BuildConfig.WS_BASE_URL;
     private ChatListAdapter adapter;
     private ApiService apiService;
     private RecyclerView chatList;
@@ -63,7 +64,7 @@ public class ChatListActivity extends AppCompatActivity {
         }
 
         apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(),"http://172.19.8.237:8080/")
+                .getSecureClient(getApplicationContext(), BuildConfig.API_BASE_URL)
                 .create(ApiService.class);
 
         toolbar = findViewById(R.id.toolbar);
