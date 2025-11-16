@@ -104,6 +104,8 @@
         <activity android:name=".ui.ChatListActivity" />
         <activity android:name=".ui.ChatActivity" />
         <activity android:name=".ui.ChatPromiseActivity" />
+        <activity android:name=".ui.ChatPromiseConfirmActivity"/>
+        <activity android:name=".ui.ChatPromiseDetailActivity"/>
 
         <service
             android:name=".wear.PhoneDataLayerListener"

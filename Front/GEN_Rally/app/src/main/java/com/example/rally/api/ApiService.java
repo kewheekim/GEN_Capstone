@@ -13,6 +13,7 @@ import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.InvitationAcceptRequest;
 import com.example.rally.dto.InvitationAcceptResponse;
 import com.example.rally.dto.InvitationItem;
+import com.example.rally.dto.MatchConfirmDto;
 import com.example.rally.dto.InvitationRefuseRequest;
 import com.example.rally.dto.MatchFoundItem;
 import com.example.rally.dto.MatchInvite;
@@ -32,6 +33,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -69,6 +71,10 @@ public interface ApiService {
     @Headers("Requires-Auth: true")
     @POST("/api/rooms/{roomId}/read")
     Call<ResponseBody> markChatRoomAsRead(@Path("roomId") Long roomId);
+
+    @Headers("Requires-Auth: true")
+    @PUT("/api/rooms/match-confirm")
+    Call<ResponseBody> confirmMatch(@Body MatchConfirmDto dto);
 
     @Headers("Requires-Auth: true")
     @POST("/api/invitation/invite")

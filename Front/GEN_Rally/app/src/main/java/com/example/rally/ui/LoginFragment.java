@@ -47,9 +47,6 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        // TODO: 로그인 로직 처리 후,
-        // 신규 소셜 유저라면 ((AuthActivity)getActivity()).showSignup();
-        // 기존 유저면 MainActivity로 이동
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

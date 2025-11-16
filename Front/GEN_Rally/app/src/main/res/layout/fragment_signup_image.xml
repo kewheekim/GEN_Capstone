@@ -28,7 +28,7 @@
         android:id="@+id/view_img"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:src="@drawable/ic_user"
+        android:src="@drawable/ic_default_profile1"
         android:scaleType="centerCrop"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_go"

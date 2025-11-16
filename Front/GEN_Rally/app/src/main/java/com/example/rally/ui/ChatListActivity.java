@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rally.BuildConfig;
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.adapter.ChatListAdapter;
 import com.example.rally.api.ApiService;

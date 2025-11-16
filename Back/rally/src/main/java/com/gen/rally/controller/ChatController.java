@@ -1,9 +1,6 @@
 package com.gen.rally.controller;
 
-import com.gen.rally.dto.ChatMessageDto;
-import com.gen.rally.dto.ChatMessageRequest;
-import com.gen.rally.dto.ChatRoomDto;
-import com.gen.rally.dto.ChatRoomListDto;
+import com.gen.rally.dto.*;
 import com.gen.rally.entity.ChatMessage;
 import com.gen.rally.entity.ChatRoom;
 import com.gen.rally.entity.CustomUserDetails;
@@ -86,6 +83,17 @@ public class ChatController {
         Long userId = userDetails.getId();
         List<ChatMessageDto> list = chatService.loadMessages(roomId, userId);
         return ResponseEntity.ok(list);
+    }
+
+    // 경기 확정 시, 게임 상태 수정
+    @PutMapping("/api/rooms/match-confirm")
+    @ResponseBody
+    public ResponseEntity<String> confirmMatch(@RequestBody MatchConfirmDto dto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+        String res = chatService.confirm(dto);
+        return ResponseEntity.ok(res);
     }
 
     // 메시지 발신 및 수신

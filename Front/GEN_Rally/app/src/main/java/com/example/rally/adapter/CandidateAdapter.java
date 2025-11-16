@@ -202,21 +202,21 @@ public class CandidateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 시간 상태
             if(user.isSameTime()) {
                 sameTimeText.setText("시간이 동일해요");
-                sameTimeIcon.setImageResource(R.drawable.ic_circle);
+                sameTimeIcon.setImageResource(R.drawable.ic_time_same);
             }
             else {
                 sameTimeText.setText("시간이 일부 겹쳐요");
-                sameTimeIcon.setImageResource(R.drawable.ic_circlehalf);
+                sameTimeIcon.setImageResource(R.drawable.ic_time_diff);
             }
 
             // 위치 상태
             if(user.isSamePlace()) {
                 samePlaceText.setText("위치가 동일해요");
-                samePlaceIcon.setImageResource(R.drawable.ic_circle);
+                samePlaceIcon.setImageResource(R.drawable.ic_location_same);
             }
             else {
                 samePlaceText.setText(String.format("%.1fkm 떨어져 있어요", user.getDistance()));
-                samePlaceIcon.setImageResource(R.drawable.ic_circlehalf);
+                samePlaceIcon.setImageResource(R.drawable.ic_location_diff);
             }
             // 클릭 시 상세화면으로 이동
             itemView.setOnClickListener(v -> {

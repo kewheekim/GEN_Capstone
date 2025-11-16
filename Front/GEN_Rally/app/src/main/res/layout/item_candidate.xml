@@ -68,9 +68,9 @@
 
                 <ImageView
                     android:id="@+id/iv_time_status"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_circlehalf" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_time_diff" />
 
                 <TextView
                     android:id="@+id/tv_time_status"
@@ -101,9 +101,9 @@
 
                 <ImageView
                     android:id="@+id/iv_location_status"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_circle" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_location_same" />
 
                 <TextView
                     android:id="@+id/tv_place_status"
