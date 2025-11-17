@@ -1,5 +1,6 @@
 package com.gen.rally.websocket.service;
 
+import com.gen.rally.service.GameScoreService;
 import com.gen.rally.websocket.bus.MessageBus;
 import com.gen.rally.websocket.model.GameState;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,8 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class GameEventService {
     private final MessageBus messageBus;
-    public GameEventService(MessageBus messageBus) {
+    private final GameScoreService gameScoreService;
+    public GameEventService(MessageBus messageBus, GameScoreService gameScoreService) {
         this.messageBus = messageBus;
+        this.gameScoreService = gameScoreService;
     }
     private final ObjectMapper mapper = new ObjectMapper();
     private final Map<String, GameState> games = new ConcurrentHashMap<>();
@@ -111,7 +114,7 @@ public class GameEventService {
                         p.put("user2Sets", st.user2Sets);
                         p.put("setNumberFinished", st.setNumber - 1);
 
-                        //  세트별 점수/시간 요약 포함
+                        //  세트별 점수, 시간
                         var arr = mapper.createArrayNode();
                         long total = 0L;
                         for (var ss : st.completedSets) {
@@ -128,6 +131,12 @@ public class GameEventService {
 
                         gf.set("payload", p);
                         messageBus.publish("/topic/game."+ gameId, mapper.writeValueAsString(gf));
+
+                        try {
+                            gameScoreService.saveFromGameState(gameId, st, arr, total);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 case "snapshot_request" -> { return false; }

@@ -44,5 +44,7 @@ public class Game {
     @ManyToOne
     @JoinColumn(name = "winner", referencedColumnName = "user_id")
     private User winner;
-    // @@ score 필드 추가하기
+
+    @OneToOne(mappedBy = "game")
+    private GameScore gameScore;
 }
