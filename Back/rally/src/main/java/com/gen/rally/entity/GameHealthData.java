@@ -19,7 +19,6 @@ public class GameHealthData {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    private int totalPoints; // 경기 획득 세트
     // 헬스 데이터
     private Integer steps;
     private Integer maxHr;
