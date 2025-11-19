@@ -18,13 +18,13 @@
         android:theme="@style/Theme.Rally"
         tools:targetApi="31">
         <activity
+            android:name=".ui.GoalCreateActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MatSuccessActivity"
             android:exported="false" />
         <activity
             android:name=".ui.InvitationDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.InvitationSentDetailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.GameResultActivity"
@@ -104,8 +104,8 @@
         <activity android:name=".ui.ChatListActivity" />
         <activity android:name=".ui.ChatActivity" />
         <activity android:name=".ui.ChatPromiseActivity" />
-        <activity android:name=".ui.ChatPromiseConfirmActivity"/>
-        <activity android:name=".ui.ChatPromiseDetailActivity"/>
+        <activity android:name=".ui.ChatPromiseConfirmActivity" />
+        <activity android:name=".ui.ChatPromiseDetailActivity" />
 
         <service
             android:name=".wear.PhoneDataLayerListener"

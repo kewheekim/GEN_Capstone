@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bg_default"
+    android:paddingHorizontal="24dp"
+    tools:context=".ui.GoalCalorieFragment">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="얼마나 칼로리를\n태워볼까요?"
+        style="@style/Text.Semibold24"
+        />
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="60kg인 사람 기준 30분 동안 배드민턴을\n적당히 치는 건 170kcal가 소모돼요"
+        style="@style/Text.Medium16"
+        />
+    
+    <EditText
+        android:id="@+id/et_calorie"
+        android:layout_width="147dp"
+        android:layout_height="78dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_content"
+        android:layout_marginTop="68dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/bg_text_field"
+        android:hint="200"
+        android:textColorHint="@color/gray_nav_bar"
+        android:padding="18dp"
+        style="@style/Text.Semibold24"
+        android:textColor="@color/gray_text"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kcal"
+        app:layout_constraintTop_toBottomOf="@id/tv_content"
+        android:layout_marginTop="92dp"
+        app:layout_constraintStart_toEndOf="@id/et_calorie"
+        android:layout_marginStart="15dp"
+        style="@style/Text.Semibold24"
+        android:textColor="@color/black_text"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_next"
+        android:layout_width="364dp"
+        android:layout_height="54dp"
+        android:text="다음"
+        style="@style/Text.Medium18"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_next_button_active"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp"
+        android:stateListAnimator="@null"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

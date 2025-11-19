@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/goal_card"
+    android:layout_width="157dp"
+    android:layout_height="197dp"
+    android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    android:layout_marginBottom="4dp"
+    app:cardElevation="0dp"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="@drawable/bg_match_item"
+        >
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/goal_type_card"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="#F9FFFF"
+            android:layout_width="61dp"
+            android:layout_height="26dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            >
+            <TextView
+                android:id="@+id/tv_goal_type"
+                android:layout_width="61dp"
+                android:layout_height="26dp"
+                android:gravity="center"
+                android:text="건강 관리"
+                android:textColor="#3191FF"
+                style="@style/Text.Medium12"
+                />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/goal_type_card"
+            android:text="경기 당 200 칼로리\n소모하기"
+            android:layout_marginTop="4dp"
+            style="@style/Text.Semibold16"
+            />
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="40dp"
+            android:text="7"
+            android:textColor="@color/blue"
+            style="@style/Text.Bold22"
+            />
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintStart_toEndOf="@id/tv_progress"
+            android:layout_marginEnd="34dp"
+
+            android:text="/8"
+            android:textColor="@color/black_text"
+            style="@style/Text.Bold22"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="74dp"
+            android:layout_height="74dp"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:progressDrawable="@drawable/custom_circle_progressbar"
+            android:progressTint="@color/green_active"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
