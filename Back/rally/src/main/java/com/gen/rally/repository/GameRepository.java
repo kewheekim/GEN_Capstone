@@ -1,6 +1,8 @@
 package com.gen.rally.repository;
 import com.gen.rally.entity.Game;
 import com.gen.rally.entity.MatchRequest;
+import com.gen.rally.entity.User;
+import com.gen.rally.enums.State;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,4 +42,13 @@ ORDER BY g.date DESC
                or (g.requestId1 = :r2 and g.requestId2 = :r1)
            """)
     Optional<Game> findByRequests(MatchRequest r1, MatchRequest r2);
+
+    @Query("""
+        SELECT g FROM Game g
+        LEFT JOIN FETCH g.requestId1
+        WHERE (g.user1 = :user OR g.user2 = :user) 
+        AND g.state = :state
+        ORDER BY g.date DESC
+    """)
+    List<Game> findGamesByUserAndState(@Param("user") User user,@Param("state") State state);
 }

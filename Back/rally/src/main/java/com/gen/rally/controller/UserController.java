@@ -1,5 +1,7 @@
 package com.gen.rally.controller;
 
+import com.gen.rally.dto.MatchInfoDto;
+import com.gen.rally.dto.MatchRequestInfoDto;
 import com.gen.rally.dto.TierAssessRequest;
 import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.entity.CustomUserDetails;
@@ -17,23 +19,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
 
     // 메인 화면
     @GetMapping("/api/home")
-    public void home(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public List<MatchInfoDto> home(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if(userDetails == null){
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
         String userId = userDetails.getUsername();
-        User user = userRepository.findByUserId(userId).
-                orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
-
+        System.out.println("요청한 사용자 아이디: "+userId);
+        return userService.getHome(userId);
     }
 
     // 실력 자가진단

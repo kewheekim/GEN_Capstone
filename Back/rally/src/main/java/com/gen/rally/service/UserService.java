@@ -1,20 +1,27 @@
 package com.gen.rally.service;
 
 import com.gen.rally.config.jwt.JwtProvider;
+import com.gen.rally.dto.MatchInfoDto;
 import com.gen.rally.dto.TierAssessRequest;
 import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.dto.auth.*;
+import com.gen.rally.entity.Game;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.entity.User;
+import com.gen.rally.enums.State;
 import com.gen.rally.enums.Tier;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
+import com.gen.rally.repository.GameRepository;
 import com.gen.rally.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,6 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final GameRepository gameRepository;
 
     public SignupResponse generalSignup(GeneralSignupRequest request){
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -119,5 +127,16 @@ public class UserService {
     public void setManner(double manner, String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    // 홈 화면 갱신
+    public List<MatchInfoDto> getHome(String userId){
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(()-> new CustomException(ErrorCode.FORBIDDEN));
+
+        List<Game> games = gameRepository.findGamesByUserAndState(user, State.경기확정);
+        return games.stream()
+                .map(game -> new MatchInfoDto(game, userId))
+                .collect(Collectors.toList());
     }
 }

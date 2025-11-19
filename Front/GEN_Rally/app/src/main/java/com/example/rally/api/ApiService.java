@@ -16,10 +16,12 @@ import com.example.rally.dto.InvitationItem;
 import com.example.rally.dto.MatchConfirmDto;
 import com.example.rally.dto.InvitationRefuseRequest;
 import com.example.rally.dto.MatchFoundItem;
+import com.example.rally.dto.MatchInfoDto;
 import com.example.rally.dto.MatchInvite;
 import com.example.rally.dto.MatchInviteResponse;
 import com.example.rally.dto.MatchRequestDetails;
 import com.example.rally.dto.MatchRequestDto;
+import com.example.rally.dto.MatchRequestInfoDto;
 import com.example.rally.dto.MatchSeekingItem;
 import com.example.rally.dto.SignupResponse;
 import com.example.rally.dto.TierAssessRequest;
@@ -53,6 +55,12 @@ public interface ApiService {
     @Headers("Requires-Auth: true")
     @POST("/api/users/tier")
     Call<TierAssessResponse> getTier(@Body TierAssessRequest request);
+
+    @Headers("Requires-Auth: true")
+    @GET("/api/home")
+    Call<List<MatchInfoDto>> getHome();
+
+    @Headers("Requires-Auth: true")
     @POST("/api/evaluation")
     Call<Void> createEvaluation(@Body EvaluationCreateRequest body);
 
