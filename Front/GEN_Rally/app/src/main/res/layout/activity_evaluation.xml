@@ -21,13 +21,11 @@
                 android:layout_height="wrap_content"
                 android:text="함께 경기했던 상대는 어땠나요?"
                 android:textColor="@color/black_text"
-                android:fontFamily="@font/pretendard_regular"
-                android:textFontWeight="700"
+                style="@style/Text.Semibold22"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="24dp"
-                android:textSize="22sp"
                 android:lineHeight="36sp"
                 />
             <TextView
@@ -36,13 +34,11 @@
                 android:layout_height="wrap_content"
                 android:text="좋았던 점이나 아쉬웠던 점을 자유롭게 선택해 주세요"
                 android:textColor="@color/gray_text"
-                android:fontFamily="@font/pretendard_regular"
-                android:textFontWeight="700"
                 app:layout_constraintTop_toBottomOf="@id/tv_title"
                 android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="24dp"
-                android:textSize="14sp"
+               style="@style/Text.Regular14"
                 android:lineHeight="36sp"
                 />
 
@@ -103,8 +99,7 @@
                     android:layout_marginLeft="24dp"
                     android:text="남기고 싶은 칭찬 한마디"
                     android:textColor="@color/black_text"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/pretendard_semibold"/>
+                    style="@style/Text.Semibold18" />
                 <EditText
                     android:id="@+id/et_compliment"
                     android:layout_width="364dp"
@@ -115,8 +110,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:background="@drawable/bg_next_button_inactive"
                     android:hint="  건강한 배드민턴 문화를 위해, 욕설이나 비방은 삼가주세요."
-                    android:fontFamily="@font/pretendard_medium"
-                    android:textSize="14sp"
+                    style="@style/Text.Regular14"
                     android:padding="17dp"
                     android:gravity="start"
                     />
@@ -242,7 +236,7 @@
                     android:layout_marginTop="42dp"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="44dp"
-                    android:text="셔틀콕을 안정적으로 잘 전달해줬어요"
+                    android:text="셔틀콕을 매너있게 전달해줬어요"
                     android:textColor="@color/black_text"
                     android:textSize="16sp"
                     android:fontFamily="@font/pretendard_medium" />

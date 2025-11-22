@@ -253,7 +253,7 @@ public class SignupFragment extends Fragment {
                         if (response.errorBody() != null) {
                             String raw = response.errorBody().string();
                             try {
-                                message = new org.json.JSONObject(raw).optString("message", message);
+                                message = new JSONObject(raw).optString("message", message);
                             } catch (Exception ignore) {}
                         }
                         tvSetId.setText(message);
@@ -266,7 +266,7 @@ public class SignupFragment extends Fragment {
                         if (response.errorBody() != null) {
                             String raw = response.errorBody().string();
                             try {
-                                String fromServer = new org.json.JSONObject(raw).optString("message", "");
+                                String fromServer = new JSONObject(raw).optString("message", "");
                                 if (!fromServer.isEmpty()) errMsg = fromServer;
                             } catch (Exception ignore) {}
                         }
