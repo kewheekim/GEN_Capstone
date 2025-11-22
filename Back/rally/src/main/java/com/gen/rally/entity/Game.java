@@ -1,5 +1,6 @@
 package com.gen.rally.entity;
 
+import com.gen.rally.enums.GameStyle;
 import com.gen.rally.enums.GameType;
 import com.gen.rally.enums.State;
 import jakarta.persistence.*;
@@ -13,6 +14,10 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long gameId;
+
+    @OneToOne
+    @JoinColumn(name = "room_id")
+    ChatRoom chatRoom;
 
     @ManyToOne
     @JoinColumn(name = "request_id1")
@@ -40,6 +45,8 @@ public class Game {
     @Enumerated(EnumType.STRING)
     @Column(name = "game_type")
     private GameType gameType;
+    @Column(name = "game_style")
+    private GameStyle gameStyle;
 
     @ManyToOne
     @JoinColumn(name = "winner", referencedColumnName = "user_id")

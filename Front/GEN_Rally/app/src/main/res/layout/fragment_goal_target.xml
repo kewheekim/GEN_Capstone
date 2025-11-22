@@ -54,7 +54,7 @@
         app:backgroundTint="@color/radio_bg"
         app:strokeColor="@color/radio_stroke"
         app:strokeWidth="1dp"
-        app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+        app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
         app:rippleColor="@android:color/transparent"
         android:stateListAnimator="@null" />
     <com.google.android.material.button.MaterialButton
@@ -72,7 +72,7 @@
         app:backgroundTint="@color/radio_bg"
         app:strokeColor="@color/radio_stroke"
         app:strokeWidth="1dp"
-        app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+        app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
         app:rippleColor="@android:color/transparent"
         android:stateListAnimator="@null" />
 
@@ -90,7 +90,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_count"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:scrollbars="none">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -108,7 +109,7 @@
                 app:backgroundTint="@color/radio_bg"
                 app:strokeColor="@color/radio_stroke"
                 app:strokeWidth="1dp"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+                app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
                 app:rippleColor="@android:color/transparent"
                 android:stateListAnimator="@null" />
             <com.google.android.material.button.MaterialButton
@@ -126,7 +127,7 @@
                 app:backgroundTint="@color/radio_bg"
                 app:strokeColor="@color/radio_stroke"
                 app:strokeWidth="1dp"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+                app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
                 app:rippleColor="@android:color/transparent"
                 android:stateListAnimator="@null" />
             <com.google.android.material.button.MaterialButton
@@ -144,7 +145,7 @@
                 app:backgroundTint="@color/radio_bg"
                 app:strokeColor="@color/radio_stroke"
                 app:strokeWidth="1dp"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+                app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
                 app:rippleColor="@android:color/transparent"
                 android:stateListAnimator="@null" />
             <com.google.android.material.button.MaterialButton
@@ -162,7 +163,7 @@
                 app:backgroundTint="@color/radio_bg"
                 app:strokeColor="@color/radio_stroke"
                 app:strokeWidth="1dp"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+                app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
                 app:rippleColor="@android:color/transparent"
                 android:stateListAnimator="@null" />
             <com.google.android.material.button.MaterialButton
@@ -180,7 +181,7 @@
                 app:backgroundTint="@color/radio_bg"
                 app:strokeColor="@color/radio_stroke"
                 app:strokeWidth="1dp"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+                app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
                 app:rippleColor="@android:color/transparent"
                 android:stateListAnimator="@null" />
             <com.google.android.material.button.MaterialButton
@@ -198,12 +199,11 @@
                 app:backgroundTint="@color/radio_bg"
                 app:strokeColor="@color/radio_stroke"
                 app:strokeWidth="1dp"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"
+                app:shapeAppearanceOverlay="@style/RoundedProfileImage12dp"
                 app:rippleColor="@android:color/transparent"
                 android:stateListAnimator="@null" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </HorizontalScrollView>
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_next"
@@ -216,8 +216,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         android:stateListAnimator="@null"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
