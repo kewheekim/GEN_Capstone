@@ -15,10 +15,6 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long gameId;
 
-    @OneToOne
-    @JoinColumn(name = "room_id")
-    ChatRoom chatRoom;
-
     @ManyToOne
     @JoinColumn(name = "request_id1")
     private MatchRequest requestId1; // 요청은 두 개이므로, 두 개의 아이디로 관리
@@ -42,11 +38,17 @@ public class Game {
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     private State state;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "game_type")
     private GameType gameType;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "game_style")
     private GameStyle gameStyle;
+
+    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY)
+    private ChatRoom chatRoom;
 
     @ManyToOne
     @JoinColumn(name = "winner", referencedColumnName = "user_id")
