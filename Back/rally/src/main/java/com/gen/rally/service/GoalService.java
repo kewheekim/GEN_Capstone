@@ -1,6 +1,7 @@
 package com.gen.rally.service;
 
 import com.gen.rally.dto.GoalCreateRequest;
+import com.gen.rally.dto.GoalItem;
 import com.gen.rally.entity.Goal;
 import com.gen.rally.entity.User;
 import com.gen.rally.enums.GoalType;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +56,30 @@ public class GoalService {
 
         Goal saved = goalRepository.save(goal);
         return saved.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<GoalItem> getActiveGoals(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        // achieved = false 인 Goal 조회
+        List<Goal> goals = goalRepository.findByUserAndAchieved(user, false);
+
+        return goals.stream()
+                .map(this::toGoalItem)
+                .collect(Collectors.toList());
+    }
+
+    private GoalItem toGoalItem(Goal goal) {
+        String theme = goal.getTheme() != null ? goal.getTheme().name() : null;
+        return new GoalItem(
+                goal.getId(),
+                goal.getName(),
+                theme,
+                goal.getTargetWeeks(),
+                goal.getTargetCount(),
+                goal.getProgressCount()
+        );
     }
 }
 

@@ -1,6 +1,7 @@
 package com.gen.rally.controller;
 
 import com.gen.rally.dto.GoalCreateRequest;
+import com.gen.rally.dto.GoalItem;
 import com.gen.rally.entity.CustomUserDetails;
 import com.gen.rally.service.GoalService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +26,11 @@ public class GoalController {
                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long goalId = goalService.createGoal(request, userDetails.getUsername());
         return ResponseEntity.ok(goalId);
+    }
+
+    @PostMapping("/active")
+    public List<GoalItem> getActiveGoals(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<GoalItem> goals = goalService.getActiveGoals(userDetails.getUsername());
+        return goals;
     }
 }
