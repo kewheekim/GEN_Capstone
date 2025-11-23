@@ -34,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // HOM_001
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButtonClickListener {
     private RecyclerView rvGames;
     private ImageView ivGameNull;
     private GameCardAdapter gameAdapter;
@@ -49,25 +49,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        /*try {
-            tokenStore = new TokenStore(getApplicationContext());
-
-            currentUserId = tokenStore.getUserId();
-
-            if (currentUserId == -1L) {
-                // 사용자 ID가 없으면 로그인 화면으로 이동 또는 오류 처리
-                Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this, AuthActivity.class));
-                finish();
-                return;
-            }
-        } catch (GeneralSecurityException | IOException e) {
-            Log.e("ChatListActivity", "TokenStore 초기화 실패", e);
-            Toast.makeText(this, "보안 저장소 오류 발생", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }*/
-
         rvGames = view.findViewById(R.id.rv_games);
         ivGameNull = view.findViewById(R.id.iv_gamenull);
 
@@ -81,7 +62,7 @@ public class HomeFragment extends Fragment {
         // 채팅 버튼
         ImageButton chatBtn = view.findViewById(R.id.btn_chat);
         chatBtn.setOnClickListener(v->{
-            Intent intent = new Intent(getActivity(),ChatListActivity.class);
+            Intent intent = new Intent(getActivity(),ChatActivity.class);
             startActivity(intent);
         });
 
@@ -95,6 +76,24 @@ public class HomeFragment extends Fragment {
                     }
                 }
         );
+
+
+        try {
+            tokenStore = new TokenStore(requireContext());
+
+            currentUserId = tokenStore.getUserId();
+
+            if (currentUserId == -1L) {
+                startActivity(new Intent(requireActivity(), AuthActivity.class));
+                requireActivity().finish();
+                return view;
+            }
+        } catch (GeneralSecurityException | IOException e) {
+            Log.e("ChatActivity", "TokenStore 초기화 실패", e);
+            requireActivity().finish();
+            return view;
+        }
+
         setupRecyclerViews();
         loadHomeData();
 
@@ -103,6 +102,7 @@ public class HomeFragment extends Fragment {
 
     private void setupRecyclerViews() {
         gameAdapter = new GameCardAdapter();
+        gameAdapter.setOnChatButtonClickListener(this);
         rvGames.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvGames.setAdapter(gameAdapter);
     }
@@ -133,5 +133,14 @@ public class HomeFragment extends Fragment {
                     ivGameNull.setVisibility(View.VISIBLE);
                 }
         });
+    }
+
+    @Override
+    public void onChatButtonClick(long roomId) {
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra(ChatActivity.ROOM_ID, roomId);
+        intent.putExtra(ChatActivity.MY_USER_ID, currentUserId); // Fragment에서 안전하게 가져온 ID 사용
+
+        startActivity(intent);
     }
 }
