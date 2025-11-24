@@ -77,7 +77,6 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
                 }
         );
 
-
         try {
             tokenStore = new TokenStore(requireContext());
 
@@ -89,7 +88,7 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
                 return view;
             }
         } catch (GeneralSecurityException | IOException e) {
-            Log.e("ChatActivity", "TokenStore 초기화 실패", e);
+            Log.e("HomeFragment", "TokenStore 초기화 실패", e);
             requireActivity().finish();
             return view;
         }
