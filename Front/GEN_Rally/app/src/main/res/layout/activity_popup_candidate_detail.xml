@@ -6,7 +6,8 @@
     android:layout_height="544dp"
     android:layout_gravity="center"
     app:cardCornerRadius="16dp"
-    android:elevation="0dp">
+    app:cardElevation="0dp"
+    android:background="@android:color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -196,7 +197,7 @@
             />
 
         <TextView
-            android:id="@+id/tv_opponent_style"
+            android:id="@+id/tv_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="열심히 경기해요"
@@ -217,7 +218,7 @@
             style="@style/Text.Medium12"
             android:textColor="@color/black_text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_opponent_style"
+            app:layout_constraintTop_toBottomOf="@+id/tv_style"
             android:layout_marginTop="16dp"
             android:layout_marginStart="24dp"
             />

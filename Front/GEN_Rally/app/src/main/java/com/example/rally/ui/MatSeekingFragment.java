@@ -1,6 +1,7 @@
 package com.example.rally.ui;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,8 +24,8 @@ import com.example.rally.adapter.MatchSeekingAdapter;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
 import com.example.rally.dto.MatchSeekingItem;
-import java.util.List;
 
+import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +66,26 @@ public class MatSeekingFragment extends Fragment {
 
         adapter.setOnMoreClickListener((anchor, item, position) -> {
             showMoreMenu(anchor, item);
+        });
+
+        // 후보 보기 버튼
+        adapter.setOnCandidatesClickListener((item, position) -> {
+            Long requestId = item.getRequestId();
+            if (requestId == null || requestId <= 0) return;
+
+            Intent intent = new Intent(requireContext(), LoadingActivity.class);
+            intent.putExtra("requestId", requestId);
+            intent.putExtra("gameType", item.getGameType());
+            String gameStyle = item.getGameStyle();
+            if(gameStyle == "편하게" || gameStyle == "열심히")
+                gameStyle +=" 해요";
+            else
+                gameStyle = "상관없어요";
+            intent.putExtra("gameStyle", gameStyle);
+            intent.putExtra("date", item.getDate().split("\\(")[0]);
+            intent.putExtra("time", item.getTime());
+            intent.putExtra("placeName", item.getPlace());
+            startActivity(intent);
         });
         rv.setAdapter(adapter);
         fetchSeekingMatches();

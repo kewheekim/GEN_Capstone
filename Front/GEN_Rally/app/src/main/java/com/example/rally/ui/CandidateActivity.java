@@ -17,8 +17,6 @@ import com.example.rally.dto.CandidateItem;
 import com.example.rally.dto.CandidateResponseDto;
 import com.example.rally.dto.MatchRequestDto;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,28 +25,31 @@ import java.util.TreeMap;
 
 // MAT_REC_S_001
 public class CandidateActivity extends AppCompatActivity {
+    TextView tvDate;
+    TextView tvTime;
+    TextView tvLocation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_candidate_result);
 
-        long requestId = getIntent().getLongExtra("requestId", -1);
-        MatchRequestDto userInput = (MatchRequestDto)getIntent().getSerializableExtra("userInput");
-
-        LocalDate gameDate= LocalDate.parse(userInput.getGameDate());
-        DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일");
-        String formattedDate = gameDate.format(formatter);
+        Intent prev = getIntent();
+        long requestId = prev.getLongExtra("requestId", -1);
+        MatchRequestDto userInput = (MatchRequestDto)prev.getSerializableExtra("userInput");
+        String dateLabel = prev.getStringExtra("date");
+        String timeLabel = prev.getStringExtra("time");
+        String placeLabel = prev.getStringExtra("placeName");
 
         @SuppressWarnings("unchecked")
         ArrayList<CandidateResponseDto> candidates = (ArrayList<CandidateResponseDto>) getIntent().getSerializableExtra("candidates");
 
-        TextView tvDate= findViewById(R.id.tv_date_type);
-        tvDate.setText(formattedDate);
-        TextView tvTime= findViewById(R.id.tv_time);
-        tvTime.setText(userInput.getStartTime()+":00 ~ "+userInput.getEndTime()+":00");
-        TextView tvLocation= findViewById(R.id.tv_opponent_place);
-        tvLocation.setText(userInput.getPlace());
+        tvDate= findViewById(R.id.tv_date);
+        tvDate.setText(dateLabel);
+        tvTime= findViewById(R.id.tv_time);
+        tvTime.setText(timeLabel);
+        tvLocation= findViewById(R.id.tv_place);
+        tvLocation.setText(placeLabel);
 
         // 리사이클러뷰에 전달할 데이터 가공
         List<CandidateItem> displayList = new ArrayList<>();

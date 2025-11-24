@@ -118,7 +118,7 @@ public interface ApiService {
 
     @Headers("Requires-Auth: true")
     @POST("/api/match/candidates")
-    Call<List<CandidateResponseDto>> getCandidates(@Body MatchRequestDto requestDto);
+    Call<List<CandidateResponseDto>> getCandidates(@Body Long requestId);
 
     @Headers("Requires-Auth: true")
     @POST("/api/invitation/accept")

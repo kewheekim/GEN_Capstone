@@ -7,15 +7,17 @@ public class MatchSeekingItem {
     public final String state;
     public final String date;
     public final String gameType;
+    public final String gameStyle;
     public final String time;
     public final String place;
     public final String createdAt;
 
-    public MatchSeekingItem(Long requestId, String date, String gameType,
+    public MatchSeekingItem(Long requestId, String date, String gameType, String gameStyle,
                             String time, String place, String state, String createdAt) {
         this.requestId = requestId;
         this.date = date;
         this.gameType = gameType;
+        this.gameStyle = gameStyle;
         this.time = time;
         this.place = place;
         this.state = state;
@@ -24,6 +26,7 @@ public class MatchSeekingItem {
     public Long getRequestId() { return requestId; }
     public String getDate() { return date; }
     public String getGameType() { return gameType; }
+    public String getGameStyle() { return gameStyle; }
     public String getTime() { return time; }
     public String getPlace() { return place; }
     public String getState() { return state; }

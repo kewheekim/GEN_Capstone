@@ -3,7 +3,6 @@ package com.example.rally.ui;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -82,7 +81,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         tvPlace = findViewById(R.id.tv_opponent_place);
         tvPlaceState = findViewById(R.id.tv_place_status);
         ivPlace = findViewById(R.id.ic_place);
-        tvStyle = findViewById(R.id.tv_opponent_style);
+        tvStyle = findViewById(R.id.tv_style);
         ivTier = findViewById(R.id.iv_tier);
         btnRequest = findViewById(R.id.btn_request);
         ratingBar = findViewById(R.id.rating_bar);

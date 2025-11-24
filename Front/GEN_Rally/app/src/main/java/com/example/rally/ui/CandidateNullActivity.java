@@ -11,40 +11,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.rally.R;
 import com.example.rally.dto.MatchRequestDto;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
+// MAT_REC_N
 public class CandidateNullActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_candidate_null);
 
-        // ui
-        TextView tvDate = findViewById(R.id.tv_date_type);
+        TextView tvDate = findViewById(R.id.tv_date);
         TextView tvTime = findViewById(R.id.tv_time);
-        TextView tvPlaceName    = findViewById(R.id.tv_opponent_place);
-        TextView tvType = findViewById(R.id.tv_opponent_style);
+        TextView tvPlaceName = findViewById(R.id.tv_place);
+        TextView tvType = findViewById(R.id.tv_type);
         TextView tvStyle = findViewById(R.id.tv_style);
         Button btnRestart = findViewById(R.id.btn_restart);
         Button btnHome = findViewById(R.id.btn_home);
 
         Intent prev= getIntent();
-        MatchRequestDto userInput = (MatchRequestDto) prev.getSerializableExtra("userInput");
-        LocalDate gameDate= LocalDate.parse(userInput.getGameDate());
-        DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일");
-        String formattedDate = gameDate.format(formatter);
-        tvDate.setText(formattedDate);
 
-        tvTime.setText(userInput.getStartTime()+"시 ~ "+ userInput.getEndTime()+"시");
-        tvPlaceName.setText(userInput.getPlace());
-        tvType.setText(userInput.getGameType()==0? "단식": "복식");
-        if(userInput.getGameStyle() == 0)
-            tvStyle.setText("상관없어요");
-        else if(userInput.getGameStyle() == 1)
-            tvStyle.setText("편하게 즐겨요");
-        else if(userInput.getGameStyle() == 2)
-            tvStyle.setText("열심히 경기해요");
+        String date = prev.getStringExtra("date");
+        String gameType = prev.getStringExtra("gameType");
+        String gameStyle = prev.getStringExtra("gameStyle");
+        String time = prev.getStringExtra("time");
+        String place = prev.getStringExtra("placeName");
+        tvDate.setText(date != null ? date : "-");
+        tvTime.setText(time != null ? time : "-");
+        tvPlaceName.setText(place != null ? place : "-");
+        tvType.setText(gameType != null ? gameType : "-");
+        tvStyle.setText(gameStyle != null ? gameStyle : "-");
 
         btnRestart.setOnClickListener(v -> {
             Intent intent = new Intent(CandidateNullActivity.this, MatTypeActivity.class);
@@ -54,7 +47,6 @@ public class CandidateNullActivity extends AppCompatActivity {
         });
 
         btnHome.setOnClickListener( v -> {
-            // 신청내역 DB에 저장 요청하는 코드
             Intent intent = new Intent(CandidateNullActivity.this, MainActivity.class);
             startActivity(intent);
             finish();

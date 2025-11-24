@@ -26,9 +26,9 @@ public class MatchRequestController {
     }
 
     @PostMapping("/candidates")
-    public ResponseEntity<List<CandidateResponseDto>> getCandidates(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody MatchRequestCreateDto dto) {
+    public ResponseEntity<List<CandidateResponseDto>> getCandidates(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Long requestId) {
         // findCandidates 매칭 후보 필터링
-        List<CandidateResponseDto> candidates = matchService.findCandidates(userDetails.getUsername(), dto);
+        List<CandidateResponseDto> candidates = matchService.findCandidates(userDetails.getUsername(), requestId);
         // 매칭 후보 반환
         return ResponseEntity.ok(candidates);
     }

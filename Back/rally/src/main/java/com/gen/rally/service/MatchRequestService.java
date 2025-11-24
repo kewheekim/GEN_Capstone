@@ -29,21 +29,34 @@ public class MatchRequestService {
     private final GameRepository gameRepository;
     DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일(E)");
 
-    public Long createMatchRequest(String userId, MatchRequestCreateDto dto) {
+    public Long createMatchRequest(String userId, MatchRequestCreateDto userInput) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자"));
 
+        // 과거에 사용자가 동일한 날짜, 겹치는 시간의 신청을 했는지 확인
+        List<MatchRequest> duplicates = matchRequestRepository.findOverlappingRequests(
+                userId,
+                userInput.getGameDate(),
+                userInput.getStartTime(),
+                userInput.getEndTime()
+        );
+
+        // 이미 해당 조건의 신청이 있으면 에러 발생
+        if (!duplicates.isEmpty()) {
+            throw new CustomException(ErrorCode.CONFLICT);
+        }
+
         MatchRequest matchRequest = new MatchRequest();
         matchRequest.setUser(user);
-        matchRequest.setGameType(GameType.fromCode(dto.getGameType()));
-        matchRequest.setGameStyle(GameStyle.fromCode(dto.getGameStyle()));
-        matchRequest.setSameGender(dto.isSameGender());
-        matchRequest.setGameDate(dto.getGameDate());
-        matchRequest.setStartTime(dto.getStartTime());
-        matchRequest.setEndTime(dto.getEndTime());
-        matchRequest.setPlace(dto.getPlace());
-        matchRequest.setLatitude(dto.getLatitude());
-        matchRequest.setLongitude(dto.getLongitude());
+        matchRequest.setGameType(GameType.fromCode(userInput.getGameType()));
+        matchRequest.setGameStyle(GameStyle.fromCode(userInput.getGameStyle()));
+        matchRequest.setSameGender(userInput.isSameGender());
+        matchRequest.setGameDate(userInput.getGameDate());
+        matchRequest.setStartTime(userInput.getStartTime());
+        matchRequest.setEndTime(userInput.getEndTime());
+        matchRequest.setPlace(userInput.getPlace());
+        matchRequest.setLatitude(userInput.getLatitude());
+        matchRequest.setLongitude(userInput.getLongitude());
 
         // User에서 가져온 정보 저장
         matchRequest.setSkill(user.getSkill());
@@ -56,21 +69,25 @@ public class MatchRequestService {
         return saved.getRequestId();
     }
 
-    public List<CandidateResponseDto> findCandidates(String userId, MatchRequestCreateDto userInput) {
-        User user = userRepository.findByUserId(userId).orElseThrow();
-
-//        // 1. 과거에 사용자가 동일한 날짜, 겹치는 시간의 신청을 했는지 확인
-//        List<MatchRequest> duplicates = matchRequestRepository.findOverlappingRequests(
-//                userId,
-//                userInput.getGameDate(),
-//                userInput.getStartTime(),
-//                userInput.getEndTime()
-//        );
-//
-//        // 2. 이미 해당 조건의 신청이 있으면 에러 발생
-//        if (!duplicates.isEmpty()) {
-//            throw new CustomException(ErrorCode.CONFLICT);
-//        }
+    public List<CandidateResponseDto> findCandidates(String userId, Long requestId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        MatchRequest request = matchRequestRepository.findByRequestId(requestId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MATCH_REQUEST_NOT_FOUND));
+        // 소유권 체크
+        if (!request.getUser().getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+        MatchRequestCreateDto userInput = new MatchRequestCreateDto();
+        userInput.setGameType(request.getGameType().getCode());
+        userInput.setGameStyle(request.getGameStyle().getCode());
+        userInput.setSameGender(request.isSameGender());
+        userInput.setGameDate(request.getGameDate());
+        userInput.setStartTime(request.getStartTime());
+        userInput.setEndTime(request.getEndTime());
+        userInput.setPlace(request.getPlace());
+        userInput.setLatitude(request.getLatitude());
+        userInput.setLongitude(request.getLongitude());
 
         List<MatchRequest> candidates = matchRequestRepository.findAll().stream()
                 .filter(r -> !r.getUser().getUserId().equals(user.getUserId()))
@@ -80,23 +97,33 @@ public class MatchRequestService {
                 // (2) sameGender 조건 필터링
                 .filter(r -> {
                     // 신청자가 같은 성별을 원할 경우
-                    if (userInput.isSameGender() == true) {
+                    if (userInput.isSameGender()) {
                         return r.getUser().getGender() == user.getGender();
                     } else {
                         // 신청자가 상대 성별 상관없음 택한 경우 -> 똑같이 상관없음을 택했거나, 동일한 성별의 상대만을 남김
-                        return r.isSameGender() == false || (r.isSameGender() == true && r.getUser().getGender() == user.getGender());
+                        return ! r.isSameGender() || (r.isSameGender() && r.getUser().getGender() == user.getGender());
                     }
                 })
+                // (3) gameStyle 조건 필터링
+                .filter(r -> {
+                    int myStyle = userInput.getGameStyle();
+                    int otherStyle = r.getGameStyle().getCode();
 
-                // (3) 거리 10km 이내
+                    if (myStyle == 0) {
+                        return true;
+                    }
+                    // 상대가 상관없음(0) 나와 같은 스타일인 경우만 허용
+                    return otherStyle == 0 || otherStyle == myStyle;
+                })
+                // (4) 거리 10km 이내
                 .filter(r -> haversine(userInput.getLatitude(), userInput.getLongitude(),
                         r.getLatitude(), r.getLongitude()) <= 10)
 
-                // (4) 시간 1시간 이상 겹침
+                // (5) 시간 1시간 이상 겹침
                 .filter(r -> Math.max(0, Math.min(userInput.getEndTime(), r.getEndTime()) -
                         Math.max(userInput.getStartTime(), r.getStartTime())) >= 1)
 
-                // (5) 기술 점수 10점 이내 차이
+                // (6) 실력 점수 10점 이내 차이
                 .filter(r -> Math.abs(r.getUser().getSkill() - user.getSkill()) <= 10)
 
                 .collect(Collectors.toList());
@@ -210,6 +237,7 @@ public class MatchRequestService {
                 r.getRequestId(),
                 r.getGameDate() != null ? r.getGameDate().format(formatter) : null,
                 r.getGameType() != null ? r.getGameType().name() : null,
+                r.getGameStyle() != null ? r.getGameStyle().name() : null,
                 timeFormat(r.getStartTime(), r.getEndTime()),
                 r.getPlace(),
                 r.getState() != null ? r.getState().name() : null,
