@@ -30,8 +30,8 @@ public class Goal {
     @Column(nullable = false)
     private GoalType goalType;
 
-    private Integer targetWeeks;  // 기간
-    private Integer targetCount;  // 횟수
+    @Column(nullable = false)
+    private Integer targetWeeksCount;  // 목표 기간 또는 횟수
     private LocalDate endDate;   // 마감 날짜
     @Column(nullable = false)
     private Integer progressCount = 0;  // 실천 횟수

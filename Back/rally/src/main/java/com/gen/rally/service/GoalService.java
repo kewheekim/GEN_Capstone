@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class GoalService {
-
     private final GoalRepository goalRepository;
     private final UserRepository userRepository;
 
@@ -36,21 +35,12 @@ public class GoalService {
         goal.setTheme(req.getTheme());
         goal.setGoalType(req.getType());
         goal.setCalorie(req.getCalorie());
+        goal.setTargetWeeksCount(req.getTargetWeeksCount());
 
         if (req.getType() == GoalType.기간) {
-            if (req.getTargetWeeks() == null) {
-                throw new CustomException(ErrorCode.INVALID_INPUT);
-            }
-            goal.setTargetWeeks(req.getTargetWeeks());
-            goal.setTargetCount(null);
-            goal.setEndDate(LocalDate.now().plusWeeks(req.getTargetWeeks()));
+            goal.setEndDate(LocalDate.now().plusWeeks(req.getTargetWeeksCount()));
 
-        } else if (req.getType() == GoalType.횟수) {
-            if (req.getTargetCount() == null) {
-                throw new CustomException(ErrorCode.INVALID_INPUT);
-            }
-            goal.setTargetCount(req.getTargetCount());
-            goal.setTargetWeeks(null);
+        } else if (req.getType() == GoalType.횟수) {;
             goal.setEndDate(null);
         }
 
@@ -69,15 +59,31 @@ public class GoalService {
                 .map(this::toGoalItem)
                 .collect(Collectors.toList());
     }
+    public void checkGoals( List<Long> goalIds) {
+        for (Long goalId : goalIds) {
 
+            Goal goal = goalRepository.findById(goalId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.GOAL_NOT_FOUND));
+
+            // progressCount +1
+            int newProgress = (goal.getProgressCount() == null ? 1 : goal.getProgressCount() + 1);
+            goal.setProgressCount(newProgress);
+
+            // 횟수 목표 달성 판정
+            if ("횟수".equals(goal.getGoalType()) &&
+                    goal.getTargetWeeksCount() != null &&
+                    newProgress >= goal.getTargetWeeksCount()) {
+                goal.setAchieved(true);
+            }
+        }
+    }
     private GoalItem toGoalItem(Goal goal) {
-        String theme = goal.getTheme() != null ? goal.getTheme().name() : null;
         return new GoalItem(
                 goal.getId(),
                 goal.getName(),
-                theme,
-                goal.getTargetWeeks(),
-                goal.getTargetCount(),
+                goal.getTheme().name(),
+                goal.getGoalType().name(),
+                goal.getTargetWeeksCount(),
                 goal.getProgressCount()
         );
     }

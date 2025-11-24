@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,12 @@ public class GoalController {
     public List<GoalItem> getActiveGoals(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<GoalItem> goals = goalService.getActiveGoals(userDetails.getUsername());
         return goals;
+    }
+
+    @Transactional(readOnly = false)
+    @PostMapping("/check")
+    public ResponseEntity<Void> checkGoal (@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody List<Long> goalIds) {
+        goalService.checkGoals(goalIds);
+        return ResponseEntity.ok().build();
     }
 }

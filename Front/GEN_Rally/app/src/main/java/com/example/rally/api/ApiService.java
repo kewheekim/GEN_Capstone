@@ -10,6 +10,7 @@ import com.example.rally.dto.EvaluationCreateRequest;
 import com.example.rally.dto.GeneralLoginRequest;
 import com.example.rally.dto.GeneralLoginResponse;
 import com.example.rally.dto.GeneralSignupRequest;
+import com.example.rally.dto.GoalActiveItem;
 import com.example.rally.dto.GoalCreateRequest;
 import com.example.rally.dto.InvitationAcceptRequest;
 import com.example.rally.dto.InvitationAcceptResponse;
@@ -135,4 +136,12 @@ public interface ApiService {
     @Headers("Requires-Auth:true")
     @POST("/api/goal/create")
     Call<ResponseBody> createGoal(@Body GoalCreateRequest body);
+
+    @Headers("Requires-Auth:true")
+    @POST("/api/goal/active")
+    Call<List<GoalActiveItem>> getActiveGoals();
+
+    @Headers("Requires-Auth:true")
+    @POST("/api/goal/check")
+    Call<Void> checkGoals(@Body List<Long> goalIds);
 }

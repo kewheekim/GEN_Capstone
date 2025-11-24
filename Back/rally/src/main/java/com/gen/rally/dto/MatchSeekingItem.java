@@ -17,6 +17,7 @@ public class MatchSeekingItem {
     private Long requestId;
     private String date;
     private String gameType;
+    private String gameStyle;
     private String time;
     private String place;
     private String state;

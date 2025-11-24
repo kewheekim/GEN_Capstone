@@ -11,7 +11,6 @@ public class GoalCreateRequest {
     private String name;
     private GoalTheme theme;
     private GoalType type;
-    private Integer targetWeeks;
-    private Integer targetCount;
+    private Integer targetWeeksCount;
     private Integer calorie;
 }

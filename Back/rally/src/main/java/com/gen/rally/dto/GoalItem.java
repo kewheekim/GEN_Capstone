@@ -12,7 +12,7 @@ public class GoalItem {
     private Long id;
     private String name;
     private String theme;
-    private Integer targetWeeks;  // 기간
-    private Integer targetCount;  // 횟수
+    private String type;
+    private Integer targetWeeksCount;  // 목표 기간 또는 횟수
     private Integer progressCount = 0;  // 실천 횟수
 }

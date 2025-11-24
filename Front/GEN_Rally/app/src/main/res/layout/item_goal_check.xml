@@ -21,7 +21,7 @@
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="24dp"
-        android:backgroundTint="@color/blue_light"
+        app:cardBackgroundColor="@color/blue_light"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp"
         >
@@ -43,7 +43,7 @@
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toEndOf="@id/cv_target"
         android:layout_marginStart="4dp"
-        android:backgroundTint="@color/blue_light"
+        app:cardBackgroundColor="@color/blue_light"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp">
         <TextView

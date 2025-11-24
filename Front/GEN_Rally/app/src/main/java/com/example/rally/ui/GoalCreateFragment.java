@@ -42,8 +42,7 @@ public class GoalCreateFragment extends Fragment {
         String goalName = activity.getGoalName();
         String goalTheme = activity.getGoalTheme();
         String goalType = activity.getGoalType();
-        Integer targetWeeks = activity.getTargetWeeks();
-        Integer targetCount = activity.getTargetCount();
+        Integer targetWeeksCount = activity.getTargetWeeks() != null ? activity.getTargetWeeks() : activity.getTargetCount();
         Integer calorie = activity.getTargetCalorie();
 
         if (goalName != null) {
@@ -52,27 +51,27 @@ public class GoalCreateFragment extends Fragment {
 
         tvTheme.setText(toDisplayTheme(goalTheme));
 
-        if ("기간".equals(goalType) && targetWeeks != null) {
-            if (targetWeeks == 4) {
+        if ("기간".equals(goalType) && targetWeeksCount != null) {
+            if (targetWeeksCount == 4) {
                 tvTarget.setText("한달");
             } else {
-                tvTarget.setText(targetWeeks + "주");
+                tvTarget.setText(targetWeeksCount + "주");
             }
-        } else if ("횟수".equals(goalType) && targetCount != null) {
-            tvTarget.setText(targetCount + "회");
+        } else if ("횟수".equals(goalType) && targetWeeksCount != null) {
+            tvTarget.setText(targetWeeksCount + "회");
         }
 
-        if (targetCount != null) {
-            tvCount.setText("/" + targetCount);
-        } else if (targetWeeks != null) {
-            tvCount.setText("/" + targetWeeks);
+        if (targetWeeksCount != null) {
+            tvCount.setText("/" + targetWeeksCount);
+        } else if (targetWeeksCount != null) {
+            tvCount.setText("/" + targetWeeksCount);
         } else {
             tvCount.setText("/0");
         }
 
         btnConfirm.setOnClickListener(view -> {
             GoalCreateRequest request = new GoalCreateRequest(
-                    goalName, goalTheme, goalType, targetWeeks, targetCount, calorie
+                    goalName, goalTheme, goalType, targetWeeksCount, calorie
             );
 
             ApiService api = RetrofitClient.getSecureClient(requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
