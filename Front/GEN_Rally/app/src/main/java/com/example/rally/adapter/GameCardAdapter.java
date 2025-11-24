@@ -23,9 +23,18 @@ import java.util.List;
 
 public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameViewHolder>{
 
+    public interface OnChatButtonClickListener {
+        void onChatButtonClick(long roomId);
+    }
+
+    private OnChatButtonClickListener chatButtonClickListener;
+
     private List<MatchInfoDto> gameList = new ArrayList<>();
     private Context context;
 
+    public void setOnChatButtonClickListener(OnChatButtonClickListener listener) {
+        this.chatButtonClickListener = listener;
+    }
     // 데이터 리스트 업데이트
     public void setGameList(List<MatchInfoDto> gameList) {
         this.gameList = gameList;
@@ -38,8 +47,7 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
 
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_main_game_card, parent, false);
-        return new GameViewHolder(view);
-    }
+        return new GameViewHolder(view, chatButtonClickListener);    }
 
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
@@ -56,9 +64,11 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
         ImageButton btnStartGame, btnChat;
         TextView tvMatchDate, tvMatchTime, tvMatchPlace, tvMatchStyle, tvOpponentName;
         ImageView ivOpponentProfile;
+        OnChatButtonClickListener chatButtonClickListener;
 
-        public GameViewHolder(@NonNull View itemView) {
+        public GameViewHolder(@NonNull View itemView, OnChatButtonClickListener listener) {
             super(itemView);
+            this.chatButtonClickListener = listener;
 
             btnStartGame = itemView.findViewById(R.id.btn_start_game);
             btnChat = itemView.findViewById(R.id.btn_chat);
@@ -91,10 +101,9 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
             });
 
             btnChat.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra(ChatActivity.ROOM_ID, game.getRoomId()); // 채팅방 ID
-                // intent.putExtra(ChatActivity.MY_USER_ID, currentUserId);
-                context.startActivity(intent);
+                if (chatButtonClickListener != null) {
+                    chatButtonClickListener.onChatButtonClick(game.getRoomId());
+                }
             });
         }
     }
