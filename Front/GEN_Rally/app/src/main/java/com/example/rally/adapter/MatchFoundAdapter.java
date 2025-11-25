@@ -69,9 +69,9 @@ public class MatchFoundAdapter extends ListAdapter<MatchFoundItem, MatchFoundAda
             switch (stateText) {
                 case "수락":
                     stateText = "경기 약속 확정 전";
-                    speechCard.setCardBackgroundColor(ContextCompat.getColor(ctx, R.color.gray100));
-                    speechCard.setStrokeColor(ContextCompat.getColor(ctx, R.color.gray_nav_bar));
-                    tvState.setTextColor(ContextCompat.getColor(ctx, R.color.gray_text));
+                    speechCard.setCardBackgroundColor(ContextCompat.getColor(ctx, R.color.gray_100));
+                    speechCard.setStrokeColor(ContextCompat.getColor(ctx, R.color.gray_400));
+                    tvState.setTextColor(ContextCompat.getColor(ctx, R.color.gray_600));
                     break;
                 case "경기확정":
                     stateText = "경기 약속 확정 완료";

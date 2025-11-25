@@ -29,7 +29,7 @@
 
         app:tabTextAppearance="@style/MatchTabText"
         app:tabTextColor="@color/match_tab_item_color"
-        app:tabSelectedTextColor="@color/black_text">
+        app:tabSelectedTextColor="@color/gray_800">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="83dp"

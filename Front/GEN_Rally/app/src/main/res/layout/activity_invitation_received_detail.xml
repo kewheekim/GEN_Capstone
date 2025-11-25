@@ -32,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"
             android:text="4월 21일(월) 단식 경기"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Semibold24" />
         <TextView
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"
             android:text="나의 희망 시간"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             style="@style/Text.Medium14"
             />
         <TextView
@@ -54,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"
             android:text="19:00~21:00"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Medium16"
             />
         <TextView
@@ -66,7 +66,7 @@
             android:layout_marginStart="108dp"
             android:gravity="center"
             android:text="나의 희망 장소"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             style="@style/Text.Medium14"
             />
         <TextView
@@ -79,7 +79,7 @@
             android:layout_marginStart="108dp"
             android:gravity="center"
             android:text="망원 다목적 체육관"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Medium16" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -111,7 +111,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:text="닉네임"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Bold20"
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
             app:layout_constraintTop_toTopOf="parent" />
@@ -169,7 +169,7 @@
             android:layout_height="wrap_content"
             android:text="20:00~21:00"
             style="@style/Text.Semibold18"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_profile"
             android:layout_marginTop="46dp"
@@ -203,7 +203,7 @@
             android:layout_height="wrap_content"
             android:text="희망 장소"
             style="@style/Text.Medium14"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_time_status"
             android:layout_marginTop="24dp"
@@ -214,7 +214,7 @@
             android:layout_height="wrap_content"
             android:text="망원 다목적 체육관"
             style="@style/Text.Semibold18"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_time_status"
             android:layout_marginTop="50dp"
@@ -247,7 +247,7 @@
             android:layout_height="wrap_content"
             android:text="경기 스타일"
             style="@style/Text.Medium14"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_place_status"
             android:layout_marginTop="24dp"
@@ -259,7 +259,7 @@
             android:layout_height="wrap_content"
             android:text="열심히 경기해요"
             style="@style/Text.Semibold18"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_place_status"
             android:layout_marginTop="50dp"
@@ -272,7 +272,7 @@
             android:layout_height="wrap_content"
             android:text="매너 지수"
             style="@style/Text.Medium14"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_style"
             android:layout_marginTop="20dp"
@@ -313,7 +313,7 @@
             android:background="@drawable/bg_next_button_inactive"
             android:text="아쉽지만 거절할게요"
             android:textSize="18sp"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             app:layout_constraintTop_toBottomOf="@id/rating_bar"
             android:layout_marginTop="118dp"
             app:layout_constraintStart_toStartOf="parent"

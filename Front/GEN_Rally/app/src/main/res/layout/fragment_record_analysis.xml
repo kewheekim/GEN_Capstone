@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:text="새 목표 추가하기"
         style="@style/Text.Medium14"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="25dp"
@@ -82,7 +82,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_back_arrow"
-            app:tint="#757575"
+            app:tint="@color/gray_500"
             android:background="?attr/selectableItemBackgroundBorderless"
             />
 
@@ -101,7 +101,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_arrow"
-            app:tint="#757575"
+            app:tint="@color/gray_500"
             android:background="?attr/selectableItemBackgroundBorderless"
             />
     </LinearLayout>
@@ -159,7 +159,7 @@
             android:src="@drawable/ic_arrow"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="24dp"
-            app:tint="#757575"
+            app:tint="@color/gray_500"
             android:background="?attr/selectableItemBackgroundBorderless"
             />
 

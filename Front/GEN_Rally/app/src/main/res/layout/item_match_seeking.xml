@@ -16,9 +16,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:cardCornerRadius="8dp"
-        app:strokeColor="@color/gray_nav_bar"
+        app:strokeColor="@color/gray_400"
         app:strokeWidth="1dp"
-        app:cardBackgroundColor="@color/gray100"
+        app:cardBackgroundColor="@color/gray_100"
         >
         <TextView
             android:id="@+id/tv_state"
@@ -28,7 +28,7 @@
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
             android:text="요청 보류 중"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             style="@style/Text.Medium12" />
     </com.google.android.material.card.MaterialCardView>
     <TextView
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="4월 21일(월) 단식 경기"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Semibold20" />
     <TextView
         android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="희망 시간"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium12" />
     <TextView
         android:id="@+id/tv_time"
@@ -61,7 +61,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="19:00~21:00"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Medium14" />
     <TextView
         android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
         android:layout_marginStart="108dp"
         android:gravity="center"
         android:text="희망 장소"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium12" />
     <TextView
         android:id="@+id/tv_place"
@@ -84,7 +84,7 @@
         android:layout_marginStart="108dp"
         android:gravity="center"
         android:text="망원 다목적 체육관"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Medium14" />
     <android.widget.Button
         style="@style/FlatButton"
@@ -111,7 +111,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
         android:text="추천 상대 업데이트까지 47:00 남음  "
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium14" />
 
     <ImageButton

@@ -10,6 +10,8 @@
     android:layout_marginBottom="4dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/gray_border"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +19,6 @@
         android:layout_height="match_parent"
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
-        android:background="@drawable/bg_match_item"
         >
 
         <com.google.android.material.card.MaterialCardView

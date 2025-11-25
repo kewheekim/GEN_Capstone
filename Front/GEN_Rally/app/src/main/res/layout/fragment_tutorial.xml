@@ -29,7 +29,7 @@
         android:layout_marginStart="24dp"
         android:text="구장 전용 실내화를 준비!\n함께 깨끗한 구장을 만들어요"
         style="@style/Text.Semibold18"
-        android:textColor="#757575"
+        android:textColor="@color/gray_500"
         android:gravity="center_vertical" />
 
     <ImageView

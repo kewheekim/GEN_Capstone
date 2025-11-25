@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:text="닉네임"
                     style="@style/Text.Semibold16"
-                    android:textColor="@color/black_text" />
+                    android:textColor="@color/gray_800" />
 
                 <ImageView
                     android:id="@+id/iv_gender_icon"
@@ -79,7 +79,7 @@
                     android:layout_marginTop="8dp"
                     android:text="시간이\n일부 겹쳐요"
                     style="@style/Text.Semibold16"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     android:gravity="center"/>
         </LinearLayout>
 
@@ -112,7 +112,7 @@
                     android:layout_marginTop="8dp"
                     android:text="위치가\n동일해요"
                     style="@style/Text.Semibold16"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>

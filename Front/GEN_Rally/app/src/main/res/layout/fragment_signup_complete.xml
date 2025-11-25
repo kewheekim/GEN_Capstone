@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="이제 당신의 배드민턴 실력을 알아볼 차례!\n원활한 매칭을 위해 실력 진단을 시작해요"
         style="@style/Text.Regular18"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         app:layout_constraintTop_toBottomOf="@id/tv_welcome"
         android:layout_marginTop="21dp"
         app:layout_constraintStart_toStartOf="parent"

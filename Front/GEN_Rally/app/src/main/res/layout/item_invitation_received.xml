@@ -41,7 +41,7 @@
         android:layout_marginStart="8dp"
         android:gravity="center"
         android:text="10월 12일(일) 단식 경기"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium14" />
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile"
@@ -63,7 +63,7 @@
         android:layout_marginStart="12dp"
         android:gravity="center"
         android:text="아어려워요님이 매칭을 요청했어요!"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Semibold16" />
     <android.widget.Button
         style="@style/FlatButton"
@@ -99,6 +99,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="거절사유: 희망 장소가 멀어요"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium14" />
 </androidx.constraintlayout.widget.ConstraintLayout>

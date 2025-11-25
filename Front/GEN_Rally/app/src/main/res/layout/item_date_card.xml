@@ -22,14 +22,14 @@
             android:layout_marginTop="5dp"
             android:id="@+id/tv_day_label"
             style="@style/Text.Semibold16"
-            android:textColor="@color/black_text"/>
+            android:textColor="@color/gray_800"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="21dp"
             android:layout_marginTop="8dp"
             android:id="@+id/tv_date_label"
             style="@style/Text.Medium14"
-            android:textColor="@color/gray_text"/>
+            android:textColor="@color/gray_600"/>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

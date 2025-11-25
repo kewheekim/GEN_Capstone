@@ -49,7 +49,7 @@
             android:layout_height="24dp"
             android:text="4월 14일 경기"
             android:gravity="center"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             android:fontFamily="@font/kimm_bold"
             android:textFontWeight="700"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_go"
@@ -64,7 +64,7 @@
             android:layout_height="48dp"
             android:text="00:50:15"
             android:gravity="center"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             android:fontFamily="@font/kimm_bold"
             android:textFontWeight="700"
             app:layout_constraintTop_toBottomOf="@+id/tv_date"
@@ -90,7 +90,7 @@
             android:layout_marginStart="48dp"
             android:gravity="center"
             android:text="망원 다목적 체육관"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Medium14" />
 
         <!--    경기 점수-->
@@ -117,7 +117,7 @@
             android:layout_marginEnd="48dp"
             android:gravity="center"
             android:text="아어려워요"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             style="@style/Text.Medium12" />
         <TextView
             android:id="@+id/tv_opponent_score"
@@ -125,7 +125,7 @@
             android:layout_height="70dp"
             android:text="0"
             android:gravity="center"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             android:fontFamily="@font/kimm_bold"
             android:textFontWeight="700"
             app:layout_constraintTop_toBottomOf="@+id/tv_place"
@@ -141,7 +141,7 @@
             android:layout_height="70dp"
             android:text=":"
             android:gravity="center"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             android:fontFamily="@font/kimm_bold"
             android:textFontWeight="700"
             app:layout_constraintTop_toBottomOf="@+id/tv_place"
@@ -155,7 +155,7 @@
             android:layout_height="70dp"
             android:text="2"
             android:gravity="center"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             android:fontFamily="@font/kimm_bold"
             android:textFontWeight="700"
             app:layout_constraintTop_toBottomOf="@+id/tv_place"
@@ -186,7 +186,7 @@
             android:layout_marginEnd="24dp"
             android:gravity="center"
             android:text="철통배턴"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             style="@style/Text.Medium12" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -313,7 +313,7 @@
                     android:layout_height="48dp"
                     android:text="3, 958"
                     android:gravity="center"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     android:fontFamily="@font/kimm_bold"
                     android:textFontWeight="700"
                     app:layout_constraintTop_toTopOf="parent"
@@ -326,7 +326,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:gravity="center"
                     android:text="걸음"
-                    android:textColor="@color/gray_text"
+                    android:textColor="@color/gray_600"
                     style="@style/Text.Medium14" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -346,7 +346,7 @@
                     android:layout_height="48dp"
                     android:text="210"
                     android:gravity="center"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     android:fontFamily="@font/kimm_bold"
                     android:textFontWeight="700"
                     app:layout_constraintTop_toTopOf="parent"
@@ -359,7 +359,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:gravity="center"
                     android:text="kcal"
-                    android:textColor="@color/gray_text"
+                    android:textColor="@color/gray_600"
                     style="@style/Text.Medium14" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -395,7 +395,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:padding="16dp"
                 android:background="@drawable/bg_text_field"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 style="@style/Text.Regular14"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>

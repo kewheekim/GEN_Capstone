@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="정말 매칭을 취소하시겠어요?"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Semibold18"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="96dp"
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="취소하게 되면 신청했던 매칭 정보는\n모두 초기화돼요."
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             style="@style/Text.Medium18"
             android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
@@ -79,7 +79,7 @@
             android:layout_marginStart="8dp"
             android:text="취소하기"
             style="@style/Text.Medium18"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             android:background="@drawable/bg_next_button_inactive"
             android:stateListAnimator="@null"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

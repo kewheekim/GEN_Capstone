@@ -66,7 +66,7 @@ public class SetGenderFragment extends Fragment {
 
         int green = ContextCompat.getColor(requireContext(), R.color.green_active);
         int gray  = ContextCompat.getColor(requireContext(), R.color.gray_border);
-        int grayText = ContextCompat.getColor(requireContext(), R.color.gray_nav_bar);
+        int grayText = ContextCompat.getColor(requireContext(), R.color.gray_400);
 
         btnBack.setOnClickListener(v -> {
             if (getActivity() instanceof AuthActivity) {
