@@ -97,7 +97,6 @@
                 android:layout_marginTop="4dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="24dp"
-                app:layout_constraintEnd_toEndOf="tv_opponent_score"
                 android:gravity="center"
                 android:text="아어려워요"
                 android:textColor="@color/gray_600"
