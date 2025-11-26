@@ -45,7 +45,7 @@ public class ScoreBarView extends View {
     }
 
     private void init(@Nullable AttributeSet attrs) {
-        int bgColor = ContextCompat.getColor(getContext(), R.color.gray_inactive);
+        int bgColor = ContextCompat.getColor(getContext(), R.color.gray_200);
         int barColor = ContextCompat.getColor(getContext(), R.color.green_active);
 
         if (attrs != null) {

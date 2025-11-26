@@ -1,8 +1,10 @@
 package com.gen.rally.controller;
 
 import com.gen.rally.dto.GameHealthRequest;
+import com.gen.rally.dto.GameResultResponse;
 import com.gen.rally.entity.CustomUserDetails;
 import com.gen.rally.service.GameHealthService;
+import com.gen.rally.service.GameResultService;
 import com.gen.rally.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
     private final GameService gameService;
     private final GameHealthService healthService;
+    private final GameResultService resultService;
 
     @PostMapping("/cancel")
     public ResponseEntity<Void> cancelGame( @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Long gameId
@@ -30,5 +33,13 @@ public class GameController {
         Long userId = userDetails.getId();
         healthService.saveHealth(userId, request);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/result")
+    public ResponseEntity<GameResultResponse> getGameResult(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                            @RequestBody Long gameId) {
+        String userId = userDetails.getUsername();
+        GameResultResponse response = resultService.getGameResult(gameId, userId);
+        return ResponseEntity.ok(response);
     }
 }

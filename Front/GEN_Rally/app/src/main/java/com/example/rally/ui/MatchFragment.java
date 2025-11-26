@@ -88,8 +88,8 @@ public class MatchFragment extends Fragment {
             PhoneDataLayerClient.sendGameSetup(
                     requireContext(),
                     123L,  // todo gameId 받아서 전달하는걸로 수정
-                    "너무어려워요",
-                    "안세영이되",
+                    "아어려워요",
+                    "감자",
                     false,
                     new PhoneDataLayerClient.SendCallback() {
                         @Override
@@ -114,8 +114,8 @@ public class MatchFragment extends Fragment {
             );
             startActivity(new Intent(requireContext(), ScoreMonitorActivity.class)
                     .putExtra("gameId", 123L)
-                    .putExtra("opponentName", "너무어려워요")
-                    .putExtra("userName", "안세영이되")
+                    .putExtra("opponentName", "아어려워요")
+                    .putExtra("userName", "감자")
                     .putExtra("localIsUser1", false)
             );
         });

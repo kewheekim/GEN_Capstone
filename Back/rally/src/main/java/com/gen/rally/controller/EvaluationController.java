@@ -24,26 +24,10 @@ public class EvaluationController {
 
     private final EvaluationService evaluationService;
 
-    @Value("${app.dev.anonymous-evaluator:}")
-    private String devEvaluatorFallback;
-
-    @PostMapping
-    public ResponseEntity<Void> create(
-            @Validated @RequestBody EvaluationCreateRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        String evaluatorUserId = (userDetails != null) ? userDetails.getUsername() : null;
-
-        if ((evaluatorUserId == null || "anonymousUser".equalsIgnoreCase(evaluatorUserId))
-                && devEvaluatorFallback != null && !devEvaluatorFallback.isBlank()) {
-            evaluatorUserId = devEvaluatorFallback;
-        }
-
-        if (evaluatorUserId == null || "anonymousUser".equalsIgnoreCase(evaluatorUserId)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
-
-        Long id = evaluationService.createEvaluation(request, evaluatorUserId);
-        return ResponseEntity.created(URI.create("/api/evaluation/" + id)).build();
+    @PostMapping("/create")
+    public ResponseEntity<Void> create(@AuthenticationPrincipal UserDetails userDetails,
+                                       @RequestBody EvaluationCreateRequest request) {
+        evaluationService.createEvaluation(request, userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 }

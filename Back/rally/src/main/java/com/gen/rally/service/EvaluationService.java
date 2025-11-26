@@ -2,9 +2,12 @@ package com.gen.rally.service;
 
 import com.gen.rally.dto.EvaluationCreateRequest;
 import com.gen.rally.entity.Evaluation;
+import com.gen.rally.entity.Game;
+import com.gen.rally.entity.User;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.EvaluationRepository;
+import com.gen.rally.repository.GameRepository;
 import com.gen.rally.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,18 +22,29 @@ import java.util.OptionalDouble;
 public class EvaluationService {
     private final EvaluationRepository evaluationRepository;
     private final UserRepository userRepository;
+    private final GameRepository gameRepository;
 
     @Transactional
     public Long createEvaluation(EvaluationCreateRequest req, String evaluatorUserId) {
-        if (req.getGameId() == null || req.getSubject() == null || req.getMannerScore() == null) {
-            throw new CustomException(ErrorCode.INVALID_STATE);
-        }
-
         // 사용자 존재 확인
-        userRepository.findByUserId(evaluatorUserId)
+        User evaluator = userRepository.findByUserId(evaluatorUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        userRepository.findByUserId(req.getSubject())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        // 경기 존재 확인
+        Game game = gameRepository.findByGameId(req.getGameId())
+                .orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
+        // user1, 2 판단
+        String user1Id = game.getUser1().getUserId();
+        String user2Id = game.getUser2().getUserId();
+
+        User subject;
+        if (game.getUser1().getUserId().equals(evaluatorUserId)) {
+            subject = game.getUser2();
+        } else if (game.getUser2().getUserId().equals(evaluatorUserId)) {
+            subject = game.getUser1();
+        } else {
+            // 이 경기에 참가한 사람이 아닌데 평가하려는 경우
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
 
         // 점수 검증: 1.0~5.0
         double score = req.getMannerScore();
@@ -40,16 +54,15 @@ public class EvaluationService {
         }
 
         // 중복 평가 방지
-        if (evaluationRepository.existsByGameIdAndEvaluatorAndSubject(
-                req.getGameId(), evaluatorUserId, req.getSubject())) {
+        if (evaluationRepository.existsByGameIdAndEvaluator_UserId(req.getGameId(), evaluatorUserId)) {
             throw new CustomException(ErrorCode.CONFLICT);
         }
 
         // 저장
         Evaluation e = new Evaluation();
         e.setGameId(req.getGameId());
-        e.setEvaluator(evaluatorUserId);
-        e.setSubject(req.getSubject());
+        e.setEvaluator(evaluator);
+        e.setSubject(subject);
         e.setMannerScore(score);
         e.setComment(req.getComment());
 
@@ -66,7 +79,7 @@ public class EvaluationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<Evaluation> latest5 =
-                evaluationRepository.findTop5BySubjectOrderByCreatedAtDesc(subjectUserId);
+                evaluationRepository.findTop5BySubject_UserIdOrderByCreatedAtDesc(subjectUserId);
 
         if (latest5.size() < 5) return null;
 

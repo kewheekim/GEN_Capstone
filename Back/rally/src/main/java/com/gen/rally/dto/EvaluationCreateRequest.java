@@ -9,8 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EvaluationCreateRequest {
         Long gameId;
-        String evaluator;
-        String subject;
         Double mannerScore;
         String comment;
 }

@@ -28,11 +28,13 @@ public class Evaluation {
     @Column(name = "game_id", nullable = false)
     private Long gameId;
 
-    @Column(name = "evaluator", nullable = false)
-    private String evaluator; // 평가하는 유저 아이디
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evaluator", referencedColumnName = "user_id")
+    private User evaluator; // 평가하는 유저 아이디
 
-    @Column(name = "subject", nullable = false)
-    private String subject;   // 평가 받는 유저 아이디
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject", referencedColumnName = "user_id")
+    private User subject;   // 평가 받는 유저 아이디
 
     @Column(name = "manner_score", nullable = false)
     private Double mannerScore;
@@ -40,7 +42,7 @@ public class Evaluation {
     @Column(name = "comment")
     private String comment;
 
-    private LocalDateTime createdAt =  LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Long getEvaluationId() { return evaluationId; }
     public void setEvaluationId(Long evaluationId) { this.evaluationId = evaluationId; }
@@ -48,11 +50,14 @@ public class Evaluation {
     public Long getGameId() { return gameId; }
     public void setGameId(Long gameId) { this.gameId = gameId; }
 
-    public String getEvaluator() { return evaluator; }
-    public void setEvaluator(String evaluator) { this.evaluator = evaluator; }
+    public User getEvaluator() { return evaluator; }
+    public void setEvaluator(User evaluator) { this.evaluator = evaluator; }
 
-    public String getSubject() { return subject; }
-    public void setSubject(String subject) { this.subject = subject; }
+    public User getSubject() { return subject; }
+    public void setSubject(User subject) { this.subject = subject; }
+
+    public String getEvaluatorUserId() { return evaluator != null ? evaluator.getUserId() : null;}
+    public String getSubjectUserId() { return subject != null ? subject.getUserId() : null;}
 
     public Double getMannerScore() { return mannerScore; }
     public void setMannerScore(Double mannerScore) { this.mannerScore = mannerScore; }

@@ -1,6 +1,8 @@
 package com.example.rally.ui;
 
 import com.example.rally.R;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -51,8 +53,15 @@ public class GameFinishActivity extends AppCompatActivity {
                 })
                 .into(ivFinishGif);
 
+        Intent prev = getIntent();
+        Long gameId = prev.getLongExtra("gameId", 0L);
+
         btnNext.setOnClickListener( v -> {
             btnNext.setEnabled(false);
+            Intent intent = new Intent(this, EvaluationActivity.class);
+            // todo: 상대 프로필 url, 닉네임 넘기기? 아니면
+            intent.putExtra("gameId", gameId);
+            startActivity(intent);
         });
     }
 }

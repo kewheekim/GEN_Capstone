@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,7 @@ public class EvaluationActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private EditText etCompliment;
     private Button btnNext;
+    private ImageView opponentProfile;
 
     private CheckBox cbCompliment1, cbCompliment2, cbCompliment3, cbCompliment4, cbCompliment5;
     private CheckBox cbProblem1, cbProblem2, cbProblem3, cbProblem4, cbProblem5;
@@ -47,6 +49,8 @@ public class EvaluationActivity extends AppCompatActivity {
         cbProblem4 = findViewById(R.id.cb_problem4);
         cbProblem5 = findViewById(R.id.cb_problem5);
 
+        opponentProfile = findViewById(R.id.iv_profile);
+
         btnNext = findViewById(R.id.btn_next);
         btnNext.setEnabled(false);
 
@@ -68,13 +72,11 @@ public class EvaluationActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v -> {
             btnNext.setEnabled(false);
 
-            long gameId = getIntent().getLongExtra("gameId", 1);
-            String opponentId = getIntent().getStringExtra("opponentId");
-
-            if (gameId == 0L || opponentId == null) {
+            long gameId = getIntent().getLongExtra("gameId", 0L);
+            if (gameId == 0L) {
                 Toast.makeText(this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
-                opponentId = "user003";
                 btnNext.setEnabled(true);
+                return;
             }
 
             // 최소 1.0 보정
@@ -86,7 +88,6 @@ public class EvaluationActivity extends AppCompatActivity {
 
             EvaluationCreateRequest body = new EvaluationCreateRequest(
                     gameId,
-                    opponentId,
                     (double) r,
                     etCompliment.getText().toString().trim()
             );
@@ -99,8 +100,9 @@ public class EvaluationActivity extends AppCompatActivity {
                         Toast.makeText(EvaluationActivity.this, "평가가 저장되었습니다.", Toast.LENGTH_SHORT).show();
 
                         // 성공 시 다음 화면으로 이동
-                        Intent intentToGameResult = new Intent(EvaluationActivity.this, GameResultActivity.class);
-                        startActivity(intentToGameResult);
+                        Intent intent = new Intent(EvaluationActivity.this, GoalAchieveActivity.class);
+                        intent.putExtra("gameId", gameId);
+                        startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(EvaluationActivity.this, "저장 실패: " + resp.code(), Toast.LENGTH_SHORT).show();

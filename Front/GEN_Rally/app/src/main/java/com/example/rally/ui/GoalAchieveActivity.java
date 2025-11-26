@@ -38,8 +38,8 @@ public class GoalAchieveActivity extends AppCompatActivity {
 
         rvGoalList = findViewById(R.id.rv_goals);
         rvGoalList.setLayoutManager(new LinearLayoutManager(this));
-
         btnNext = findViewById(R.id.btn_next);
+        Long gameId = getIntent().getLongExtra("gameId", 0L);
 
         adapter = new GoalCheckAdapter(new ArrayList<>(), (item, position, isChecked) -> {
             updateNextButtonState();
@@ -65,6 +65,7 @@ public class GoalAchieveActivity extends AppCompatActivity {
                     }
 
                     Intent intent = new Intent(GoalAchieveActivity.this, GameResultActivity.class);
+                    intent.putExtra("gameId", gameId);
                     startActivity(intent);
                     finish();
                 }

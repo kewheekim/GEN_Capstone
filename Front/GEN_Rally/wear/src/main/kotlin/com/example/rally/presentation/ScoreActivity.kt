@@ -140,7 +140,6 @@ class ScoreActivity : ComponentActivity() {
                             ) == "USER2"
                         ) Player.USER2 else Player.USER1
 
-                        vm.markStarted(true)
                         val mySets   = if (vm.isUser1.value) u1Sets else u2Sets
                         val oppSets  = if (vm.isUser1.value) u2Sets else u1Sets
                         vm.initSets(mySets, oppSets)

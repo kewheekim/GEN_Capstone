@@ -237,8 +237,8 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
                             // 워치로 전달
                             PhoneDataLayerClient.sendPhoneEventToWatch(this, PATH_EVENT_GAME_FINISH, env.toString());
-
                             Intent intentToEvaluate = new Intent(this, GameFinishActivity.class);
+                            intentToEvaluate.putExtra("gameId", gameId);
                             startActivity(intentToEvaluate);
                             break;
                         }

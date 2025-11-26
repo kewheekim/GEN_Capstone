@@ -6,8 +6,8 @@
             android:tileMode="repeat" />
     </item>
     <item android:id="@android:id/progress">
-        <clip
-            android:drawable="@drawable/ic_star_full_40dp"
+        <bitmap
+            android:src="@drawable/ic_star_full_40dp"
             android:tileMode="repeat" />
     </item>
 </layer-list>

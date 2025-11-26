@@ -8,6 +8,7 @@ import com.example.rally.dto.CheckIdRequest;
 import com.example.rally.dto.CheckNicknameResponse;
 import com.example.rally.dto.EvaluationCreateRequest;
 import com.example.rally.dto.GameHealthRequest;
+import com.example.rally.dto.GameResultResponse;
 import com.example.rally.dto.GeneralLoginRequest;
 import com.example.rally.dto.GeneralLoginResponse;
 import com.example.rally.dto.GeneralSignupRequest;
@@ -64,7 +65,7 @@ public interface ApiService {
     Call<List<MatchInfoDto>> getHome();
 
     @Headers("Requires-Auth: true")
-    @POST("/api/evaluation")
+    @POST("/api/evaluation/create")
     Call<Void> createEvaluation(@Body EvaluationCreateRequest body);
 
     @Headers("Requires-Auth: true")
@@ -149,4 +150,8 @@ public interface ApiService {
     @Headers("Requires-Auth:true")
     @POST("/api/game/health/save")
     Call<Void> saveGameHealth( @Body GameHealthRequest body );
+
+    @Headers("Requires-Auth:true")
+    @POST("/api/game/result")
+    Call<GameResultResponse> getGameResult(@Body Long gameId);
 }
