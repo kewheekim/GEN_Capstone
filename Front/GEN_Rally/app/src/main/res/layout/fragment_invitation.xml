@@ -31,7 +31,7 @@
             app:tabIndicatorColor="@android:color/transparent"
             app:tabIndicatorHeight="0dp"
             app:tabRippleColor="@android:color/transparent"
-            app:tabTextColor="@color/gray_text"
+            app:tabTextColor="@color/gray_600"
             app:tabSelectedTextColor="@android:color/white"
             app:tabBackground="@drawable/selector_tab_invitation"
             app:tabTextAppearance="@style/InvitationTabText">

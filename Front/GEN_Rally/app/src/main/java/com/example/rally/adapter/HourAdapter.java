@@ -1,6 +1,5 @@
 package com.example.rally.adapter;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.rally.R;
 import com.google.android.material.card.MaterialCardView;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +38,7 @@ public class HourAdapter extends RecyclerView.Adapter<HourAdapter.VH> {
         boolean isSel = selected.contains(hour);
         int fillColor = ContextCompat.getColor(
                 holder.card.getContext(),
-                isSel ? R.color.green_active : R.color.gray_inactive
+                isSel ? R.color.green_active : R.color.gray_200
         );
         holder.card.setBackgroundTintList(ColorStateList.valueOf(fillColor));
 

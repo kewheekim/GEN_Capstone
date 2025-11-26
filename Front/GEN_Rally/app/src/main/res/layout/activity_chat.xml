@@ -78,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="시간"
-                        android:textColor="#757575"
+                        android:textColor="@color/gray_500"
                         style="@style/Text.Regular12"
                         android:layout_marginStart="4dp" />
 
@@ -92,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="장소"
-                        android:textColor="#757575"
+                        android:textColor="@color/gray_500"
                         style="@style/Text.Regular12"
                         android:layout_marginStart="4dp"/>
 
@@ -108,7 +108,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="38dp"
                         android:layout_height="26dp"
-                        android:backgroundTint="#757575"
+                        android:backgroundTint="@color/gray_500"
                         app:cardElevation="0dp"
                         app:cardCornerRadius="12dp">
 
@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="19:00~21:00"
-                        android:textColor="@color/black_text"
+                        android:textColor="@color/gray_800"
                         style="@style/Text.Regular12"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="4dp"/>
@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.2"
                         android:text="망원 다목적 체육관"
-                        android:textColor="@color/black_text"
+                        android:textColor="@color/gray_800"
                         style="@style/Text.Regular12"
                         android:layout_marginTop="4dp"/>
                 </LinearLayout>
@@ -160,7 +160,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="38dp"
                         android:layout_height="26dp"
-                        android:backgroundTint="#757575"
+                        android:backgroundTint="@color/gray_500"
                         app:cardElevation="0dp"
                         app:cardCornerRadius="12dp">
                         <TextView
@@ -179,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="20:00~21:00"
-                        android:textColor="@color/black_text"
+                        android:textColor="@color/gray_800"
                         style="@style/Text.Regular12"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="4dp"/>
@@ -190,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.2"
                         android:text="망원 다목적 체육관"
-                        android:textColor="@color/black_text"
+                        android:textColor="@color/gray_800"
                         style="@style/Text.Regular12"
                         android:layout_marginTop="4dp"/>
                 </LinearLayout>
@@ -243,7 +243,7 @@
             android:layout_weight="1"
             android:hint="메시지 보내기"
             style="@style/Text.Semibold16"
-            android:textColorHint="@color/gray_nav_bar"
+            android:textColorHint="@color/gray_400"
             android:background="@drawable/bg_search_text"
             android:padding="8dp"
             android:imeOptions="actionSend"/>

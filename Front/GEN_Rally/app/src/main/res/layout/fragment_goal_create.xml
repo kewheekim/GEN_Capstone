@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/Text.Semibold24"
-        android:textColor="@color/black_text"/>
+        android:textColor="@color/gray_800"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
         style="@style/Text.Medium20"
-        android:textColor="@color/gray_text"/>
+        android:textColor="@color/gray_600"/>
     
     <com.google.android.material.card.MaterialCardView
         android:layout_width="364dp"
@@ -96,7 +96,7 @@
                 android:layout_marginTop="17dp"
                 app:layout_constraintStart_toStartOf="parent"
                 style="@style/Text.Semibold24"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 android:breakStrategy="simple"/>
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_circle"
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="/6"
-                        android:textColor="@color/gray_text"
+                        android:textColor="@color/gray_600"
                         style="@style/Text.Semibold24" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

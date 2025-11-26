@@ -78,9 +78,9 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
                     switch (stateText) {
                         case "요청중":
                             stateText = "요청완료";
-                            speechCard.setCardBackgroundColor(ContextCompat.getColor(ctx, R.color.gray100));
-                            speechCard.setStrokeColor(ContextCompat.getColor(ctx, R.color.gray_nav_bar));
-                            tvState.setTextColor(ContextCompat.getColor(ctx, R.color.gray_text));
+                            speechCard.setCardBackgroundColor(ContextCompat.getColor(ctx, R.color.gray_100));
+                            speechCard.setStrokeColor(ContextCompat.getColor(ctx, R.color.gray_400));
+                            tvState.setTextColor(ContextCompat.getColor(ctx, R.color.gray_600));
                             break;
                         case "수락":
                             stateText = "상대수락";
@@ -98,9 +98,9 @@ public class InvitationAdapter extends ListAdapter<InvitationItem, InvitationAda
                     switch (stateText) {
                         case "요청중":
                             stateText = "수락 대기중";
-                            speechCard.setCardBackgroundColor(ContextCompat.getColor(ctx, R.color.gray100));
-                            speechCard.setStrokeColor(ContextCompat.getColor(ctx, R.color.gray_nav_bar));
-                            tvState.setTextColor(ContextCompat.getColor(ctx, R.color.gray_text));
+                            speechCard.setCardBackgroundColor(ContextCompat.getColor(ctx, R.color.gray_100));
+                            speechCard.setStrokeColor(ContextCompat.getColor(ctx, R.color.gray_400));
+                            tvState.setTextColor(ContextCompat.getColor(ctx, R.color.gray_600));
                             break;
                         case "수락":
                             stateText = "수락 완료";

@@ -13,7 +13,7 @@
         android:text="아직 선택한 조건에 맞는\n상대가 없어요"
         style="@style/Text.Semibold22"
         android:textAlignment="center"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         android:layout_marginStart="80dp"
         android:layout_marginEnd="80dp"
         android:layout_marginTop="132dp"
@@ -58,7 +58,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:text="날짜"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 style="@style/Text.Medium14"/>
 
             <View
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="시간"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 style="@style/Text.Medium14"/>
         </LinearLayout>
 
@@ -100,7 +100,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:text="장소"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 style="@style/Text.Medium14"
                 />
         </LinearLayout>
@@ -126,7 +126,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:text="유형"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 style="@style/Text.Medium14"/>
 
             <View
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="스타일"
-                android:textColor="@color/black_text" />
+                android:textColor="@color/gray_800" />
         </LinearLayout>
     </LinearLayout>
 
@@ -157,7 +157,7 @@
         android:layout_marginBottom="30dp"
         android:text="조건을 다시 설정하거나,\n상대가 생기면 알림으로 알려드릴게요!"
         android:textAlignment="center"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Regular18"
         app:layout_constraintBottom_toTopOf="@id/btn_restart"
         app:layout_constraintEnd_toEndOf="parent"

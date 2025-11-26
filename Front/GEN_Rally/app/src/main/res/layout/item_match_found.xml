@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="4월 21일(월) 단식 경기"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Semibold20" />
     <TextView
         android:id="@+id/tv_time_title"
@@ -53,7 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="경기 시간"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium12"
         android:visibility="gone"/>
     <TextView
@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="19:00~21:00"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Medium14"
         android:visibility="gone"/>
     <TextView
@@ -78,7 +78,7 @@
         android:layout_marginStart="108dp"
         android:gravity="center"
         android:text="경기 장소"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium12"
         android:visibility="gone"/>
     <TextView
@@ -91,7 +91,7 @@
         android:layout_marginStart="108dp"
         android:gravity="center"
         android:text="망원 다목적 체육관"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Medium14"
         android:visibility="gone"/>
     <com.google.android.material.imageview.ShapeableImageView
@@ -113,7 +113,7 @@
         android:layout_marginStart="16dp"
         android:gravity="center"
         android:text="경기 상대"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         style="@style/Text.Medium12" />
     <TextView
         android:id="@+id/tv_opponent"
@@ -125,7 +125,7 @@
         android:layout_marginStart="16dp"
         android:gravity="center"
         android:text="아어려워요"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         style="@style/Text.Medium16" />
     <ImageButton
         android:id="@+id/btn_chat"

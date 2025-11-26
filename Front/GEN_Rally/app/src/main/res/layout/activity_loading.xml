@@ -42,7 +42,7 @@
         android:layout_height="54dp"
         android:text="매칭 취소하기"
         android:background="@drawable/bg_next_button_inactive"
-        android:textColor="@color/gray_nav_bar"
+        android:textColor="@color/gray_400"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

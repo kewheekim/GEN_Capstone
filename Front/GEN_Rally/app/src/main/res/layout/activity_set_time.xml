@@ -24,7 +24,7 @@
         style="@style/Text.Semibold20"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         app:layout_constraintTop_toBottomOf="@id/toolbar_go"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="오전"
                 style="@style/Text.Semibold16"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 android:layout_marginTop="24dp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:text="오후"
                 style="@style/Text.Semibold16"
-                android:textColor="@color/black_text"
+                android:textColor="@color/gray_800"
                 android:layout_marginTop="24dp" />
 
             <androidx.recyclerview.widget.RecyclerView

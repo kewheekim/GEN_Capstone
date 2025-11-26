@@ -26,7 +26,7 @@
         app:layout_constraintStart_toEndOf="@+id/iv_profile"
         android:text="아어려워요"
         android:textSize="12sp"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         android:layout_marginStart="7dp"/>
 
     <com.google.android.material.card.MaterialCardView
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="날짜"
-                    android:textColor="@color/gray_text"
+                    android:textColor="@color/gray_600"
                     style="@style/Text.Semibold16"
                     />
 
@@ -80,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10월 3일 금요일"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Regular16"
                     android:layout_marginStart="12dp"
                     />
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="시간"
-                    android:textColor="@color/gray_text"
+                    android:textColor="@color/gray_600"
                     style="@style/Text.Semibold16"
 
                     />
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="20:00~21:00"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Regular16"
                     android:layout_marginStart="12dp"
                     />
@@ -124,7 +124,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="장소"
-                    android:textColor="@color/gray_text"
+                    android:textColor="@color/gray_600"
                     style="@style/Text.Semibold16"
 
                     />
@@ -134,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="망원 다목적 체육관"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Regular16"
                     android:layout_marginStart="12dp"
                     />
@@ -147,7 +147,7 @@
                 android:background="@drawable/bg_next_button_inactive"
                 android:text="경기 약속 확정하기"
                 android:textSize="16sp"
-                android:textColor="#757575"
+                android:textColor="@color/gray_500"
                 android:layout_gravity="center"
                 android:layout_marginTop="12dp"
                 />
@@ -161,7 +161,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="오후 3:10"
-        android:textColor="#757575"
+        android:textColor="@color/gray_500"
         style="@style/Text.Regular10"
         app:layout_constraintBottom_toBottomOf="@id/chat_card"
         app:layout_constraintStart_toEndOf="@id/chat_card"

@@ -4,7 +4,7 @@
     <style name="Text.Bold24">
         <item name="android:fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">24sp</item>
-        <item name="android:lineHeight">12sp</item>
+        <item name="android:lineHeight">36sp</item>
     </style>
 
     <style name="Text.Bold22">
@@ -61,6 +61,11 @@
         <item name="android:lineHeight">21sp</item>
     </style>
 
+    <style name="Text.Semibold12">
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineHeight">18sp</item>
+    </style>
 
     <!-- ===== Label ===== -->
     <style name="Text.Medium18">

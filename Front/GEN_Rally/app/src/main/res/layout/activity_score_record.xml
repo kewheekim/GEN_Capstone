@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/black_text">
+        android:background="@color/gray_800">
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -235,7 +235,7 @@
             android:layout_marginTop="165dp"
             android:fontFamily="@font/pretendard_variable"
             android:text="경기 일시정지"
-            android:textColor="@color/gray_text"
+            android:textColor="@color/gray_600"
             android:textFontWeight="500"
             android:textSize="20sp" />
     </androidx.constraintlayout.widget.ConstraintLayout>

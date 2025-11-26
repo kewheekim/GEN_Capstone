@@ -4,7 +4,7 @@
     <style name="Theme.Rally" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/green_active</item>
         <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorSecondary">@color/gray_inactive</item>
+        <item name="colorSecondary">@color/gray_200</item>
         <item name="colorOnSecondary">@android:color/white</item>
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">#343434</item>
@@ -94,5 +94,17 @@
     <style name="RoundedChatProfileImage">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
+    </style>
+
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CalenderDayViewCustom" parent="Theme.AppCompat">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

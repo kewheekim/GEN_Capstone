@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="지정한 위치가 맞나요?"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Semibold18"
             android:layout_marginTop="-6dp"
             android:textStyle="bold" />
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="장소명"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Semibold16"/>
 
                 <TextView
@@ -76,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="상세 주소"
-                    android:textColor="@color/gray_text"
+                    android:textColor="@color/gray_600"
                     style="@style/Text.Medium12"
                     android:layout_marginTop="8dp" />
             </LinearLayout>

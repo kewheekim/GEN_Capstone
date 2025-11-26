@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="매칭 신청 내용을 확인해주세요!"
-            android:textColor="@color/black_text"
+            android:textColor="@color/gray_800"
             style="@style/Text.Semibold18"
             android:layout_marginTop="-6dp" />
 
@@ -67,7 +67,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:text="날짜"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Medium14" />
 
                 <View
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="시간"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Medium14" />
             </LinearLayout>
 
@@ -109,7 +109,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:text="장소"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Medium14"
                     />
             </LinearLayout>
@@ -135,7 +135,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:text="유형"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Medium14" />
 
                 <View
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="스타일"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/gray_800"
                     style="@style/Text.Medium14" />
             </LinearLayout>
         </LinearLayout>

@@ -38,10 +38,10 @@
         app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/bg_text_field"
         android:hint="200"
-        android:textColorHint="@color/gray_nav_bar"
+        android:textColorHint="@color/gray_400"
         android:padding="18dp"
         style="@style/Text.Semibold24"
-        android:textColor="@color/gray_text"
+        android:textColor="@color/gray_600"
         android:inputType="number"/>
     <TextView
         android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
         app:layout_constraintStart_toEndOf="@id/et_calorie"
         android:layout_marginStart="15dp"
         style="@style/Text.Semibold24"
-        android:textColor="@color/black_text"
+        android:textColor="@color/gray_800"
         />
 
     <com.google.android.material.button.MaterialButton
