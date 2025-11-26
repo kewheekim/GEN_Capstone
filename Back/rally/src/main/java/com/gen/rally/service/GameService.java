@@ -24,6 +24,7 @@ public class GameService {
     private final ChatRoomRepository roomRepository;
     private final ChatMessageRepository messageRepository;
 
+
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("M월 d일(E)");
 
 
