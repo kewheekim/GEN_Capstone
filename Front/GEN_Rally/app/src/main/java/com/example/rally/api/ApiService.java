@@ -27,6 +27,7 @@ import com.example.rally.dto.MatchRequestDetails;
 import com.example.rally.dto.MatchRequestDto;
 import com.example.rally.dto.MatchRequestInfoDto;
 import com.example.rally.dto.MatchSeekingItem;
+import com.example.rally.dto.RecordCalendarResponse;
 import com.example.rally.dto.SignupResponse;
 import com.example.rally.dto.TierAssessRequest;
 import com.example.rally.dto.TierAssessResponse;
@@ -154,4 +155,9 @@ public interface ApiService {
     @Headers("Requires-Auth:true")
     @POST("/api/game/result")
     Call<GameResultResponse> getGameResult(@Body Long gameId);
+
+    @Headers("Requires-Auth:true")
+    @GET("/api/record/calendar")
+    Call<List<RecordCalendarResponse>> getMonthlyGames(@Query("year") int year, @Query("month") int month
+    );
 }

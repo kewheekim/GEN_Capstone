@@ -55,7 +55,7 @@ public class RecordAnalysisFragment extends Fragment {
 
         rvGoals.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         // TODO: GoalAdapter 클래스 생성 후 주석 해제
-        //goalAdapter = new RecordGoalAdapter(new ArrayList<>());
+        // goalAdapter = new RecordGoalAdapter(new ArrayList<>());
         // rvGoals.setAdapter(goalAdapter);
 
         rvRecords.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));

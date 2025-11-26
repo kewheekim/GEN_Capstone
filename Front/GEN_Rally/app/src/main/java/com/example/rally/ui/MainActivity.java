@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.navigation_matching) {
                 selected = MatchFragment.newInstance(0);
             } else if (id == R.id.navigation_record) {
-                //selected = new RecordFragment();
+                selected = new RecordFragment();
             } else if (id == R.id.navigation_my) {
                 //selected = new MyPageFragment();
             }

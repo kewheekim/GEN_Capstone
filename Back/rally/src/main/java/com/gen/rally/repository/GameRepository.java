@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,4 +52,11 @@ ORDER BY g.date DESC
         ORDER BY g.date DESC
     """)
     List<Game> findGamesByUserAndState(@Param("user") User user,@Param("state") State state);
+
+    @Query("""
+        SELECT g FROM Game g
+        WHERE (g.user1 = :user OR g.user2 = :user)
+        AND g.date BETWEEN :from AND :to
+    """)
+    List<Game> findByUserAndDateBetween(@Param("user") User user, @Param("from") LocalDate from, @Param("to") LocalDate to);
 }
