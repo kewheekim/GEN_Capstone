@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity @Setter @Getter
 public class Game {
@@ -56,4 +57,7 @@ public class Game {
 
     @OneToOne(mappedBy = "game")
     private GameScore gameScore;
+
+    @OneToMany(mappedBy = "game")
+    private List<Goal> goals;
 }

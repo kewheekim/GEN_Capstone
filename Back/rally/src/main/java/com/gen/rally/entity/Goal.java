@@ -39,4 +39,8 @@ public class Goal {
 
     @Column(nullable = false)
     private boolean achieved = false; // 달성 여부
+
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
 }
