@@ -42,6 +42,7 @@ import kotlinx.coroutines.launch
 fun ScoreScreen(
     setNumber: Int,
     viewModel: ScoreViewModel,
+    gameId: Long,
     onSetFinished: (SetResult) -> Unit
 ) {
     val context = LocalContext.current
@@ -207,7 +208,7 @@ fun ScoreScreen(
                     // 폰으로 전송
                     WatchDataLayerClient.sendScore(
                         context = context,
-                        gameId = "match-123",
+                        gameId = gameId,
                         userScore = userScore + 1, opponentScore = opponentScore,
                         setNumber = setNumber, localIsUser1 = isUser1)
 
@@ -260,7 +261,7 @@ fun ScoreScreen(
                         viewModel.undoUserScore()
                         WatchDataLayerClient.sendUndo(
                             context = context,
-                            gameId = "match-123",
+                            gameId = gameId,
                             setNumber = setNumber,
                             userScore = userScore-1,
                             opponentScore = opponentScore,
@@ -322,6 +323,7 @@ fun MatchScoreScreenPreview() {
     ScoreScreen(
         setNumber = 1,
         viewModel = viewModel(),
+        gameId=123L,
         onSetFinished = {}
     )
 }

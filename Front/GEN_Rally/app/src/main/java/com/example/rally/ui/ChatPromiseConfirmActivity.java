@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
@@ -107,7 +108,7 @@ public class ChatPromiseConfirmActivity extends AppCompatActivity implements OnM
         tvEndTime.setText(endTime);
 
         apiService = RetrofitClient
-                .getSecureClient(getApplicationContext(),"http://10.0.2.2:8080/")
+                .getSecureClient(getApplicationContext(), BuildConfig.API_BASE_URL)
                 .create(ApiService.class);
 
         btnConfirm.setOnClickListener(v -> {

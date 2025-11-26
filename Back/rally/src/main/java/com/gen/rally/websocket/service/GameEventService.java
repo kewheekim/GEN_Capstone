@@ -20,19 +20,19 @@ public class GameEventService {
         this.gameScoreService = gameScoreService;
     }
     private final ObjectMapper mapper = new ObjectMapper();
-    private final Map<String, GameState> games = new ConcurrentHashMap<>();
+    private final Map<Long, GameState> games = new ConcurrentHashMap<>();
 
     public boolean applyIfValid(String rawJson) {
         try {
             JsonNode root = mapper.readTree(rawJson);
             String type = text(root, "type");
-            String gameId = text(root, "gameId");
+            Long gameId = root.get("gameId").asLong(-1L);
             String clientMsgId = text(root, "clientMsgId");
             int seq = root.has("seq") ? root.get("seq").asInt() : 0;
             if (gameId == null || clientMsgId == null || type == null) return false;
 
             GameState st = games.computeIfAbsent(gameId, k -> new GameState());
-            if (st.appliedMsgIds.contains(clientMsgId)) return false;       // 멱등
+            if (st.appliedMsgIds.contains(clientMsgId)) return false; // 멱등
             if (seq != 0 && seq != st.lastSeq + 1) return false;   // 순서체크
 
             switch (type) {
@@ -43,7 +43,7 @@ public class GameEventService {
                     long startAt = p.path("startAt").asLong(System.currentTimeMillis());
 
                     st.setNumber = setNum;
-                    st.currentServe = firstServer;    // 다음 득점 전까지의 선서브
+                    st.currentServe = firstServer; // 다음 득점 전까지의 선서브
                     st.user1Score = 0;
                     st.user2Score = 0;
                     st.setStartAt = startAt;
@@ -151,7 +151,7 @@ public class GameEventService {
         } catch (Exception e) { return false; }
     }
 
-    public String getLatestSnapshot(String gameId) {
+    public String getLatestSnapshot(Long gameId) {
         try {
             GameState st = games.computeIfAbsent(gameId, k -> new GameState());
             ObjectNode p = mapper.createObjectNode();
@@ -178,9 +178,14 @@ public class GameEventService {
         } catch (Exception e) { return null; }
     }
 
-    public String extractgameId(String rawJson) {
-        try { return text(new ObjectMapper().readTree(rawJson), "gameId"); }
-        catch (Exception e) { return null; }
+    public Long extractgameId(String rawJson) {
+        try {
+            JsonNode node = new ObjectMapper().readTree(rawJson);
+            long id = node.path("gameId").asLong(0L);
+            return (id <= 0L) ? null : id;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static String text(JsonNode n, String f){ return n.has(f) && !n.get(f).isNull() ? n.get(f).asText() : null; }

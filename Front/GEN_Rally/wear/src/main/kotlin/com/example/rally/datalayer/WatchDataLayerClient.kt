@@ -1,5 +1,6 @@
 package com.example.rally.datalayer
 
+import GameHealthPayload
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
@@ -14,15 +15,15 @@ import java.util.UUID
 
 object WatchDataLayerClient {
     private const val TAG = "WatchDL"
-    private const val CAP_PHONE = "rally_phone"     // 폰 capability(없어도 폴백)
+    private const val CAP_PHONE = "rally_phone"     // 폰 capability
     private const val PATH_EVENT_SET_START = "/rally/event/set_start"
     private const val PATH_EVENT_SCORE = "/rally/event/score"
     private const val PATH_EVENT_UNDO = "/rally/event/undo"
     private const val PATH_EVENT_PAUSE = "/rally/event/pause"
     private const val PATH_EVENT_RESUME = "/rally/event/resume"
     private const val PATH_EVENT_SET_FINISH = "/rally/event/set_finish"
-    private const val PATH_EVENT_GAME_FINISH = "/rally/event/game_finish"
     private const val PATH_SNAPSHOT_REQ = "/rally/snapshot_req"
+    private const val PATH_HEALTH_SUMMARY = "/rally/health_summary"
 
     // 노드 조회 + 메시지 전송
     private suspend fun sendBytes(ctx: Context, path: String, data: ByteArray) {
@@ -70,7 +71,7 @@ object WatchDataLayerClient {
         }
     }
 
-    fun sendGameStart(context: Context, gameId: String, setNumber: Int) {
+    fun sendGameStart(context: Context, gameId: Long, setNumber: Int) {
         val json = JSONObject()
             .put("version", 1)
             .put("type", "SET_START")
@@ -117,7 +118,7 @@ object WatchDataLayerClient {
 
     fun sendScore(
         context: Context,
-        gameId: String,
+        gameId: Long,
         userScore: Int,
         opponentScore: Int,
         setNumber: Int,
@@ -143,7 +144,7 @@ object WatchDataLayerClient {
 
     fun sendUndo(
         context: Context,
-        gameId: String,
+        gameId: Long,
         userScore: Int,
         opponentScore: Int,
         setNumber: Int,
@@ -166,7 +167,7 @@ object WatchDataLayerClient {
         sendJson(context, PATH_EVENT_UNDO, json)
     }
 
-    fun sendPause(context: Context, gameId: String) {
+    fun sendPause(context: Context, gameId: Long) {
         val json = JSONObject()
             .put("version", 1)
             .put("type", "PAUSE")
@@ -179,7 +180,7 @@ object WatchDataLayerClient {
         sendJson(context, PATH_EVENT_PAUSE, json)
     }
 
-    fun sendResume(context: Context, gameId: String) {
+    fun sendResume(context: Context, gameId: Long) {
         val json = JSONObject()
             .put("version", 1).put("type", "RESUME")
             .put("eventId", UUID.randomUUID().toString())
@@ -193,7 +194,7 @@ object WatchDataLayerClient {
 
     fun sendSetFinish(
         context: Context,
-        gameId: String,
+        gameId: Long,
         setNumber: Int,
         userScore: Int,
         opponentScore: Int,
@@ -221,7 +222,7 @@ object WatchDataLayerClient {
         sendJson(context, PATH_EVENT_SET_FINISH, json)
     }
 
-    fun requestSnapshot(context: Context, gameId: String) {
+    fun requestSnapshot(context: Context, gameId: Long) {
         val json = org.json.JSONObject()
             .put("version", 1)
             .put("type", "SNAPSHOT_REQ")
@@ -229,5 +230,57 @@ object WatchDataLayerClient {
             .put("createdAtUtc", System.currentTimeMillis())
             .put("gameId", gameId)
         sendJson(context, PATH_SNAPSHOT_REQ, json)
+    }
+
+    fun sendHealthSummary(
+        context: Context,
+        gameId: Long,
+        payload: GameHealthPayload,
+        localIsUser1: Boolean
+    ) {
+        try {
+            val root = JSONObject().apply {
+                put("version", 1)
+                put("type", "HEALTH_SUMMARY")
+                put("eventId", UUID.randomUUID().toString())
+                put("createdAt", System.currentTimeMillis())
+                put("gameId", gameId)
+
+                val p = JSONObject().apply {
+                    put("localIsUser1", localIsUser1)
+                    put("totalSteps", payload.totalSteps)
+                    put("totalKcal", payload.totalKcal)
+                    put("overallMaxBpm", payload.overallMaxBpm ?: JSONObject.NULL)
+                    put("overallMinBpm", payload.overallMinBpm ?: JSONObject.NULL)
+
+                    val setsArr = org.json.JSONArray()
+                    payload.perSet.forEachIndexed { index, set ->
+                        val setObj = JSONObject().apply {
+                            put("setNumber", index + 1)
+                            put("maxHr", set.maxHeartRateBpm ?: JSONObject.NULL)
+                            put("minHr", set.minHeartRateBpm ?: JSONObject.NULL)
+                            put("steps", set.steps)
+                            put("caloriesKcal", set.caloriesKcal)
+
+                            val seriesArr = org.json.JSONArray()
+                            set.heartSeries.forEach { sample ->
+                                val s = JSONObject()
+                                s.put("epochMs", sample.epochMs)
+                                s.put("bpm", sample.bpm)
+                                seriesArr.put(s)
+                            }
+                            put("heartSeries", seriesArr)
+                        }
+                        setsArr.put(setObj)
+                    }
+                    put("perSet", setsArr)
+                }
+                put("payload", p)
+            }
+
+            sendJson(context, PATH_HEALTH_SUMMARY, root)
+        } catch (t: Throwable) {
+            Log.e(TAG, "sendHealthSummary failed", t)
+        }
     }
 }

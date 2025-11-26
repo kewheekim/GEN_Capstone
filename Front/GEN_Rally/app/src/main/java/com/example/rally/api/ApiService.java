@@ -7,6 +7,7 @@ import com.example.rally.dto.ChatRoomListDto;
 import com.example.rally.dto.CheckIdRequest;
 import com.example.rally.dto.CheckNicknameResponse;
 import com.example.rally.dto.EvaluationCreateRequest;
+import com.example.rally.dto.GameHealthRequest;
 import com.example.rally.dto.GeneralLoginRequest;
 import com.example.rally.dto.GeneralLoginResponse;
 import com.example.rally.dto.GeneralSignupRequest;
@@ -144,4 +145,8 @@ public interface ApiService {
     @Headers("Requires-Auth:true")
     @POST("/api/goal/check")
     Call<Void> checkGoals(@Body List<Long> goalIds);
+
+    @Headers("Requires-Auth:true")
+    @POST("/api/game/health/save")
+    Call<Void> saveGameHealth( @Body GameHealthRequest body );
 }

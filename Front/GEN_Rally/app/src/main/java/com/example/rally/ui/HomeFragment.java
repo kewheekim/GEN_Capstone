@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
         // 채팅 버튼
         ImageButton chatBtn = view.findViewById(R.id.btn_chat);
         chatBtn.setOnClickListener(v->{
-            Intent intent = new Intent(getActivity(),ChatActivity.class);
+            Intent intent = new Intent(getActivity(),ChatListActivity.class);
             startActivity(intent);
         });
 

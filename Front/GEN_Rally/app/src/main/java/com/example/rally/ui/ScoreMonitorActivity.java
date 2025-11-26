@@ -34,7 +34,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
     private static final String PATH_EVENT_SET_FINISH = "/rally/event/set_finish";
     private static final String PATH_EVENT_GAME_FINISH = "/rally/event/game_finish";
     private ScoreViewModel viewModel;
-    private String gameId;
+    private Long gameId;
     private RealtimeClient client;
 
     ImageButton btnBack;
@@ -76,7 +76,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
         viewModel.prepareSet(1, Player.USER1);
 
         // websocket 연결
-        gameId = intent.getStringExtra("gameId");
+        gameId = intent.getLongExtra("gameId", 123L); // todo: gameId 교체
         String baseUrl = BuildConfig.API_BASE_URL;
         baseUrl = baseUrl.replace("http://", "").replace("https://", "").replaceAll("/$", "");
         String url = "ws://" + baseUrl + "/ws-score?gameId=" + gameId;

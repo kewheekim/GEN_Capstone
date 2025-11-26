@@ -125,7 +125,7 @@
 
                 <data
                     android:host="*"
-                    android:pathPrefix="/rally/event"
+                    android:pathPrefix="/rally"
                     android:scheme="wear" />
             </intent-filter>
             <!-- 스냅샷: 폰 -> 워치 (/rally/snapshot) 수신 -->

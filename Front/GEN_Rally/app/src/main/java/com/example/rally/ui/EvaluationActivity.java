@@ -68,12 +68,12 @@ public class EvaluationActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v -> {
             btnNext.setEnabled(false);
 
-            long gameId = getIntent().getLongExtra("game_id", 1);
-            String subjectUserId = getIntent().getStringExtra("subject_user_id");
+            long gameId = getIntent().getLongExtra("gameId", 1);
+            String opponentId = getIntent().getStringExtra("opponentId");
 
-            if (gameId == 0L || subjectUserId == null) {
+            if (gameId == 0L || opponentId == null) {
                 Toast.makeText(this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
-                subjectUserId = "user003";
+                opponentId = "user003";
                 btnNext.setEnabled(true);
             }
 
@@ -86,15 +86,12 @@ public class EvaluationActivity extends AppCompatActivity {
 
             EvaluationCreateRequest body = new EvaluationCreateRequest(
                     gameId,
-                    subjectUserId,
+                    opponentId,
                     (double) r,
                     etCompliment.getText().toString().trim()
             );
 
-            ApiService api = RetrofitClient
-                    .getClient(BuildConfig.API_BASE_URL)
-                    .create(ApiService.class);
-
+            ApiService api = RetrofitClient.getSecureClient(this, BuildConfig.API_BASE_URL).create(ApiService.class);
             api.createEvaluation(body).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> resp) {

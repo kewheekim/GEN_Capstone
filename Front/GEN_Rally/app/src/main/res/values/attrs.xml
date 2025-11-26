@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ScoreBarView">
+        <attr name="maxValue" format="integer" />
+        <attr name="value" format="integer" />
+        <attr name="barColor" format="color" />
+        <attr name="bgColor" format="color" />
+        <attr name="fillFromRight" format="boolean" />
+        <attr name="roundLeft" format="boolean" />
+        <attr name="roundRight" format="boolean" />
+    </declare-styleable>
+</resources>

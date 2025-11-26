@@ -88,7 +88,7 @@ public class PhoneDataLayerClient {
     }
 
     // 공통 데이터
-    private static String buildEnvelope(String type, String gameId, JSONObject payload) {
+    private static String buildEnvelope(String type, Long gameId, JSONObject payload) {
         try {
             return new JSONObject()
                     .put("version", 1)
@@ -104,7 +104,7 @@ public class PhoneDataLayerClient {
     }
 
     // 경기 시작 세팅
-    public static void sendGameSetup(Context ctx, String gameId,
+    public static void sendGameSetup(Context ctx, Long gameId,
                                      String user1Name, String user2Name,
                                      boolean watchIsUser1, @Nullable SendCallback cb) {
         Executors.newSingleThreadExecutor().execute(() -> {
@@ -120,7 +120,7 @@ public class PhoneDataLayerClient {
                         .put("type", "GAME_SETUP")
                         .put("eventId", java.util.UUID.randomUUID().toString())
                         .put("createdAtUtc", System.currentTimeMillis())
-                        .put("gameId", gameId == null ? "" : gameId)
+                        .put("gameId", gameId)
                         .put("payload", new JSONObject()
                                 .put("user1Name", user1Name)
                                 .put("user2Name", user2Name)

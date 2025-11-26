@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.gen.rally.entity.Game;
 import com.gen.rally.entity.GameScore;
+import com.gen.rally.exception.CustomException;
+import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.GameRepository;
 import com.gen.rally.repository.GameScoreRepository;
 import com.gen.rally.websocket.model.GameState;
@@ -20,10 +22,9 @@ public class GameScoreService {
     private final ObjectMapper mapper;
 
     @Transactional
-    public void saveFromGameState(String gameIdStr, GameState st, ArrayNode setsArray, long totalElapsedSec) throws Exception {
-        Long gameId = Long.valueOf(gameIdStr);
+    public void saveFromGameState(Long gameId, GameState st, ArrayNode setsArray, long totalElapsedSec) throws Exception {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found: " + gameId));
+                .orElseThrow(() -> new CustomException(ErrorCode.GAME_NOT_FOUND));
 
         GameScore score = new GameScore();
         score.setGame(game);

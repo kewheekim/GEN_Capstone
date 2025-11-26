@@ -2,6 +2,7 @@ package com.example.rally.ui;
 
 import com.example.rally.R;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,14 +16,15 @@ import com.bumptech.glide.request.target.Target;
 
 // MAT_END_001
 public class GameFinishActivity extends AppCompatActivity {
-    ImageView ivFinishGif;
-
+    private ImageView ivFinishGif;
+    private Button btnNext;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_finish);
 
         ivFinishGif = findViewById(R.id.iv_finish_gif);
+        btnNext = findViewById(R.id.btn_next);
 
         Glide.with(this).asGif().load(R.drawable.game_finish_gif)
                 .listener(new RequestListener<GifDrawable>() {
@@ -48,5 +50,9 @@ public class GameFinishActivity extends AppCompatActivity {
                     }
                 })
                 .into(ivFinishGif);
+
+        btnNext.setOnClickListener( v -> {
+            btnNext.setEnabled(false);
+        });
     }
 }

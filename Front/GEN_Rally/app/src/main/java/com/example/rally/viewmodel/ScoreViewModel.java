@@ -355,7 +355,7 @@ public class ScoreViewModel extends ViewModel {
         opponentScore.setValue((v==null?0:v)+1);
     }
     //  경기 시작 이벤트 JSON 생성 (수신측은 startStopWatchAt(startAt)으로 스톱워치 초기화)
-    public JSONObject buildSetStart(String gameId, int setNum, Player firstServer, long startAt) {
+    public JSONObject buildSetStart(Long gameId, int setNum, Player firstServer, long startAt) {
         try {
             JSONObject payload = new JSONObject()
                     .put("setNumber", setNum)
@@ -375,7 +375,7 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     //  득점 이벤트 JSON 생성
-    public JSONObject buildScoreAdd(String gameId, String to) {
+    public JSONObject buildScoreAdd(Long gameId, String to) {
         try {
             JSONObject payload = new JSONObject().put("scoreTo", to);
             JSONObject root = new JSONObject();
@@ -391,7 +391,7 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     //  되돌리기 이벤트 JSON 생성
-    public JSONObject buildScoreUndo(String gameId, String from) {
+    public JSONObject buildScoreUndo(Long gameId, String from) {
         try {
             JSONObject root = new JSONObject();
             root.put("type", "score_undo");
@@ -407,7 +407,7 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     // 일시 정지 이벤트 JSON 생성
-    public JSONObject buildSetPause(String gameId, long pausedAt) {
+    public JSONObject buildSetPause(Long gameId, long pausedAt) {
         try {
             JSONObject payload = new JSONObject().put("pausedAt", pausedAt);
             JSONObject root = new JSONObject();
@@ -422,7 +422,7 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     // 경기 재개 이벤트 JSON 생성
-    public JSONObject buildSetResume(String gameId, long resumedAt) {
+    public JSONObject buildSetResume(Long gameId, long resumedAt) {
         try {
             JSONObject payload = new JSONObject().put("resumedAt", resumedAt);
             JSONObject root = new JSONObject();
@@ -437,7 +437,7 @@ public class ScoreViewModel extends ViewModel {
         } catch (Exception e) { return null; }
     }
     //  세트 종료 이벤트 JSON 생성
-    public JSONObject buildSetFinish(String gameId, String winner) {
+    public JSONObject buildSetFinish(Long gameId, String winner) {
         try {
             JSONObject payload = new JSONObject().put("winner", winner);
             JSONObject root = new JSONObject();

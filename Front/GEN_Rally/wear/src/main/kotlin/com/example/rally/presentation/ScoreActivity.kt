@@ -42,7 +42,8 @@ import org.json.JSONObject
 
 class ScoreActivity : ComponentActivity() {
     private lateinit var vm: ScoreViewModel
-
+    private var gameId: Long=0L
+    
     private lateinit var health: HealthSessionManager
     private var hsRunning: Boolean = false
     private var finalSetsJson: String = "[]"
@@ -269,12 +270,24 @@ class ScoreActivity : ComponentActivity() {
                         vm.markStarted(false)
                         vm.markGameFinished(true)
 
+                        val healthPayload = if (setHealthResults.isNotEmpty()) {
+                            GameHealthPayload.from(setHealthResults)
+                        } else null
+
+                        healthPayload?.let { hp ->
+                            WatchDataLayerClient.sendHealthSummary(
+                                context = context,
+                                gameId = gameId,
+                                payload = hp,
+                                localIsUser1 = vm.isUser1.value
+                            )
+                        }
                         // 헬스 세션 종료
                         lifecycleScope.launch {
                             if (hsRunning) {
                               runCatching { health.endSet() }
                               hsRunning = false
-                        }
+                            }
                         }
                     }
                 }
@@ -291,6 +304,7 @@ class ScoreActivity : ComponentActivity() {
         val initialOpponentName = intent.getStringExtra("opponentName") ?: "상대"
         val initialUserName = intent.getStringExtra("userName") ?: "나"
         val initialIsUser1 = intent.getBooleanExtra("localIsUser1", false)
+        gameId = intent.getLongExtra("gameId", 0L)
         health = HealthSessionManager(this)
         vm = androidx.lifecycle.ViewModelProvider(this)[ScoreViewModel::class.java]
         vm.initSets(0, 0)
@@ -357,7 +371,7 @@ class ScoreActivity : ComponentActivity() {
                                         // 폰으로 경기 시작 이벤트 전송
                                         WatchDataLayerClient.sendGameStart(
                                             context = ctx,
-                                            gameId = "match-123",
+                                            gameId = gameId,
                                             setNumber = displayNextSet
                                         )
                                     } else {
@@ -383,6 +397,7 @@ class ScoreActivity : ComponentActivity() {
                             ScorePager(
                                 setNumber = currentSetNumber,
                                 viewModel = viewModel,
+                                gameId = gameId,
                                 onSetFinished = { result, elapsedSec ->
                                     lifecycleScope.launch {
                                         if (hsRunning) {
@@ -418,7 +433,7 @@ class ScoreActivity : ComponentActivity() {
             .getInstance(this)
             .registerReceiver(watchRelayReceiver, f)
 
-        WatchDataLayerClient.requestSnapshot(this, gameId = "match-123")
+        WatchDataLayerClient.requestSnapshot(this, gameId = gameId)
         lifecycleScope.launch {
             hsRunning = runCatching { health.ownsActiveExercise() }.getOrDefault(false)
             Log.d("HS", "onStart sync: hsRunning=$hsRunning")
@@ -445,6 +460,7 @@ class ScoreActivity : ComponentActivity() {
 private fun ScorePager(
     setNumber: Int,
     viewModel: ScoreViewModel,
+    gameId: Long,
     onSetFinished: (SetResult, Long) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -489,11 +505,12 @@ private fun ScorePager(
                 0 -> ScoreScreen(
                     setNumber = setNumber,
                     viewModel = viewModel,
+                    gameId = gameId,
                     onSetFinished = { result ->
                         viewModel.pause()
                         WatchDataLayerClient.sendSetFinish(
                             context = context,
-                            gameId = "match-123",
+                            gameId = gameId,
                             setNumber = viewModel.setNumber.value ,
                             userScore = result.userScore,
                             opponentScore = result.opponentScore,
@@ -510,9 +527,9 @@ private fun ScorePager(
                     onPause = {
                         if (isPaused) {
                             // 폰으로 이벤트 전송
-                            WatchDataLayerClient.sendResume(context, gameId = "match-123")
+                            WatchDataLayerClient.sendResume(context, gameId = gameId)
                         } else {
-                            WatchDataLayerClient.sendPause(context, gameId = "match-123")
+                            WatchDataLayerClient.sendPause(context, gameId = gameId)
                         }
                     }
                 )

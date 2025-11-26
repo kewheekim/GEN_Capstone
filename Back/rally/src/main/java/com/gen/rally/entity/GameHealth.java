@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class GameHealthData {
+public class GameHealth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

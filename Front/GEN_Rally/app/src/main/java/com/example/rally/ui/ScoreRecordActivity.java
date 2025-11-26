@@ -28,7 +28,7 @@ import com.example.rally.viewmodel.ScoreViewModel;
 public class ScoreRecordActivity extends AppCompatActivity {
     private ScoreViewModel viewModel;
     private RealtimeClient client;
-    private final String gameId = "match-123";
+    private Long gameId;
 
     private TextView tvSetNumber, tvOpponentName, tvUserName,
             tvOpponentScore, tvUserScore, tvOpponentSets, tvUserSets, tvTimer, tvUndo, tvPause;
@@ -38,7 +38,6 @@ public class ScoreRecordActivity extends AppCompatActivity {
 
     private int setNumber;
     private boolean isSetFinished = false;
-    private final Handler uiHandler = new Handler(Looper.getMainLooper()); // 일시정지
     private Player nextFirstServer = Player.USER1;
 
     @Override
@@ -53,6 +52,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         setupClicks();
 
         Intent intent = getIntent();
+        gameId = intent.getLongExtra("gameId", 123L);
         setNumber = intent.getIntExtra("setNumber", 1);
         int opponentSets = intent.getIntExtra("opponentSets", 0);
         int userSets = intent.getIntExtra("userSets", 0);

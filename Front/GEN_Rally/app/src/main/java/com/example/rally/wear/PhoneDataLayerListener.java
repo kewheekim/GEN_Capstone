@@ -4,6 +4,11 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+
+import com.example.rally.BuildConfig;
+import com.example.rally.api.ApiService;
+import com.example.rally.api.RetrofitClient;
+import com.example.rally.dto.GameHealthRequest;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
@@ -26,9 +31,10 @@ import java.util.Set;
 public class PhoneDataLayerListener extends WearableListenerService {
     private static final String TAG = "PhoneDL";
 
-    private static final String PATH_ACK          = "/rally/ack";            // 폰→워치 ACK
-    private static final String PATH_SNAPSHOT     = "/rally/snapshot";       // 폰→워치 스냅샷(DataItem)
+    private static final String PATH_ACK = "/rally/ack";    // 폰→워치 ACK
+    private static final String PATH_SNAPSHOT = "/rally/snapshot";       // 폰→워치 스냅샷(DataItem)
     private static final String PATH_SNAPSHOT_REQ = "/rally/snapshot_req";   // 워치→폰 스냅샷 요청
+    private static final String PATH_HEALTH_SUMMARY = "/rally/health_summary";
 
     // Capability
     private static final String CAP_WATCH = "rally_watch";
@@ -47,8 +53,13 @@ public class PhoneDataLayerListener extends WearableListenerService {
         Log.d(TAG, "onMessageReceived <- " + path + " from " + fromNode + " : " + body);
 
         try {
+            if (PATH_HEALTH_SUMMARY.equals(path)) {
+                // 워치에서 보낸 헬스 요약 처리
+                handleHealthSummary(body);
+                return;
+            }
             if (path.startsWith("/rally/event/")) {
-                // ACK 비동기 전송(아래 3번)
+                // ACK 비동기 전송
                 sendAckAsync(fromNode, safeEventId(body));
                 // 액티비티로 브릿지
                 broadcastEventToApp(path, body);
@@ -123,7 +134,7 @@ public class PhoneDataLayerListener extends WearableListenerService {
                     .put("type", "SNAPSHOT")
                     .put("eventId", java.util.UUID.randomUUID().toString())
                     .put("createdAt", System.currentTimeMillis())
-                    .put("gameId", "match-123")
+                    .put("gameId", 123L)   // TODO: 실제 gameId(Long)로 교체
                     .put("payload", payload);
 
             PutDataMapRequest req = PutDataMapRequest.create(PATH_SNAPSHOT);
@@ -145,17 +156,69 @@ public class PhoneDataLayerListener extends WearableListenerService {
         }
     }
 
-    // 가까운 워치 노드(참고용)
-    private String pickWatchNodeOrNull() {
+    private void handleHealthSummary(String json) {
         try {
-            CapabilityInfo info = Tasks.await(
-                    Wearable.getCapabilityClient(this).getCapability(
-                            CAP_WATCH, CapabilityClient.FILTER_REACHABLE));
-            Set<Node> nodes = info.getNodes();
-            for (Node n : nodes) if (n.isNearby()) return n.getId();
-            return nodes.isEmpty() ? null : nodes.iterator().next().getId();
+            Log.d(TAG, "handleHealthSummary raw=" + json);
+            JSONObject root = new JSONObject(json);
+            long gameId = root.optLong("gameId", 123L);
+            if (gameId <= 0L) {
+                return;
+            }
+
+            JSONObject payload = root.optJSONObject("payload");
+            if (payload == null) payload = new JSONObject();
+
+            int totalSteps = (int)payload.optLong("totalSteps", 0L);
+            int totalKcal = payload.optInt("totalKcal", 0);
+
+            Integer overallMax = payload.isNull("overallMaxBpm")
+                    ? null : payload.optInt("overallMaxBpm");
+            Integer overallMin = payload.isNull("overallMinBpm")
+                    ? null : payload.optInt("overallMinBpm");
+
+            // heartSeries 합치기
+            JSONObject seriesRoot = new JSONObject();
+            org.json.JSONArray perSet = payload.optJSONArray("perSet");
+            org.json.JSONArray allHeart = new org.json.JSONArray();
+
+            if (perSet != null) {
+                for (int i = 0; i < perSet.length(); i++) {
+                    JSONObject setObj = perSet.optJSONObject(i);
+                    if (setObj == null) continue;
+
+                    org.json.JSONArray heartArr = setObj.optJSONArray("heartSeries");
+                    if (heartArr == null || heartArr.length() == 0) continue;
+
+                    for (int j = 0; j < heartArr.length(); j++) {
+                        allHeart.put(heartArr.getJSONObject(j)); // {epochMs, bpm} 형식
+                    }
+                }
+            }
+
+            seriesRoot.put("heartSeries", allHeart);
+            String seriesHr = seriesRoot.toString();
+
+            GameHealthRequest dto = new GameHealthRequest(gameId, totalSteps, overallMax, overallMin, totalKcal, seriesHr);
+
+            ApiService api = RetrofitClient
+                    .getSecureClient(getApplicationContext(), BuildConfig.API_BASE_URL)
+                    .create(ApiService.class);
+
+            api.saveGameHealth(dto).enqueue(new retrofit2.Callback<Void>() {
+                @Override
+                public void onResponse(retrofit2.Call<Void> call,
+                                       retrofit2.Response<Void> response) {
+                    Log.d(TAG, "saveGameHealth success code=" + response.code());
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                    Log.e(TAG, "saveGameHealth failed", t);
+                }
+            });
+
         } catch (Exception e) {
-            return null;
+            Log.e(TAG, "handleHealthSummary parse error", e);
         }
     }
 }
