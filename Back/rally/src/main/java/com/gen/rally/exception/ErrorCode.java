@@ -32,6 +32,8 @@ public enum ErrorCode {
     CHATROOM_NOT_FOUND("CHATROOM_NOT_FOUND","해당 채팅방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     CHATMESSAGE_NOT_FOUND("CHATMESSAGE_NOT_FOUND","메시지를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     GOAL_NOT_FOUND("GOAL_NOT_FOUND", "해당 목표를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    GAME_SCORE_NOT_FOUND("GAME_SCORE_NOT_FOUND","해당 점수 기록을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    EVALUATION_NOT_FOUND("EVALUATION_NOT_FOUND", "해당 상포형가를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
     // 409 Conflict
     CONFLICT("CONFLICT", "중복이 발생했습니다.", HttpStatus.CONFLICT),
