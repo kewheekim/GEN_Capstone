@@ -79,11 +79,11 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         if (user.isSameTime()) {
             tvTimeState.setText("시간이 동일해요");
             tvTimeState.setTextColor(getColor(R.color.green_active));
-            ivTime.setImageResource(R.drawable.ic_circle);
+            ivTime.setImageResource(R.drawable.ic_time_same);
         } else {
             tvTimeState.setText("시간이 일부 겹쳐요");
-            tvTimeState.setTextColor(getColor(R.color.pink));
-            ivTime.setImageResource(R.drawable.ic_circlehalf);
+            tvTimeState.setTextColor(getColor(R.color.gray_500));
+            ivTime.setImageResource(R.drawable.ic_time_diff);
         }
 
         tvPlace.setText(user.getPlace());
@@ -91,11 +91,11 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         if (user.isSamePlace()) {
             tvPlaceState.setText("위치가 동일해요");
             tvPlaceState.setTextColor(getColor(R.color.green_active));
-            ivPlace.setImageResource(R.drawable.ic_circle);
+            ivPlace.setImageResource(R.drawable.ic_location_same);
         } else {
             tvPlaceState.setText(String.format("%.1fkm 떨어져 있어요", user.getDistance()));
-            tvPlaceState.setTextColor(getColor(R.color.pink));
-            ivPlace.setImageResource(R.drawable.ic_circlehalf);
+            tvPlaceState.setTextColor(getColor(R.color.gray_500));
+            ivPlace.setImageResource(R.drawable.ic_location_diff);
         }
 
         // 경기 스타일 (예시 매핑)
