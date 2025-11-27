@@ -76,45 +76,46 @@
                 android:textColor="@color/gray_800"
                 style="@style/Text.Medium14" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_opponent_profile"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/profile_image_male"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/tv_place"
                 android:layout_marginTop="39dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_opponent_score"
-                android:layout_marginStart="26dp"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"/>
-
-            <TextView
-                android:id="@+id/tv_opponent_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/iv_opponent_profile"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="24dp"
                 android:gravity="center"
-                android:text="아어려워요"
-                android:textColor="@color/gray_600"
-                style="@style/Text.Medium12" />
+                android:orientation="vertical"
+                >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_opponent_profile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/profile_image_male"
+                    android:scaleType="centerCrop"
+                    android:layout_marginBottom="4dp"
+                    app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"/>
+                <TextView
+                    android:id="@+id/tv_opponent_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="아어려워요"
+                    android:textColor="@color/gray_600"
+                    style="@style/Text.Medium12" />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/tv_opponent_score"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
-                android:text="0"
+                android:text=""
                 android:gravity="center"
                 android:textColor="@color/gray_800"
                 android:fontFamily="@font/kimm_bold"
                 android:textFontWeight="700"
                 app:layout_constraintTop_toBottomOf="@+id/tv_place"
                 android:layout_marginTop="31dp"
-                app:layout_constraintStart_toEndOf="@id/iv_opponent_profile"
-                android:layout_marginStart="42dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_colon"
                 android:layout_marginEnd="42dp"
                 android:textSize="56sp" />
@@ -136,7 +137,7 @@
                 android:id="@+id/tv_user_score"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
-                android:text="2"
+                android:text=""
                 android:gravity="center"
                 android:textColor="@color/gray_800"
                 android:fontFamily="@font/kimm_bold"
@@ -146,32 +147,35 @@
                 app:layout_constraintStart_toEndOf="@id/tv_colon"
                 android:layout_marginStart="40dp"
                 android:textSize="56sp" />
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_user_profile"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_default_profile"
-                app:layout_constraintTop_toBottomOf="@+id/tv_place"
-                android:layout_marginTop="39dp"
-                app:layout_constraintStart_toEndOf="@id/tv_user_score"
-                android:layout_marginStart="42dp"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"/>
 
-            <TextView
-                android:id="@+id/tv_user_name"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/iv_user_profile"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toEndOf="@id/tv_user_score"
-                android:layout_marginStart="42dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_place"
+                android:layout_marginTop="39dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="24dp"
                 android:gravity="center"
-                android:text="철통배턴"
-                android:textColor="@color/gray_600"
-                style="@style/Text.Medium12" />
+                android:orientation="vertical"
+                >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_user_profile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_default_profile"
+                    android:layout_marginBottom="4dp"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/RoundedProfileImage10dp"/>
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="철통배턴"
+                    android:textColor="@color/gray_600"
+                    style="@style/Text.Medium12" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_time"
@@ -207,7 +211,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_time"
                 android:layout_marginTop="27dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_set1"
-                android:layout_marginEnd="19dp"
+                android:layout_marginEnd="104dp"
                 style="@style/Text.Semibold18"
                 android:textColor="@color/gray_800"/>
             <TextView
@@ -218,7 +222,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_time"
                 android:layout_marginTop="27dp"
                 app:layout_constraintStart_toEndOf="@id/tv_set1"
-                android:layout_marginStart="19dp"
+                android:layout_marginStart="104dp"
                 style="@style/Text.Semibold18"
                 android:textColor="@color/gray_800"/>
             <TextView
@@ -235,8 +239,8 @@
 
             <com.example.rally.ui.ScoreBarView
                 android:id="@+id/sb_opponent1"
-                android:layout_width="142dp"
-                android:layout_height="16dp"
+                android:layout_width="109dp"
+                android:layout_height="12dp"
                 app:maxValue="21"
                 app:value="19"
                 app:bgColor="@color/gray_200"
@@ -246,14 +250,14 @@
                 app:roundRight="false"
                 app:cornerRadius="10dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_time"
-                android:layout_marginTop="53dp"
+                android:layout_marginTop="58dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_time1"
                 android:layout_marginEnd="4dp"/>
 
             <com.example.rally.ui.ScoreBarView
                 android:id="@+id/sb_user1"
-                android:layout_width="142dp"
-                android:layout_height="16dp"
+                android:layout_width="109dp"
+                android:layout_height="12dp"
                 app:maxValue="21"
                 app:value="18"
                 app:bgColor="@color/gray_200"
@@ -263,7 +267,7 @@
                 app:roundRight="true"
                 app:cornerRadius="10dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_time"
-                android:layout_marginTop="53dp"
+                android:layout_marginTop="58dp"
                 app:layout_constraintStart_toEndOf="@id/tv_time1"
                 android:layout_marginStart="4dp"/>
 
@@ -286,7 +290,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_time1"
                 android:layout_marginTop="17dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_set2"
-                android:layout_marginEnd="19dp"
+                android:layout_marginEnd="104dp"
                 style="@style/Text.Semibold18"
                 android:textColor="@color/gray_800"/>
             <TextView
@@ -297,7 +301,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_time1"
                 android:layout_marginTop="17dp"
                 app:layout_constraintStart_toEndOf="@id/tv_set2"
-                android:layout_marginStart="19dp"
+                android:layout_marginStart="104dp"
                 style="@style/Text.Semibold18"
                 android:textColor="@color/gray_800"/>
 
@@ -315,8 +319,8 @@
 
             <com.example.rally.ui.ScoreBarView
                 android:id="@+id/sb_opponent2"
-                android:layout_width="142dp"
-                android:layout_height="16dp"
+                android:layout_width="109dp"
+                android:layout_height="12dp"
                 app:maxValue="21"
                 app:value="19"
                 app:bgColor="@color/gray_200"
@@ -326,14 +330,14 @@
                 app:roundRight="false"
                 app:cornerRadius="10dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_set2"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_time2"
                 android:layout_marginEnd="4dp"/>
 
             <com.example.rally.ui.ScoreBarView
                 android:id="@+id/sb_user2"
-                android:layout_width="142dp"
-                android:layout_height="16dp"
+                android:layout_width="109dp"
+                android:layout_height="12dp"
                 app:maxValue="21"
                 app:value="18"
                 app:bgColor="@color/gray_200"
@@ -343,7 +347,7 @@
                 app:roundRight="true"
                 app:cornerRadius="10dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_set2"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
                 app:layout_constraintStart_toEndOf="@id/tv_time2"
                 android:layout_marginStart="4dp"/>
 
@@ -372,7 +376,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="17dp"
                     app:layout_constraintEnd_toStartOf="@id/tv_set3"
-                    android:layout_marginEnd="19dp"
+                    android:layout_marginEnd="104dp"
                     style="@style/Text.Semibold18"
                     android:textColor="@color/gray_800"/>
                 <TextView
@@ -383,7 +387,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="17dp"
                     app:layout_constraintStart_toEndOf="@id/tv_set3"
-                    android:layout_marginStart="19dp"
+                    android:layout_marginStart="104dp"
                     style="@style/Text.Semibold18"
                     android:textColor="@color/gray_800"/>
 
@@ -401,8 +405,8 @@
 
                 <com.example.rally.ui.ScoreBarView
                     android:id="@+id/sb_opponent3"
-                    android:layout_width="142dp"
-                    android:layout_height="16dp"
+                    android:layout_width="109dp"
+                    android:layout_height="12dp"
                     app:maxValue="21"
                     app:value="19"
                     app:bgColor="@color/gray_200"
@@ -412,14 +416,14 @@
                     app:roundRight="false"
                     app:cornerRadius="10dp"
                     app:layout_constraintTop_toBottomOf="@id/tv_set3"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     app:layout_constraintEnd_toStartOf="@id/tv_time3"
                     android:layout_marginEnd="4dp"/>
 
                 <com.example.rally.ui.ScoreBarView
                     android:id="@+id/sb_user3"
-                    android:layout_width="142dp"
-                    android:layout_height="16dp"
+                    android:layout_width="109dp"
+                    android:layout_height="12dp"
                     app:maxValue="21"
                     app:value="18"
                     app:bgColor="@color/gray_200"
@@ -429,7 +433,7 @@
                     app:roundRight="true"
                     app:cornerRadius="10dp"
                     app:layout_constraintTop_toBottomOf="@id/tv_set3"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="7dp"
                     app:layout_constraintStart_toEndOf="@id/tv_time3"
                     android:layout_marginStart="4dp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
