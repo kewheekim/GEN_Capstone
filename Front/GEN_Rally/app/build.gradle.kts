@@ -17,8 +17,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_BASE_URL", "\"http://172.19.7.81:8080/\"")
-        buildConfigField ("String", "WS_BASE_URL", "\"ws://172.19.7.81:8080/stomp\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://172.19.14.199:8080/\"")
+        buildConfigField ("String", "WS_BASE_URL", "\"ws://172.19.14.199:8080/stomp\"")
     }
 
     buildTypes {
@@ -66,7 +66,5 @@ dependencies {
     implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0") // Chart
-    implementation ("com.github.prolificinteractive:material-calendarview:2.0.1") {
-        exclude ("com.android.support")
-    } // calendar
+    implementation ("com.github.prolificinteractive:material-calendarview:2.0.1") // calendar
 }
