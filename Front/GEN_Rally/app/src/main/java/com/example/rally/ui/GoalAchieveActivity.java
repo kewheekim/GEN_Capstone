@@ -15,6 +15,7 @@ import com.example.rally.adapter.GoalCheckAdapter;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
 import com.example.rally.dto.GoalActiveItem;
+import com.example.rally.dto.GoalCheckDto;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -55,8 +56,8 @@ public class GoalAchieveActivity extends AppCompatActivity {
             for (GoalActiveItem item : achievedItems) {
                 goalIds.add(item.getId());
             }
-
-            Call<Void> callCheck = apiService.checkGoals(goalIds);
+            GoalCheckDto dto = new GoalCheckDto(goalIds, gameId);
+            Call<Void> callCheck = apiService.checkGoals(dto);
             callCheck.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
