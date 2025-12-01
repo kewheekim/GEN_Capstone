@@ -30,36 +30,7 @@ public class InvitationController {
     @PostMapping("/invite")
     public ResponseEntity<MatchInviteResponse> invite( @AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody MatchInviteRequest req
     ) {
-        User sender = userRepo.findByUserId(userDetails.getUsername()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        User receiver = userRepo.findByUserId(req.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        MatchRequest senderReq = requestRepo.findById(req.getSenderRequestId())
-                .orElseThrow(() -> new CustomException(ErrorCode.MATCH_REQUEST_NOT_FOUND));
-        MatchRequest receiverReq = requestRepo.findById(req.getReceiverRequestId())
-                .orElseThrow(() -> new CustomException(ErrorCode.MATCH_REQUEST_NOT_FOUND));
-
-        // 소유자 검증
-        if (!senderReq.getUser().getUserId().equals(sender.getUserId())) {
-            throw new CustomException(ErrorCode.FORBIDDEN); // 내 요청이 아님
-        }
-        if (!receiverReq.getUser().getUserId().equals(receiver.getUserId())) {
-            throw new CustomException(ErrorCode.FORBIDDEN); // 상대의 요청과 receiverId 불일치
-        }
-        // 상태 검증 (대기 상태만 요청 가능)
-        if (senderReq.getState() != State.대기 || receiverReq.getState() != State.대기) {
-            throw new CustomException(ErrorCode.INVALID_STATE);
-        }
-
-        senderReq.setState(State.요청중);
-        MatchInvitation inv = new MatchInvitation();
-        inv.setSender(sender);
-        inv.setReceiver(receiver);
-        inv.setSenderRequest(senderReq);
-        inv.setReceiverRequest(receiverReq);
-        inv.setState(State.요청중);
-
-        inviteRepo.save(inv);
-
-        return ResponseEntity.ok(new MatchInviteResponse(inv.getInvitationId(), inv.getState().name()));
+        return invitationService.invite(userDetails.getUsername(), req);
     }
 
     // 받은 요청 목록

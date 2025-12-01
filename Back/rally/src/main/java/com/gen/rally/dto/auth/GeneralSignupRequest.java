@@ -14,4 +14,5 @@ public class GeneralSignupRequest {
     private String imageUrl;
     private Gender gender;
     private Primary primaryThing;
+    private String fcmToken;
 }
