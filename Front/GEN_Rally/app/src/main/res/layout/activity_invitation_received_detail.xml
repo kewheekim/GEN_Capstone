@@ -177,12 +177,12 @@
 
         <ImageView
             android:id="@+id/ic_time"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:src="@drawable/ic_circlehalf"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_time_diff"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_time"
-            android:layout_marginTop="12.5dp"
+            android:layout_marginTop="8dp"
             />
         <TextView
             android:id="@+id/tv_time_status"
@@ -190,7 +190,7 @@
             android:layout_height="wrap_content"
             android:text="시간이 일부 겹쳐요"
             style="@style/Text.Medium14"
-            android:textColor="@color/pink"
+            android:textColor="@color/gray_500"
             app:layout_constraintLeft_toRightOf="@+id/ic_time"
             app:layout_constraintTop_toBottomOf="@+id/tv_time"
             android:layout_marginTop="8dp"
@@ -221,12 +221,12 @@
             />
         <ImageView
             android:id="@+id/ic_place"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:src="@drawable/ic_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_location_same"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_opponent_place"
-            android:layout_marginTop="12.5dp"
+            android:layout_marginTop="8dp"
             />
         <TextView
             android:id="@+id/tv_place_status"
@@ -319,6 +319,29 @@
             app:layout_constraintStart_toStartOf="parent"
             android:fontFamily="@font/pretendard_variable"
             />
+
+        <LinearLayout
+            android:id="@+id/layout_manner_null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_manner"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="center"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_warning"
+                android:layout_marginEnd="4dp"/>
+            <TextView
+                android:text="아직 받은 매너 평가가 없어요"
+                style="@style/Text.Medium12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
         <android.widget.Button
             android:id="@+id/btn_accept"
             style="@style/FlatButton"
