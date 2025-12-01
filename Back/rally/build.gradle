@@ -43,6 +43,8 @@ dependencies {
     // webSocket
     implementation "org.springframework.boot:spring-boot-starter-websocket"
     implementation "com.fasterxml.jackson.core:jackson-databind"
+
+    implementation 'com.google.firebase:firebase-admin:9.7.0' // firebase
 }
 
 tasks.named('test') {

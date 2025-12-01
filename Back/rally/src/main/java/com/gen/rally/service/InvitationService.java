@@ -1,17 +1,18 @@
 package com.gen.rally.service;
 
-import com.gen.rally.dto.InvitationAcceptResponse;
-import com.gen.rally.dto.InvitationItem;
+import com.gen.rally.dto.*;
 import com.gen.rally.entity.*;
 import com.gen.rally.enums.State;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
-import com.gen.rally.repository.ChatRoomRepository;
-import com.gen.rally.repository.GameRepository;
-import com.gen.rally.repository.MatchInvitationRepository;
+import com.gen.rally.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
@@ -23,7 +24,45 @@ public class InvitationService {
     private final MatchInvitationRepository invitationRepo;
     private final GameRepository gameRepo;
     private final ChatRoomRepository chatRoomRepo;
+    private final NotificationService notiService;
+    private final UserRepository userRepo;
+    private final MatchRequestRepository requestRepo;
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("M월 d일(E)");
+
+    public ResponseEntity<MatchInviteResponse> invite(String userId, MatchInviteRequest req
+    ) {
+        User sender = userRepo.findByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User receiver = userRepo.findByUserId(req.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        MatchRequest senderReq = requestRepo.findById(req.getSenderRequestId())
+                .orElseThrow(() -> new CustomException(ErrorCode.MATCH_REQUEST_NOT_FOUND));
+        MatchRequest receiverReq = requestRepo.findById(req.getReceiverRequestId())
+                .orElseThrow(() -> new CustomException(ErrorCode.MATCH_REQUEST_NOT_FOUND));
+
+        // 소유자 검증
+        if (!senderReq.getUser().getUserId().equals(sender.getUserId())) {
+            throw new CustomException(ErrorCode.FORBIDDEN); // 내 요청이 아님
+        }
+        if (!receiverReq.getUser().getUserId().equals(receiver.getUserId())) {
+            throw new CustomException(ErrorCode.FORBIDDEN); // 상대의 요청과 receiverId 불일치
+        }
+        // 상태 검증 (대기 상태만 요청 가능)
+        if (senderReq.getState() != State.대기 || receiverReq.getState() != State.대기) {
+            throw new CustomException(ErrorCode.INVALID_STATE);
+        }
+
+        senderReq.setState(State.요청중);
+        MatchInvitation inv = new MatchInvitation();
+        inv.setSender(sender);
+        inv.setReceiver(receiver);
+        inv.setSenderRequest(senderReq);
+        inv.setReceiverRequest(receiverReq);
+        inv.setState(State.요청중);
+
+        invitationRepo.save(inv);
+
+        return ResponseEntity.ok(new MatchInviteResponse(inv.getInvitationId(), inv.getState().name()));
+    }
+
 
     public List<InvitationItem> findReceived(String myUserId) {
         return invitationRepo.findReceivedByUserId(myUserId).stream().map(mi -> {
@@ -68,7 +107,7 @@ public class InvitationService {
     @Transactional
     public InvitationAcceptResponse accept(String myUserId, Long invitationId){
         MatchInvitation inv = invitationRepo.findById(invitationId)
-                .orElseThrow(() -> new IllegalArgumentException("초대 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.MATCH_INVITATION_NOT_FOUND));
 
         // 수신자 검증
         if (inv.getReceiver() == null || inv.getReceiver().getUserId() == null) {
@@ -132,6 +171,8 @@ public class InvitationService {
             room = ChatRoom.create(game);
             chatRoomRepo.save(room);
         }
+
+        notiService.sendMatchAcceptedNotification(me.getName(), opp.getUserId(), game.getGameId());  // 알림+fcm 전송
 
         return new InvitationAcceptResponse(
                 game.getGameId(),

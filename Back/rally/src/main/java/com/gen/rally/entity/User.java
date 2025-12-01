@@ -41,4 +41,6 @@ public class User {
     private int skill;
     private double manner;
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    private String fcmToken;
 }

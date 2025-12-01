@@ -1,14 +1,11 @@
 package com.gen.rally.controller;
 
 import com.gen.rally.dto.MatchInfoDto;
-import com.gen.rally.dto.MatchRequestInfoDto;
 import com.gen.rally.dto.TierAssessRequest;
 import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.entity.CustomUserDetails;
-import com.gen.rally.entity.User;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
-import com.gen.rally.repository.UserRepository;
 import com.gen.rally.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,12 +48,19 @@ public class UserController {
 
     // 매너점수 갱신
     @PostMapping("/api/users/manner")
-    public void setManner( int manner, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public void setManner(int manner, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if(userDetails == null){
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
         String userId = userDetails.getUsername();
         // 반환 필요없음
         return ;
+    }
+
+    // fcm 토큰 갱신
+    @PostMapping("/api/users/update-token")
+    public ResponseEntity<Void> updateFcmToken(@AuthenticationPrincipal CustomUserDetails userDetails, String fcmToken) {
+        userService.updateFcmToken(userDetails.getId(), fcmToken);
+        return ResponseEntity.ok().build();
     }
 }

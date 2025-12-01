@@ -21,6 +21,7 @@ import com.example.rally.api.RetrofitClient;
 import com.example.rally.auth.TokenStore;
 import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.SignupResponse;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -39,7 +40,7 @@ public class SetPrimaryFragment extends Fragment {
     private static final String ARG_NAME = "name";
     private static final String ARG_IMAGE_BYTES = "imageBytes";
     private static final String ARG_GENDER = "gender";
-    private String userId, userPw, name, gender;
+    private String userId, userPw, name, gender, fcmToken;
     private byte[] imageBytes;
     private StorageReference storage;
     private ImageButton btnBack;
@@ -95,6 +96,15 @@ public class SetPrimaryFragment extends Fragment {
         com.google.firebase.FirebaseApp.initializeApp(requireContext().getApplicationContext());
 
         storage = FirebaseStorage.getInstance().getReference();
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener( task -> {
+            if (!task.isSuccessful()) {
+                Log.w("FCM", "FCM 토큰 가져오기 실패", task.getException());
+                return;
+            }
+            fcmToken = task.getResult();
+            Log.d("FCM", "FCM 토큰: " + fcmToken);
+        });
 
         final ApiService apiService = RetrofitClient
                 .getClient(BuildConfig.API_BASE_URL)
@@ -153,6 +163,7 @@ public class SetPrimaryFragment extends Fragment {
         request.setGender(gender);
         request.setPrimaryThing(String.valueOf(checkedIndex));
         request.setImageUrl(imageUrl);
+        request.setFcmToken(fcmToken);
 
             apiService.signup(request)
                     .enqueue(new Callback<SignupResponse>() {

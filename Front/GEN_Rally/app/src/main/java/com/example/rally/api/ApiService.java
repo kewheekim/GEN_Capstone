@@ -28,6 +28,7 @@ import com.example.rally.dto.MatchRequestDetails;
 import com.example.rally.dto.MatchRequestDto;
 import com.example.rally.dto.MatchRequestInfoDto;
 import com.example.rally.dto.MatchSeekingItem;
+import com.example.rally.dto.NotificationItem;
 import com.example.rally.dto.RecordCalendarResponse;
 import com.example.rally.dto.SignupResponse;
 import com.example.rally.dto.TierAssessRequest;
@@ -161,4 +162,12 @@ public interface ApiService {
     @GET("/api/record/calendar")
     Call<List<RecordCalendarResponse>> getMonthlyGames(@Query("year") int year, @Query("month") int month
     );
+
+    @Headers("Requires-Auth:true")
+    @POST("/api/users/update-token")
+    Call<ResponseBody> updateFcmToken(@Body String fcmToken);
+
+    @Headers("Requires-Auth:true")
+    @POST("/api/notification/recent")
+    Call<List<NotificationItem>> getRecentNotifications();
 }

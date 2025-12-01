@@ -43,6 +43,7 @@ public class UserService {
         user.setGender(request.getGender());
         user.setPrimaryThing(request.getPrimaryThing());
         user.setLoginType(LoginType.NORMAL);
+        user.setFcmToken(request.getFcmToken());
         userRepository.save(user);
 
         String subject =user.getUserId();
@@ -138,5 +139,12 @@ public class UserService {
         return games.stream()
                 .map(game -> new MatchInfoDto(game, userId))
                 .collect(Collectors.toList());
+    }
+
+    // fcm 토큰 업데이트
+    public void updateFcmToken(Long userId, String fcmToken) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        user.setFcmToken(fcmToken);
     }
 }

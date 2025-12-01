@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -37,6 +36,7 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButtonClickListener {
     private RecyclerView rvGames;
     private ImageView ivGameNull;
+    private  ImageButton btnRequest, btnChat, btnNoti;
     private GameCardAdapter gameAdapter;
     private TokenStore tokenStore;
     private long currentUserId = -1L;
@@ -53,16 +53,23 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
         ivGameNull = view.findViewById(R.id.iv_gamenull);
 
         // 매칭 버튼
-        ImageButton requestBtn = view.findViewById(R.id.btn_request);
-        requestBtn.setOnClickListener(v -> {
+        btnRequest = view.findViewById(R.id.btn_request);
+        btnRequest.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MatTypeActivity.class);
             startActivity(intent);
         });
 
         // 채팅 버튼
-        ImageButton chatBtn = view.findViewById(R.id.btn_chat);
-        chatBtn.setOnClickListener(v->{
+        btnChat = view.findViewById(R.id.btn_chat);
+        btnChat.setOnClickListener(v->{
             Intent intent = new Intent(getActivity(),ChatListActivity.class);
+            startActivity(intent);
+        });
+
+        // 알림 버튼
+        btnNoti = view.findViewById(R.id.btn_noti);
+        btnNoti.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), NotificationActivity.class);
             startActivity(intent);
         });
 

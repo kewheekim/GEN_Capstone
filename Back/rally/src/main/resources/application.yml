@@ -33,6 +33,10 @@ logging:
     org.apache.coyote: DEBUG
     org.springframework.boot.web.embedded.tomcat: DEBUG
 
+firebase:
+  credentials:
+    path: C:\Capstone\GEN_Capstone\rally-eb414-firebase-adminsdk-fbsvc-72e951da9e.json
+
 ---
 spring:
   config:

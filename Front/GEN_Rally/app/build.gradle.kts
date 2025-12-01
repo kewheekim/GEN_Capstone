@@ -17,8 +17,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_BASE_URL", "\"http://172.19.14.199:8080/\"")
-        buildConfigField ("String", "WS_BASE_URL", "\"ws://172.19.14.199:8080/stomp\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://172.19.0.85:8080/\"")
+        buildConfigField ("String", "WS_BASE_URL", "\"ws://172.19.0.85:8080/stomp\"")
     }
 
     buildTypes {
@@ -61,6 +61,7 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
     implementation (platform("com.google.firebase:firebase-bom:34.2.0")) // Firebase
     implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.google.firebase:firebase-messaging-ktx:23.4.1")
     implementation ("com.github.NaikSoftware:StompProtocolAndroid:1.6.6") // STOMP
     implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
