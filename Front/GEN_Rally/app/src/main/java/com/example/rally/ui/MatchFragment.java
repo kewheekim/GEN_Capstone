@@ -60,13 +60,9 @@ public class MatchFragment extends Fragment {
 
         if (savedInstanceState == null) {
             int initial = (getArguments() != null) ? getArguments().getInt(ARG_INITIAL_TAB_INDEX, 0) : 0;
+            switchTab(initial);
             TabLayout.Tab t = tabs.getTabAt(initial);
             if (t != null) t.select();
-            else {
-                switchTab(initial);
-                TabLayout.Tab first = tabs.getTabAt(0);
-                if (first != null) first.select();
-            }
         }
 
 //        btnStart.setOnClickListener(v -> {
