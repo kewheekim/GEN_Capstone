@@ -176,7 +176,7 @@ public interface ApiService {
 
     @Headers("Requires-Auth:true")
     @GET("/api/record/calendar")
-    Call<List<RecordCalendarResponse>> getMonthlyGames(@Query("year") int year, @Query("month") int month
+    Call<RecordCalendarResponse> getMonthlyGames(@Query("year") int year, @Query("month") int month
     );
 
     @Headers("Requires-Auth:true")

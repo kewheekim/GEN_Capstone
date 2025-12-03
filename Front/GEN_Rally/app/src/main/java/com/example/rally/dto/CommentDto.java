@@ -9,4 +9,5 @@ public class CommentDto {
     private String date;
     private String gameStyle;
     private String tier;
+    private String opponentImage;
 }

@@ -28,6 +28,17 @@ public class RecordService {
     private final EvaluationRepository evaluationRepository;
     private final GameHealthRepository gameHealthRepository;
 
+    private String formatPlayTime(int totalSeconds) {
+        if (totalSeconds == 0) {
+            return "00:00:00";
+        }
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+
     // 기록 - 분석 탭
     public ResponseEntity<RecordAnalysisResponse> showAnalysis(Long userId){
         User user = userRepository.findById(userId).
@@ -37,7 +48,7 @@ public class RecordService {
         List<GoalItem> goalDtos = goals.stream().map(goal -> GoalItem.builder()
                 .id(goal.getId())
                 .name(goal.getName())
-                .type(goal.getGoalType().name())
+                .theme(goal.getTheme().name())
                 .progressCount(goal.getProgressCount())
                 .targetWeeksCount(goal.getTargetWeeksCount())
                 .build()
@@ -61,6 +72,7 @@ public class RecordService {
             GameScore score = game.getGameScore();
             int myScoreStr = 0;
             int opScoreStr = 0;
+            int totalSec = (score != null) ? score.getTotalElapsedSec() : null;
 
             if (score != null) {
                 myScoreStr = isUser1 ? score.getUser1Sets() : score.getUser2Sets();
@@ -71,7 +83,7 @@ public class RecordService {
                 .gameId(game.getGameId())
                 .myScore(myScoreStr)
                 .opponentScore(opScoreStr)
-                .playTime(game.getGameScore() != null ? game.getGameScore().getTotalElapsedSec().toString() : "00:00") // Null check
+                .playTime(formatPlayTime(totalSec)) // Null check
                 .steps(mySteps)
                 .calories(myCalories)
                 .opponentImage(opponent.getImageUrl())
@@ -164,24 +176,59 @@ public class RecordService {
     }
 
     // 기록 - 달력 탭
-    public List<RecordCalendarResponse> getMonthlyGames(Long userId, int year, int month){
+    public RecordCalendarResponse getMonthlyGames(Long userId, int year, int month){
         User user = userRepository.findById(userId).
                 orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        // 현재 월 기준, 게임한 날짜에 따라 select한 캘린더 띄우기
         List<Game> games = gameRepository.findByUserAndDateBetweenAndState(user, startDate, endDate, State.경기완료);
 
-        return games.stream()
-                .map(game -> RecordCalendarResponse.builder()
-                        .gameId(game.getGameId())
-                        .date(game.getDate())
-                        .build())
+        List<LocalDate> markedDates = games.stream()
+                .map(Game::getDate)
+                .distinct()
+                .sorted()
                 .collect(Collectors.toList());
-        // TODO: 경기 dto (날짜, 점수, 상대방 프로필, 승패여부, 시간, 걸음, 칼로리) 가져오기
 
+        List<GameReviewDto> gameReviewDtos = games.stream().map(game -> {
+            boolean isUser1 = game.getUser1().getId().equals(userId);
+            User opponent = isUser1 ? game.getUser2() : game.getUser1();
+
+            GameHealth myHealth = game.getGameHealth().stream()
+                    .filter(h -> h.getUser().getId().equals(userId))
+                    .findFirst()
+                    .orElse(null);
+
+            Integer mySteps = (myHealth != null) ? myHealth.getSteps() : 0;
+            Integer myCalories = (myHealth != null) ? myHealth.getCalories() : 0;
+
+            GameScore score = game.getGameScore();
+            int myScoreStr = 0;
+            int opScoreStr = 0;
+
+            int totalSec = (score != null) ? score.getTotalElapsedSec() : null;
+
+            if (score != null) {
+                myScoreStr = isUser1 ? score.getUser1Sets() : score.getUser2Sets();
+                opScoreStr = isUser1 ? score.getUser2Sets() : score.getUser1Sets();
+            }
+
+            return GameReviewDto.builder()
+                    .gameId(game.getGameId())
+                    .date(String.valueOf(game.getDate()))
+                    .myScore(myScoreStr)
+                    .opponentScore(opScoreStr)
+                    .playTime(formatPlayTime(totalSec))
+                    .steps(mySteps)
+                    .calories(myCalories)
+                    .opponentImage(opponent.getImageUrl())
+                    .build();
+        }).toList();
+
+        return RecordCalendarResponse.builder()
+                .markedDates(markedDates)
+                .games(gameReviewDtos)
+                .build();
     }
-
 }
