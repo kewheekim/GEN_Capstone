@@ -46,93 +46,11 @@
         android:clipToPadding="false"
         android:nestedScrollingEnabled="false"/>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/goal_card"
-            android:layout_width="364dp"
-            android:layout_height="88dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_new_goal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/gray_border"
-            >
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="12dp"
-                >
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/goal_type_card"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:backgroundTint="#F9FFFF"
-                    android:layout_width="61dp"
-                    android:layout_height="26dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="0dp"
-                    >
-                    <TextView
-                        android:id="@+id/tv_goal_type"
-                        android:layout_width="61dp"
-                        android:layout_height="26dp"
-                        android:gravity="center"
-                        android:text="건강 관리"
-                        android:textColor="#3191FF"
-                        style="@style/Text.Medium12"
-                        />
-
-                </com.google.android.material.card.MaterialCardView>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="26dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/goal_type_card"
-                    android:gravity="center"
-                    android:text="경기 당 200칼로리 소모하기"
-                    android:layout_marginTop="4dp"
-                    style="@style/Text.Medium16"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginEnd="15dp"
-                    android:text="7/8"
-                    style="@style/Text.Bold14"
-                    />
-
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    style="@style/Widget.AppCompat.ProgressBar"
-                    android:progressDrawable="@drawable/custom_circle_progressbar"
-                    android:progressTint="@color/green_active"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
 
     <View
         android:layout_width="364dp"
         android:layout_height="1dp"
-        app:layout_constraintTop_toBottomOf="@id/goal_card"
+        app:layout_constraintTop_toBottomOf="@id/rv_goals"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_gravity="center_vertical"
@@ -144,7 +62,7 @@
         android:layout_height="wrap_content"
         android:text="소모 칼로리"
         style="@style/Text.Semibold20"
-        app:layout_constraintTop_toBottomOf="@id/goal_card"
+        app:layout_constraintTop_toBottomOf="@id/rv_goals"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="44dp"
         android:layout_marginStart="24dp"
@@ -154,7 +72,7 @@
         android:id="@+id/layout_weeks"
         android:layout_width="142dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/goal_card"
+        app:layout_constraintTop_toBottomOf="@id/rv_goals"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="86dp"
@@ -222,185 +140,12 @@
         android:clipToPadding="false"
         android:nestedScrollingEnabled="false"/>
 
-        <com.google.android.material.card.MaterialCardView
-            app:layout_constraintTop_toBottomOf="@id/chart_kcal"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/match_record_card"
-            android:layout_marginEnd="8dp"
-            android:layout_width="258dp"
-            android:layout_height="127dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="84dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            >
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:background="@drawable/selector_rectangle"
-                >
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/tv_opponent_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="5dp"
-                        style="@style/Text.Semibold20"
-                        android:text="1"
-                        android:textSize="36dp"
-                        android:textColor="@color/gray_600"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="10dp"
-                        style="@style/Text.Semibold20"
-                        android:text=":"
-                        android:textSize="36dp"
-                        android:textColor="@color/gray_400"
-                        />
-
-                    <TextView
-                        android:id="@+id/tv_my_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        app:layout_constraintStart_toEndOf="@id/tv_opponent_score"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="10dp"
-                        style="@style/Text.Semibold20"
-                        android:text="2"
-                        android:textSize="36dp"
-                        android:textColor="@color/green_active"
-                        />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/iv_opponent_profile"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginStart="40dp"
-                    android:src="@drawable/profile_image_male"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_style_single"
-                    app:layout_constraintEnd_toEndOf="@id/iv_opponent_profile"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="-30dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginTop="6dp"
-                    />
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="40dp"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="62dp">
-
-                    <TextView
-                        android:id="@+id/tv_record_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        style="@style/Text.Medium14"
-                        android:text="00:50:15"
-                        android:textColor="@color/gray_800"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="18dp"
-                        android:text="시간"
-                        style="@style/Text.Medium12"
-                        android:textColor="@color/gray_500"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="40dp"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="62dp"
-                    android:layout_marginStart="78dp">
-
-                    <TextView
-                        android:id="@+id/tv_record_walk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        style="@style/Text.Medium14"
-                        android:text="3,230"
-                        android:textColor="@color/gray_800"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="18dp"
-                        android:text="걸음"
-                        style="@style/Text.Medium12"
-                        android:textColor="@color/gray_500"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="40dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="62dp">
-
-                    <TextView
-                        android:id="@+id/tv_record_kcal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        style="@style/Text.Medium14"
-                        android:text="204"
-                        android:textColor="@color/gray_800"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="18dp"
-                        android:text="kcal"
-                        style="@style/Text.Medium12"
-                        android:textColor="@color/gray_500"
-                        />
-
-                </LinearLayout>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="내가 받은 칭찬 한마디"
             style="@style/Text.Semibold20"
-            app:layout_constraintTop_toBottomOf="@id/match_record_card"
+            app:layout_constraintTop_toBottomOf="@id/rv_records"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="27dp"
             android:layout_marginStart="24dp"
@@ -410,7 +155,7 @@
             android:id="@+id/btn_compliment"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:layout_constraintTop_toBottomOf="@id/match_record_card"
+            app:layout_constraintTop_toBottomOf="@id/rv_records"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_arrow"
             android:layout_marginTop="30dp"
@@ -419,37 +164,18 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             />
 
-        <ImageView
-            android:id="@+id/iv_opponent_profile2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="77dp"
-            android:layout_marginStart="24dp"
-            android:src="@drawable/profile_image_male"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginHorizontal="24dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_compliment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/match_record_card"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="false"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="아어려워요"
-            style="@style/Text.Semibold14"
-            app:layout_constraintTop_toBottomOf="@id/match_record_card"
-            app:layout_constraintStart_toEndOf="@id/iv_opponent_profile2"
-            android:layout_marginTop="77dp"
-            android:layout_marginStart="12dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="경기 매너가 너무 좋았어요! 다음에 또 같이 해요"
-            style="@style/Text.Regular14"
-            app:layout_constraintTop_toBottomOf="@id/match_record_card"
-            app:layout_constraintStart_toEndOf="@id/iv_opponent_profile2"
-            android:layout_marginTop="107dp"
-            android:layout_marginStart="12dp"
-            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

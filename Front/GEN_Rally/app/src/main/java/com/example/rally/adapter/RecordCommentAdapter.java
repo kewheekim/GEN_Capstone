@@ -1,4 +1,4 @@
 package com.example.rally.adapter;
 
-public class RecordAdapter {
+public class RecordCommentAdapter {
 }

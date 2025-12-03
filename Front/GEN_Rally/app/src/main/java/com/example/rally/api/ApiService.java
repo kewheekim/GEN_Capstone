@@ -6,6 +6,7 @@ import com.example.rally.dto.ChatRoomDto;
 import com.example.rally.dto.ChatRoomListDto;
 import com.example.rally.dto.CheckIdRequest;
 import com.example.rally.dto.CheckNicknameResponse;
+import com.example.rally.dto.CommentDto;
 import com.example.rally.dto.EvaluationCreateRequest;
 import com.example.rally.dto.GameHealthRequest;
 import com.example.rally.dto.GameResultResponse;
@@ -29,7 +30,9 @@ import com.example.rally.dto.MatchRequestDto;
 import com.example.rally.dto.MatchRequestInfoDto;
 import com.example.rally.dto.MatchSeekingItem;
 import com.example.rally.dto.NotificationItem;
+import com.example.rally.dto.RecordAnalysisResponse;
 import com.example.rally.dto.RecordCalendarResponse;
+import com.example.rally.dto.RecordWeeklyCalorie;
 import com.example.rally.dto.SignupResponse;
 import com.example.rally.dto.TierAssessRequest;
 import com.example.rally.dto.TierAssessResponse;
@@ -152,11 +155,24 @@ public interface ApiService {
 
     @Headers("Requires-Auth:true")
     @POST("/api/game/health/save")
-    Call<Void> saveGameHealth( @Body GameHealthRequest body );
+    Call<Void> saveGameHealth( @Body GameHealthRequest body);
 
     @Headers("Requires-Auth:true")
     @POST("/api/game/result")
     Call<GameResultResponse> getGameResult(@Body Long gameId);
+
+
+    @Headers("Requires-Auth:true")
+    @GET("/api/record/analysis")
+    Call<RecordAnalysisResponse> getRecordAnalysis();
+
+    @Headers("Requires-Auth:true")
+    @GET("/api/record/analysis/weekly-calorie")
+    Call<RecordWeeklyCalorie> getWeeklyCalorie(@Query("date") String date);
+
+    @Headers("Requires-Auth:true")
+    @GET("/api/record/analysis/comments")
+    Call<List<CommentDto>> getComments();
 
     @Headers("Requires-Auth:true")
     @GET("/api/record/calendar")
@@ -170,4 +186,5 @@ public interface ApiService {
     @Headers("Requires-Auth:true")
     @POST("/api/notification/recent")
     Call<List<NotificationItem>> getRecentNotifications();
+
 }

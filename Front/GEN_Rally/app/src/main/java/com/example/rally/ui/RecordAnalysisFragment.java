@@ -2,6 +2,7 @@ package com.example.rally.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import com.example.rally.adapter.RecordGoalAdapter;
-import com.example.rally.adapter.RecordAdapter;
+import com.example.rally.adapter.RecordGameAdapter;
+import com.example.rally.api.ApiService;
+import com.example.rally.api.RetrofitClient;
+import com.example.rally.auth.TokenStore;
+import com.example.rally.dto.RecordAnalysisResponse;
+import com.example.rally.dto.RecordWeeklyCalorie;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -25,15 +32,25 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecordAnalysisFragment extends Fragment {
     private BarChart barChart;
     private RecyclerView rvGoals, rvRecords;
     private RecordGoalAdapter goalAdapter;
-    private RecordAdapter recordAdapter;
-    private TextView tvNewGoal;
+    private RecordGameAdapter recordGameAdapter;
+    private TextView tvNewGoal, tvWeeks;
     private ImageButton btnPrevWeek, btnNextWeek, btnCompliment;
+    private ApiService apiService;
+    private TokenStore tokenStore;
+    private long userId = -1L;
+    private String dateParam = LocalDate.now().toString();
 
     @Nullable
     @Override
@@ -49,28 +66,33 @@ public class RecordAnalysisFragment extends Fragment {
         rvGoals = view.findViewById(R.id.rv_goals);
         rvRecords = view.findViewById(R.id.rv_records);
         tvNewGoal = view.findViewById(R.id.tv_new_goal);
+        tvWeeks = view.findViewById(R.id.tv_weeks);
         btnPrevWeek = view.findViewById(R.id.btn_prev_week);
         btnNextWeek = view.findViewById(R.id.btn_next_week);
         btnCompliment = view.findViewById(R.id.btn_compliment);
 
+        apiService = RetrofitClient.getSecureClient(requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
+
         rvGoals.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        // TODO: GoalAdapter 클래스 생성 후 주석 해제
-        //goalAdapter = new RecordGoalAdapter(new ArrayList<>());
-        // rvGoals.setAdapter(goalAdapter);
+        goalAdapter = new RecordGoalAdapter(new ArrayList<>());
+        rvGoals.setAdapter(goalAdapter);
 
         rvRecords.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        // TODO: RecordAdapter 클래스 생성 후 주석 해제
-        // recordAdapter = new RecordAdapter(new ArrayList<>());
-        // rvRecords.setAdapter(recordAdapter);
+        recordGameAdapter = new RecordGameAdapter(new ArrayList<>());
+        rvRecords.setAdapter(recordGameAdapter);
+
+        //TODO: 칭찬 리사이클러 뷰
 
         // 모서리 렌더러 설정
         barChart.setRenderer(new RoundedBarChartRenderer(barChart, barChart.getAnimator(), barChart.getViewPortHandler()));
 
+        setupClickListeners();
         // 차트 외형 커스텀
         setupChartAppearance();
 
+        loadAnalysisData();
         // 차트 데이터 세팅
-        loadChartData();
+        loadChartData(dateParam);
     }
 
     private void setupClickListeners() {
@@ -79,11 +101,17 @@ public class RecordAnalysisFragment extends Fragment {
         });
 
         btnPrevWeek.setOnClickListener(v -> {
-            // TODO: 이전 주 데이터 로드
+            LocalDate current = LocalDate.parse(dateParam);
+            LocalDate prevWeek = current.minusWeeks(1);
+            dateParam = prevWeek.toString();
+            loadChartData(dateParam);
         });
 
         btnNextWeek.setOnClickListener(v -> {
-            // TODO: 다음 주 데이터 로드
+            LocalDate current = LocalDate.parse(dateParam);
+            LocalDate nextWeek = current.plusWeeks(1);
+            dateParam = nextWeek.toString();
+            loadChartData(dateParam);
         });
 
         btnCompliment.setOnClickListener(v -> {
@@ -138,17 +166,80 @@ public class RecordAnalysisFragment extends Fragment {
         leftAxis.setAxisMinimum(0f); // Y축 최소값을 0으로 설정
     }
 
-    private void loadChartData() {
-        // TODO: 헬스데이터 불러와서 여기에 적용
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0f, 89f));  // 일
-        entries.add(new BarEntry(1f, 150f)); // 월
-        entries.add(new BarEntry(2f, 89f));  // 화
-        entries.add(new BarEntry(3f, 110f)); // 수
-        entries.add(new BarEntry(4f, 40f));  // 목
-        entries.add(new BarEntry(5f, 65f));  // 금
-        entries.add(new BarEntry(6f, 89f));  // 토
+    // 목표, 게임 카드 조회
+    private void loadAnalysisData(){
+        apiService.getRecordAnalysis().enqueue(new Callback<RecordAnalysisResponse>() {
+            @Override
+            public void onResponse(Call<RecordAnalysisResponse> call, Response<RecordAnalysisResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    RecordAnalysisResponse data = response.body();
 
+                    if (data.getGoalItems() != null) {
+                        goalAdapter.setItems(data.getGoalItems());
+                    }
+
+                    if (data.getGameResults() != null) {
+                        recordGameAdapter.setItems(data.getGameResults());
+                    }
+                } else {
+                    Log.e("AnalysisFragment", "분석 데이터 로드 실패: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RecordAnalysisResponse> call, Throwable t) {
+                Log.e("AnalysisFragment", "통신 오류", t);
+            }
+        });
+    }
+
+    // 칼로리 조회
+    private void loadChartData(String date) {
+        apiService.getWeeklyCalorie(date).enqueue(new Callback<RecordWeeklyCalorie>() {
+            @Override
+            public void onResponse(Call<RecordWeeklyCalorie> call, Response<RecordWeeklyCalorie> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    RecordWeeklyCalorie data = response.body();
+                    String title = data.getTitle(); // 11월 2주차
+                    tvWeeks.setText(title);
+                    List<RecordWeeklyCalorie.DailyCalorie> list = data.getDailyCalories();
+                    ArrayList<BarEntry> entries = new ArrayList<>();
+
+                    for (int i = 0; i < 7; i++) {
+                        entries.add(new BarEntry((float) i, 0f));
+                    }
+
+                    for (RecordWeeklyCalorie.DailyCalorie item : list) {
+                        int index = getDayIndex(item.getDayOfWeek());
+                        entries.set(index, new BarEntry((float) index, (float) item.getCalories()));
+                    }
+                    updateChart(entries);
+                } else {
+                    Log.e("RecordAnalysisFragment", "칼로리 로드 실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RecordWeeklyCalorie> call, Throwable t) {
+                Log.e("RecordAnalysisFragment", "서버 오류",t);
+            }
+        });
+    }
+
+    private int getDayIndex(String dayOfWeek) {
+        switch (dayOfWeek) {
+            case "일": return 0;
+            case "월": return 1;
+            case "화": return 2;
+            case "수": return 3;
+            case "목": return 4;
+            case "금": return 5;
+            case "토": return 6;
+            default: return 0;
+        }
+    }
+
+    private void updateChart(ArrayList<BarEntry> entries) {
         BarDataSet dataSet = new BarDataSet(entries, "Weekly Kcal");
 
         // 바 위에 숫자 표시
@@ -156,7 +247,7 @@ public class RecordAnalysisFragment extends Fragment {
         dataSet.setValueTextSize(12f);
         dataSet.setValueTextColor(Color.parseColor("#343434"));
 
-        // 값 포맷터 (소수점 제거)
+        // 값 포맷터 (소수점 제거: 150.0 -> 150)
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getBarLabel(BarEntry barEntry) {
@@ -168,10 +259,9 @@ public class RecordAnalysisFragment extends Fragment {
         dataSet.setColor(Color.parseColor("#2ABA72"));
 
         BarData barData = new BarData(dataSet);
-        barData.setBarWidth(0.6f); // 바 두께 (0.1f ~ 1.0f)
+        barData.setBarWidth(0.5f); // 바 두께 조절
 
         barChart.setData(barData);
-        barChart.setMinOffset(0f);
-        barChart.invalidate();
+        barChart.invalidate(); // 차트 새로고침 (필수)
     }
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="364dp"
+    android:layout_height="108dp"
+    android:paddingTop="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iv_opponent_profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/profile_image_male"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_opponent_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아어려워요"
+        style="@style/Text.Semibold14"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_opponent_profile"
+        android:layout_marginStart="12dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_tier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="초보자 1"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_600"
+        app:layout_constraintTop_toBottomOf="@id/tv_opponent_name"
+        app:layout_constraintStart_toEndOf="@id/iv_opponent_profile"
+        android:layout_marginStart="12dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="·"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_600"
+        app:layout_constraintTop_toBottomOf="@id/tv_opponent_name"
+        app:layout_constraintStart_toEndOf="@id/tv_tier"
+        android:layout_marginStart="4dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_game_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="단식"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_600"
+        app:layout_constraintTop_toBottomOf="@id/tv_opponent_name"
+        app:layout_constraintStart_toEndOf="@id/tv_1"
+        android:layout_marginStart="4dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="·"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_600"
+        app:layout_constraintTop_toBottomOf="@id/tv_opponent_name"
+        app:layout_constraintStart_toEndOf="@id/tv_game_style"
+        android:layout_marginStart="4dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_game_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2025.11.28"
+        style="@style/Text.Medium12"
+        android:textColor="@color/gray_600"
+        app:layout_constraintTop_toBottomOf="@id/tv_opponent_name"
+        app:layout_constraintStart_toEndOf="@id/tv_2"
+        android:layout_marginStart="4dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="경기 매너가 너무 좋았어요! 다음에 또 같이 해요"
+        style="@style/Text.Regular14"
+        android:textColor="#121212"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toEndOf="@id/iv_opponent_profile"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="12dp"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
