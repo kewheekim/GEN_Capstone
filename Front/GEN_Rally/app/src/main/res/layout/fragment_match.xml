@@ -8,7 +8,7 @@
     android:background="@color/bg_default"
     >
     <include
-        android:id="@+id/toolbar_alert"
+        android:id="@+id/toolbar_mat"
         layout="@layout/layout_toolbar_tab"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +18,7 @@
         android:id="@+id/tab_match"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_alert"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_mat"
         android:background="@android:color/transparent"
         android:backgroundTint="@android:color/transparent"
         app:tabMode="fixed"

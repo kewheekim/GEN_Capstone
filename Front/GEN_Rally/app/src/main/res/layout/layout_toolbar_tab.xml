@@ -21,14 +21,4 @@
         android:layout_marginStart="24dp"
         />
 
-    <ImageButton
-        android:id="@+id/btn_noti"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_notification"
-        android:contentDescription=" "
-        android:layout_marginEnd="24dp"
-        android:layout_gravity="center_vertical|end"
-        android:background="@color/white"/>
-
 </androidx.appcompat.widget.Toolbar>
