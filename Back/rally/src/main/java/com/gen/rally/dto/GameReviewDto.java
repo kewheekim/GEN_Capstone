@@ -7,6 +7,7 @@ import lombok.Getter;
 @Builder
 public class GameReviewDto {
     private Long gameId;
+    private String date;
     private int myScore;
     private int opponentScore;
     private String playTime;
