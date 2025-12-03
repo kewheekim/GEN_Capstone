@@ -60,4 +60,7 @@ public class Game {
 
     @OneToMany(mappedBy = "game")
     private List<Goal> goals;
+
+    @OneToMany(mappedBy = "game")
+    private List<GameHealth> gameHealth;
 }

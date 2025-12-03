@@ -109,7 +109,7 @@ public class GameResultService {
         String subject = String.valueOf(me.getUserId());
 
         Evaluation evaluation = evaluationRepository
-                .findByGameIdAndSubject_UserId(gameId, subject)
+                .findByGameAndSubject_UserId(game, subject)
                 .orElseThrow(() -> new CustomException(ErrorCode.EVALUATION_NOT_FOUND));
 
         String comment = evaluation != null ? evaluation.getComment() : null;

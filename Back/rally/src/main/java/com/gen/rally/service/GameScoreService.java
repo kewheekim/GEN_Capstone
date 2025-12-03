@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.gen.rally.entity.Game;
 import com.gen.rally.entity.GameScore;
+import com.gen.rally.enums.State;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.GameRepository;
@@ -44,5 +45,8 @@ public class GameScoreService {
         } else if (st.user2Sets > st.user1Sets) {
             game.setWinner(game.getUser2());
         }
+        game.setState(State.경기완료);
+        gameRepository.save(game);
+
     }
 }

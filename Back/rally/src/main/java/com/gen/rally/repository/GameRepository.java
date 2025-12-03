@@ -29,10 +29,10 @@ public interface GameRepository  extends JpaRepository<Game, Long> {
     List<Game> findRecentByUserAndStates(@Param("userId") String userId);
 
     @Query("""
-SELECT g FROM Game g
-WHERE (g.user1.userId = :userId OR g.user2.userId = :userId)
-ORDER BY g.date DESC
-""")
+    SELECT g FROM Game g
+    WHERE (g.user1.userId = :userId OR g.user2.userId = :userId)
+    ORDER BY g.date DESC
+    """)
     List<Game> findAllByUser(@Param("userId") String userId);
 
     Optional<Game> findByGameId(Long gameId);
@@ -57,6 +57,21 @@ ORDER BY g.date DESC
         SELECT g FROM Game g
         WHERE (g.user1 = :user OR g.user2 = :user)
         AND g.date BETWEEN :from AND :to
+        AND g.state = :state
     """)
-    List<Game> findByUserAndDateBetween(@Param("user") User user, @Param("from") LocalDate from, @Param("to") LocalDate to);
+    List<Game> findByUserAndDateBetweenAndState(
+            @Param("user") User user,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to,
+            @Param("state") State state
+    );
+
+    @Query(value = """
+        SELECT * FROM game 
+        WHERE (user_id1 = :userId OR user_id2 = :userId) 
+        AND state = '경기완료' 
+        ORDER BY date DESC, time DESC 
+        LIMIT 5
+        """, nativeQuery = true)
+    List<Game> findTop5GamesByUser(@Param("userId") String userId);
 }
