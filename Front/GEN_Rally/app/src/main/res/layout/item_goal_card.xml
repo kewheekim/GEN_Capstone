@@ -70,9 +70,7 @@
 
         <ProgressBar
             android:id="@+id/progress_bar"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:progressDrawable="@drawable/custom_circle_progressbar"
-            android:progressTint="@color/green_active"
+            style="?android:attr/progressBarStyleHorizontal"            android:progressDrawable="@drawable/custom_circle_progressbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -14,12 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rally.BuildConfig;
 import com.example.rally.R;
+import com.example.rally.adapter.CalendarCardAdapter;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
 import com.example.rally.auth.TokenStore;
+import com.example.rally.dto.GameReviewDto;
 import com.example.rally.dto.RecordCalendarResponse;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
@@ -46,6 +50,9 @@ public class RecordCalendarFragment extends Fragment {
     private MaterialCalendarView calendarView;
     private TextView tvWeeks;
     private ImageButton btnPrevWeek, btnNextWeek;
+    private CalendarCardAdapter calendarCardAdapter;
+    private List<GameReviewDto> allMonthlyGames = new ArrayList<>();
+    private RecyclerView rvGames;
     private ApiService apiService;
     private TokenStore tokenStore;
     private long userId = -1L;
@@ -66,8 +73,19 @@ public class RecordCalendarFragment extends Fragment {
         tvWeeks = view.findViewById(R.id.tv_weeks);
         btnPrevWeek = view.findViewById(R.id.btn_prev_week);
         btnNextWeek = view.findViewById(R.id.btn_next_week);
+        rvGames = view.findViewById(R.id.rv_games);
+
+        rvGames.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        calendarCardAdapter = new CalendarCardAdapter(new ArrayList<>());
+        rvGames.setAdapter(calendarCardAdapter);
 
         apiService = RetrofitClient.getSecureClient(requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
+
+        calendarCardAdapter.setOnItemClickListener(gameId -> {
+            Intent intent = new Intent(requireContext(), GameResultActivity.class);
+            intent.putExtra("gameId", gameId);
+            startActivity(intent);
+        });
 
         initCalendarDesign();
         initListeners();
@@ -103,15 +121,25 @@ public class RecordCalendarFragment extends Fragment {
 
         calendarView.setOnDateChangedListener((widget, date, selected) -> {
             if (selected) {
+                Log.d("CalendarDebug", "클릭한 날짜: year=" + date.getYear()
+                        + ", month=" + date.getMonth()
+                        + ", day=" + date.getDay());
+
+                Log.d("CalendarDebug", "Map 크기: " + dateGameIdMap.size());
+                Log.d("CalendarDebug", "Map 내용: " + dateGameIdMap.toString());
+
                 Long gameId = dateGameIdMap.get(date);
+
+                Log.d("CalendarDebug", "찾은 gameId: " + gameId);
 
                 if (gameId != null) {
                     Intent intent = new Intent(requireContext(), GameResultActivity.class);
                     intent.putExtra("gameId", gameId);
                     startActivity(intent);
                 } else {
-                    calendarView.clearSelection();
+                    Log.w("CalendarDebug", "해당 날짜에 gameId가 없습니다.");
                 }
+                calendarView.clearSelection();
             }
         });
     }
@@ -119,7 +147,6 @@ public class RecordCalendarFragment extends Fragment {
     private void loadMonthlyData(int year, int month) {
         try {
             tokenStore = new TokenStore(requireContext());
-
             userId = tokenStore.getUserId();
 
             if (userId == -1L) { // 로그인 안 되어있으면
@@ -131,34 +158,57 @@ public class RecordCalendarFragment extends Fragment {
             requireActivity().finish();
         }
 
-        apiService.getMonthlyGames(year, month).enqueue(new Callback<List<RecordCalendarResponse>>() {
+        apiService.getMonthlyGames(year, month).enqueue(new Callback<RecordCalendarResponse>() {
             @Override
-            public void onResponse(Call<List<RecordCalendarResponse>> call, Response<List<RecordCalendarResponse>> response) {
+            public void onResponse(Call<RecordCalendarResponse> call, Response<RecordCalendarResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     applyCalendarData(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<RecordCalendarResponse>> call, Throwable t) {
+            public void onFailure(Call<RecordCalendarResponse> call, Throwable t) {
                 Log.e("RecordCalendarFragment", "달력 데이터 로드 실패", t);
             }
         });
     }
 
-    private void applyCalendarData(List<RecordCalendarResponse> games) {
-        dateGameIdMap.clear(); // 기존 데이터 초기화
-        List<CalendarDay> eventDates = new ArrayList<>();
+    private void applyCalendarData(RecordCalendarResponse response) {
+        dateGameIdMap.clear();
 
-        for (RecordCalendarResponse game : games) {
-            LocalDate d = LocalDate.parse(game.getDate());
-            CalendarDay day = CalendarDay.from(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
-            eventDates.add(day);
-            dateGameIdMap.put(day, game.getGameId());
+        if (response.getGames() != null) {
+            this.allMonthlyGames = response.getGames();
+            calendarCardAdapter.setItems(allMonthlyGames);
+
+            for (GameReviewDto game : response.getGames()) {
+                if (game.getDate() != null) {
+                    try {
+                        LocalDate d = LocalDate.parse(game.getDate());
+                        CalendarDay day = CalendarDay.from(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
+
+                        dateGameIdMap.put(day, game.getGameId());
+
+                        Log.d("CalendarDebug", "Map 저장: year=" + day.getYear()
+                                + ", month=" + day.getMonth()
+                                + ", day=" + day.getDay()
+                                + " -> ID: " + game.getGameId());
+                    } catch (Exception e) {
+                        Log.e("CalendarFragment", "날짜 파싱 오류: " + game.getDate());
+                    }
+                }
+            }
         }
 
-        // 데코레이터 갱신
-        calendarView.removeDecorators(); // 기존 데코레이터 제거
+        List<CalendarDay> eventDates = new ArrayList<>();
+        if (response.getMarkedDates() != null) {
+            for (String dateStr : response.getMarkedDates()) {
+                LocalDate d = LocalDate.parse(dateStr);
+                CalendarDay day = CalendarDay.from(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
+                eventDates.add(day);
+            }
+        }
+
+        calendarView.removeDecorators();
         Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar_select);
         if (drawable != null) {
             calendarView.addDecorator(new EventDecorator(drawable, eventDates));

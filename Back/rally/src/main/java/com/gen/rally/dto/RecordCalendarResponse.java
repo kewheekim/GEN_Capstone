@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 public class RecordCalendarResponse {
-    private Long gameId;
-    private LocalDate date;
+    private List<LocalDate> markedDates;
+    private List<GameReviewDto> games;
 }

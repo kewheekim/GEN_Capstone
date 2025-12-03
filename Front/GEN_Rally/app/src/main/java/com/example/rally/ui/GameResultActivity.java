@@ -1,6 +1,7 @@
 package com.example.rally.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +47,8 @@ public class GameResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_result);
 
         long gameId = getIntent().getLongExtra("gameId", -1L);
+
+        Log.d("GameResultDebug", "Activity 시작 - 받은 gameId: " + gameId);
 
         initViews();
 
@@ -98,12 +101,20 @@ public class GameResultActivity extends AppCompatActivity {
     }
 
     private void loadGameResult(long gameId) {
+        Log.d("GameResultDebug", "API 호출 시작 - gameId: " + gameId);
+
         apiService.getGameResult(gameId).enqueue(new Callback<GameResultResponse>() {
             @Override
             public void onResponse(Call<GameResultResponse> call, Response<GameResultResponse> response) {
+                Log.d("GameResultDebug", "응답 받음 - isSuccessful: " + response.isSuccessful()
+                        + ", code: " + response.code());
+
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.d("GameResultDebug", "데이터 바인딩 시작");
                     bindGameResult(response.body());
                 } else {
+                    Log.e("GameResultDebug", "실패 응답 - code: " + response.code()
+                            + ", message: " + response.message());
                     Toast.makeText(GameResultActivity.this, "경기 결과를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show();
                 }
             }

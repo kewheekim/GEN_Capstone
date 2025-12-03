@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_calender_date"
+        style="@style/Text.Semibold18"
+        android:layout_width="364dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="26일 수요일" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/record_calendar_card"
+        android:layout_width="364dp"
+        android:layout_height="148dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_calender_date"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_rectangle">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="22dp"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_opponent_score"
+                    style="@style/Text.Semibold20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:text="1"
+                    android:textColor="@color/gray_600"
+                    android:textSize="36dp" />
+
+                <TextView
+                    style="@style/Text.Semibold20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:text=":"
+                    android:textColor="@color/gray_400"
+                    android:textSize="36dp" />
+
+                <TextView
+                    android:id="@+id/tv_my_score"
+                    style="@style/Text.Semibold20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:text="2"
+                    android:textColor="@color/green_active"
+                    android:textSize="36dp"
+                    app:layout_constraintStart_toEndOf="@id/tv_opponent_score"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_opponent_profile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="22dp"
+                android:layout_marginEnd="22dp"
+                android:src="@drawable/profile_image_male"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="22dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="22dp"
+                android:src="@drawable/ic_style_single"
+                app:layout_constraintEnd_toEndOf="@id/iv_opponent_profile"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/layout_time"
+                android:layout_width="86dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="78dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_record_time"
+                    style="@style/Text.Semibold18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="00:50:15"
+                    android:textColor="@color/gray_800" />
+
+                <TextView
+                    style="@style/Text.Medium14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:text="시간"
+                    android:textColor="@color/gray_500" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_steps"
+                android:layout_width="86dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="78dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/layout_time"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_record_walk"
+                    style="@style/Text.Semibold18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="3,230"
+                    android:textColor="@color/gray_800" />
+
+                <TextView
+                    style="@style/Text.Medium14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:text="걸음"
+                    android:textColor="@color/gray_500" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_kcal"
+                android:layout_width="86dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="78dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toEndOf="@id/layout_steps"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_record_kcal"
+                    style="@style/Text.Semibold18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="204"
+                    android:textColor="@color/gray_800" />
+
+                <TextView
+                    style="@style/Text.Medium14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:text="kcal"
+                    android:textColor="@color/gray_500" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_win_lose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="-5dp"
+                android:fontFamily="@font/kimm_bold"
+                android:text="승"
+                android:textColor="#AAE4C7"
+                android:textSize="64sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

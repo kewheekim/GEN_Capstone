@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rally.BuildConfig;
 import com.example.rally.R;
+import com.example.rally.adapter.RecordCommentAdapter;
 import com.example.rally.adapter.RecordGoalAdapter;
 import com.example.rally.adapter.RecordGameAdapter;
 import com.example.rally.api.ApiService;
@@ -32,6 +35,8 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +47,10 @@ import retrofit2.Response;
 
 public class RecordAnalysisFragment extends Fragment {
     private BarChart barChart;
-    private RecyclerView rvGoals, rvRecords;
+    private RecyclerView rvGoals, rvRecords, rvComments;
     private RecordGoalAdapter goalAdapter;
     private RecordGameAdapter recordGameAdapter;
+    private RecordCommentAdapter recordCommentAdapter;
     private TextView tvNewGoal, tvWeeks;
     private ImageButton btnPrevWeek, btnNextWeek, btnCompliment;
     private ApiService apiService;
@@ -55,7 +61,26 @@ public class RecordAnalysisFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_record_analysis, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_record_analysis, container, false);
+
+        try {
+            tokenStore = new TokenStore(requireContext());
+
+            userId = tokenStore.getUserId();
+
+            if (userId == -1L) {
+                startActivity(new Intent(requireActivity(), AuthActivity.class));
+                requireActivity().finish();
+                return view;
+            }
+        } catch (GeneralSecurityException | IOException e) {
+            Log.e("RecordAnalysisFragment", "TokenStore 초기화 실패", e);
+            requireActivity().finish();
+            return view;
+        }
+
+        return view;
     }
 
     @Override
@@ -65,15 +90,17 @@ public class RecordAnalysisFragment extends Fragment {
         barChart = view.findViewById(R.id.chart_kcal);
         rvGoals = view.findViewById(R.id.rv_goals);
         rvRecords = view.findViewById(R.id.rv_records);
+        rvComments = view.findViewById(R.id.rv_comments);
         tvNewGoal = view.findViewById(R.id.tv_new_goal);
         tvWeeks = view.findViewById(R.id.tv_weeks);
         btnPrevWeek = view.findViewById(R.id.btn_prev_week);
         btnNextWeek = view.findViewById(R.id.btn_next_week);
         btnCompliment = view.findViewById(R.id.btn_compliment);
 
+
         apiService = RetrofitClient.getSecureClient(requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
 
-        rvGoals.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvGoals.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         goalAdapter = new RecordGoalAdapter(new ArrayList<>());
         rvGoals.setAdapter(goalAdapter);
 
@@ -81,7 +108,9 @@ public class RecordAnalysisFragment extends Fragment {
         recordGameAdapter = new RecordGameAdapter(new ArrayList<>());
         rvRecords.setAdapter(recordGameAdapter);
 
-        //TODO: 칭찬 리사이클러 뷰
+        rvComments.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recordCommentAdapter = new RecordCommentAdapter(new ArrayList<>());
+        rvComments.setAdapter(recordCommentAdapter);
 
         // 모서리 렌더러 설정
         barChart.setRenderer(new RoundedBarChartRenderer(barChart, barChart.getAnimator(), barChart.getViewPortHandler()));
@@ -115,7 +144,8 @@ public class RecordAnalysisFragment extends Fragment {
         });
 
         btnCompliment.setOnClickListener(v -> {
-            // TODO: 칭찬 상세 화면으로 이동
+            Intent intent = new Intent(requireContext(), RecordCommentActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -181,6 +211,11 @@ public class RecordAnalysisFragment extends Fragment {
                     if (data.getGameResults() != null) {
                         recordGameAdapter.setItems(data.getGameResults());
                     }
+
+                    if (data.getComments() != null) {
+                        recordCommentAdapter.setItems(data.getComments());
+                    }
+
                 } else {
                     Log.e("AnalysisFragment", "분석 데이터 로드 실패: " + response.code());
                 }
