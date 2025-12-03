@@ -18,7 +18,6 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class InvitationService {
     private final MatchInvitationRepository invitationRepo;
@@ -59,6 +58,7 @@ public class InvitationService {
         inv.setState(State.요청중);
 
         invitationRepo.save(inv);
+        notiService.sendInvitationNotification(receiver.getUserId(), inv.getInvitationId());
 
         return ResponseEntity.ok(new MatchInviteResponse(inv.getInvitationId(), inv.getState().name()));
     }

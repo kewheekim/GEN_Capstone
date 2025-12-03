@@ -35,6 +35,17 @@ public class NotificationService {
         notification.setRead(false);
         notification.setCreatedAt(LocalDateTime.now());
         notificationRepository.save(notification);
+
+        String fcmToken = target.getFcmToken();
+        if (fcmToken != null && !fcmToken.isBlank()) {
+            fcmService.sendInvitation(
+                    fcmToken,
+                    invitationId,
+                    notification.getId(),
+                    notification.getTitle(),
+                    notification.getBody()
+            );
+        }
     }
 
     @Transactional
@@ -56,7 +67,7 @@ public class NotificationService {
         String fcmToken = target.getFcmToken();
         if (fcmToken != null && !fcmToken.isBlank()) {
 
-            fcmService.sendInvitationAccepted(
+            fcmService.sendInvitation(
                     fcmToken,
                     gameId,
                     notification.getId(),
