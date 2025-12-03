@@ -130,23 +130,23 @@ public class GameResultActivity extends AppCompatActivity {
         tvUserScore.setText(String.valueOf(g.mySetScore));
         tvTime.setText(g.totalDuration);
 
-//        // 상대 프로필
-//        try {
-//            if (g.opponentProfileUrl != null && !g.opponentProfileUrl.isEmpty()) {
-//                int sizePx = (int) (48 * getResources().getDisplayMetrics().density);
-//                Glide.with(ivOpponentProfile.getContext())
-//                        .load(g.opponentProfileUrl)
-//                        .placeholder(R.drawable.ic_default_profile)
-//                        .error(R.drawable.ic_default_profile)
-//                        .centerCrop()
-//                        .override(sizePx, sizePx)
-//                        .into(ivOpponentProfile);
-//            } else {
-//                ivOpponentProfile.setImageResource(R.drawable.ic_default_profile);
-//            }
-//        } catch (Throwable t) {
-//            ivOpponentProfile.setImageResource(R.drawable.ic_default_profile);
-//        }
+        // 상대 프로필
+        try {
+            if (g.opponentProfileUrl != null && !g.opponentProfileUrl.isEmpty()) {
+                int sizePx = (int) (48 * getResources().getDisplayMetrics().density);
+                Glide.with(ivOpponentProfile.getContext())
+                        .load(g.opponentProfileUrl)
+                        .placeholder(R.drawable.ic_default_profile)
+                        .error(R.drawable.ic_default_profile)
+                        .centerCrop()
+                        .override(sizePx, sizePx)
+                        .into(ivOpponentProfile);
+            } else {
+                ivOpponentProfile.setImageResource(R.drawable.ic_default_profile);
+            }
+        } catch (Throwable t) {
+            ivOpponentProfile.setImageResource(R.drawable.ic_default_profile);
+        }
         // 사용자 프로필
         try {
             if (g.myProfileUrl != null && !g.myProfileUrl.isEmpty()) {
