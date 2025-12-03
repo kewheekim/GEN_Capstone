@@ -9,6 +9,7 @@ import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorResponse;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.repository.UserRepository;
+import com.gen.rally.service.AuthService;
 import com.gen.rally.service.KakaoService;
 import com.gen.rally.service.NaverService;
 import com.gen.rally.service.UserService;
@@ -25,7 +26,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
+    private final AuthService authService;
     private final KakaoService kakaoService;
     private final UserRepository userRepository;
     private final NaverService naverService;
@@ -36,14 +37,14 @@ public class AuthController {
         if(userRepository.findByUserId(request.getUserId()).isPresent()) {
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorCode.USER_ALREADY_EXISTS));
         }
-        SignupResponse res = userService.generalSignup(request);
+        SignupResponse res = authService.generalSignup(request);
         return ResponseEntity.ok(res);
     }
 
     // 일반 로그인
     @PostMapping("/api/users/login")
     public ResponseEntity<?> login(@RequestBody GeneralLoginRequest request){
-        GeneralLoginResponse res = userService.login(request);
+        GeneralLoginResponse res = authService.login(request);
         return ResponseEntity.ok(res);
     }
 
@@ -101,6 +102,12 @@ public class AuthController {
     public ResponseEntity<?> socialSignup(@RequestBody SocialSignupRequest request, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
         String socialId = userDetails.getUsername();
         LoginType loginType = LoginType.KAKAO;
-        return userService.socialSignup(request, socialId, loginType);
+        return authService.socialSignup(request, socialId, loginType);
+    }
+
+    // 로그아웃
+    @PostMapping("/api/users/logout")
+    public void logout(){
+
     }
 }
