@@ -54,13 +54,13 @@ public class EvaluationService {
         }
 
         // 중복 평가 방지
-        if (evaluationRepository.existsByGameIdAndEvaluator_UserId(req.getGameId(), evaluatorUserId)) {
+        if (evaluationRepository.existsByGameAndEvaluator_UserId(game, evaluatorUserId)) {
             throw new CustomException(ErrorCode.CONFLICT);
         }
 
         // 저장
         Evaluation e = new Evaluation();
-        e.setGameId(req.getGameId());
+        e.setGame(game);
         e.setEvaluator(evaluator);
         e.setSubject(subject);
         e.setMannerScore(score);

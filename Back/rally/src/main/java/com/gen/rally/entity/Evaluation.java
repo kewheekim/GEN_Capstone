@@ -1,13 +1,15 @@
 package com.gen.rally.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity @Getter @Setter
 @Table(
         name = "evaluation",
         uniqueConstraints = {
@@ -19,14 +21,14 @@ import java.time.LocalDateTime;
         }
 )
 public class Evaluation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "evaluation_id")
     private Long evaluationId;
 
-    @Column(name = "game_id", nullable = false)
-    private Long gameId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evaluator", referencedColumnName = "user_id")
@@ -43,25 +45,4 @@ public class Evaluation {
     private String comment;
 
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    public Long getEvaluationId() { return evaluationId; }
-    public void setEvaluationId(Long evaluationId) { this.evaluationId = evaluationId; }
-
-    public Long getGameId() { return gameId; }
-    public void setGameId(Long gameId) { this.gameId = gameId; }
-
-    public User getEvaluator() { return evaluator; }
-    public void setEvaluator(User evaluator) { this.evaluator = evaluator; }
-
-    public User getSubject() { return subject; }
-    public void setSubject(User subject) { this.subject = subject; }
-
-    public String getEvaluatorUserId() { return evaluator != null ? evaluator.getUserId() : null;}
-    public String getSubjectUserId() { return subject != null ? subject.getUserId() : null;}
-
-    public Double getMannerScore() { return mannerScore; }
-    public void setMannerScore(Double mannerScore) { this.mannerScore = mannerScore; }
-
-    public String getComment() { return comment; }
-    public void setComment(String comment) { this.comment = comment; }
 }
