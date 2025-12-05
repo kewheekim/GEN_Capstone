@@ -1,6 +1,7 @@
 package com.gen.rally.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gen.rally.dto.GameHealthDto;
 import com.gen.rally.dto.GameInfoDto;
@@ -102,7 +103,35 @@ public class GameResultService {
             gameHealthDto.setMinHr(health.getMinHr());
             gameHealthDto.setSteps(health.getSteps());
             gameHealthDto.setCalories(health.getCalories());
-            gameHealthDto.setSeriesHr(health.getSeriesHr());
+            String rawJson = health.getSeriesHr();
+
+            if (rawJson != null && !rawJson.isEmpty()) {
+                try {
+                    // 전체 JSONObject 변환
+                    JsonNode node = objectMapper.readTree(rawJson);
+
+                    // heartSeries 배열
+                    JsonNode arrNode = node.get("heartSeries");
+
+                    if (arrNode != null && arrNode.isArray()) {
+                        List<GameHealthDto.HeartSampleDto> parsed =
+                                objectMapper.readValue(
+                                        arrNode.toString(),
+                                        new TypeReference<List<GameHealthDto.HeartSampleDto>>() {}
+                                );
+
+                        gameHealthDto.setSeriesHr(parsed);
+                    } else {
+                        gameHealthDto.setSeriesHr(new ArrayList<>());
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    gameHealthDto.setSeriesHr(new ArrayList<>());
+                }
+            } else {
+                gameHealthDto.setSeriesHr(new ArrayList<>());
+            }
         }
 
         // 상대의 평가

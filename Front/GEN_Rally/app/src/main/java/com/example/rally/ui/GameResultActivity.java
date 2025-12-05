@@ -20,6 +20,9 @@ import com.example.rally.dto.GameInfoDto;
 import com.example.rally.dto.GameResultResponse;
 import com.example.rally.dto.SetResultDto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +40,8 @@ public class GameResultActivity extends AppCompatActivity {
     private TextView tvOpponentScore2, tvMyScore2, tvTime2;
     private TextView tvOpponentScore3, tvMyScore3, tvTime3;
     private ScoreBarView sbOpponent1, sbUser1, sbOpponent2, sbUser2, sbOpponent3, sbUser3;
+    private HeartRateView hrGraph;
+    ImageView ivHr;
 
     private TextView tvHrMax, tvHrMin, tvSteps, tvCalorie, tvCompliment;
     View set3Group;
@@ -93,6 +98,8 @@ public class GameResultActivity extends AppCompatActivity {
         sbUser3 = findViewById(R.id.sb_user3);
         set3Group = findViewById(R.id.layout_set3);
 
+        hrGraph = findViewById(R.id.hr_graph);
+        ivHr = findViewById(R.id.iv_hr);
         tvHrMax = findViewById(R.id.tv_hr_max);
         tvHrMin = findViewById(R.id.tv_hr_min);
         tvSteps = findViewById(R.id.tv_steps);
@@ -214,11 +221,24 @@ public class GameResultActivity extends AppCompatActivity {
 
         // 헬스데이터
         if (h != null) {
+            Log.d("HR_DEBUG", "seriesHr = " + h.seriesHr);
+            Log.d("HR_DEBUG", "seriesHr size = " + (h.seriesHr != null ? h.seriesHr.size() : -1));
             if (h.maxHr != null) tvHrMax.setText(String.valueOf(h.maxHr));
             if (h.minHr != null) tvHrMin.setText("/ " + h.minHr);
             if (h.steps != null) tvSteps.setText(String.format("%,d", h.steps));
             if (h.calories != null) tvCalorie.setText(String.valueOf(h.calories));
-            // todo: 심박수 시계열 그래프 h.calories
+
+            if (h.seriesHr != null && !h.seriesHr.isEmpty()) {
+                List<HeartRateView.HeartSample> list = new ArrayList<>();
+                for(GameHealthDto.HeartSampleDto src : h.seriesHr) {
+                    list.add(new HeartRateView.HeartSample(src.bpm, src.epochMs));
+                }
+                hrGraph.setVisibility(View.VISIBLE);
+                hrGraph.setHeartSeries(list);
+            } else {
+                hrGraph.setVisibility(View.GONE);
+                ivHr.setVisibility(View.VISIBLE);
+            }
         }
 
         // 칭찬 코멘트
