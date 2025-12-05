@@ -5,6 +5,10 @@ import android.graphics.*;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
+
+import com.example.rally.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,7 @@ public class HeartRateView extends View {
 
     private final Paint markerFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint markerStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private List<HeartSample> samples = new ArrayList<>();
     private float minBpm = 60f;
@@ -63,6 +68,11 @@ public class HeartRateView extends View {
         markerStrokePaint.setStyle(Paint.Style.STROKE);
         markerStrokePaint.setStrokeWidth(1f * getResources().getDisplayMetrics().density);
         markerStrokePaint.setColor(0xFFFF5C50);
+
+        // 텍스트
+        textPaint.setColor(0xFFD9D9D9);
+        textPaint.setTextSize(12f* getResources().getDisplayMetrics().density);
+        textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
     }
 
     public void setHeartSeries(List<HeartSample> list) {
@@ -183,6 +193,14 @@ public class HeartRateView extends View {
         float maxY = ys[maxIndex];
         canvas.drawCircle(maxX, maxY, markerRadius, markerFillPaint);
         canvas.drawCircle(maxX, maxY, markerRadius, markerStrokePaint);
+
+        //  텍스트
+        float textOffset = 6f * getResources().getDisplayMetrics().density;
+
+        String minText = "최저 " + minBpmValue;
+        canvas.drawText(minText, minX +textOffset, minY + 2*textOffset, textPaint);
+        String maxText = "최고 " + maxBpmValue;
+        canvas.drawText(maxText, maxX - 2*textOffset, maxY - textOffset, textPaint);
     }
 
     private float bpmToY(int bpm, float topPadding, float usableHeight) {

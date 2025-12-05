@@ -41,7 +41,6 @@ public class GameResultActivity extends AppCompatActivity {
     private TextView tvOpponentScore3, tvMyScore3, tvTime3;
     private ScoreBarView sbOpponent1, sbUser1, sbOpponent2, sbUser2, sbOpponent3, sbUser3;
     private HeartRateView hrGraph;
-    ImageView ivHr;
 
     private TextView tvHrMax, tvHrMin, tvSteps, tvCalorie, tvCompliment;
     View set3Group;
@@ -99,7 +98,6 @@ public class GameResultActivity extends AppCompatActivity {
         set3Group = findViewById(R.id.layout_set3);
 
         hrGraph = findViewById(R.id.hr_graph);
-        ivHr = findViewById(R.id.iv_hr);
         tvHrMax = findViewById(R.id.tv_hr_max);
         tvHrMin = findViewById(R.id.tv_hr_min);
         tvSteps = findViewById(R.id.tv_steps);
@@ -237,7 +235,6 @@ public class GameResultActivity extends AppCompatActivity {
                 hrGraph.setHeartSeries(list);
             } else {
                 hrGraph.setVisibility(View.GONE);
-                ivHr.setVisibility(View.VISIBLE);
             }
         }
 
