@@ -30,6 +30,7 @@ public class AuthService {
         user.setGender(request.getGender());
         user.setPrimaryThing(request.getPrimaryThing());
         user.setLoginType(LoginType.NORMAL);
+        user.setFcmToken(request.getFcmToken());
         userRepository.save(user);
 
         String subject =user.getUserId();
