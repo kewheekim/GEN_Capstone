@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.navigation_record) {
                 selected = new RecordFragment();
             } else if (id == R.id.navigation_my) {
-                //selected = new MyPageFragment();
+                selected = new MyPageFragment();
             }
 
             if (selected != null) {
