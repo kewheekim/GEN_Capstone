@@ -1,6 +1,5 @@
 package com.example.rally.dto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.Getter;

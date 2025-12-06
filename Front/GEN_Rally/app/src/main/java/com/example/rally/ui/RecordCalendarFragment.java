@@ -121,17 +121,7 @@ public class RecordCalendarFragment extends Fragment {
 
         calendarView.setOnDateChangedListener((widget, date, selected) -> {
             if (selected) {
-                Log.d("CalendarDebug", "클릭한 날짜: year=" + date.getYear()
-                        + ", month=" + date.getMonth()
-                        + ", day=" + date.getDay());
-
-                Log.d("CalendarDebug", "Map 크기: " + dateGameIdMap.size());
-                Log.d("CalendarDebug", "Map 내용: " + dateGameIdMap.toString());
-
                 Long gameId = dateGameIdMap.get(date);
-
-                Log.d("CalendarDebug", "찾은 gameId: " + gameId);
-
                 if (gameId != null) {
                     Intent intent = new Intent(requireContext(), GameResultActivity.class);
                     intent.putExtra("gameId", gameId);
@@ -188,10 +178,6 @@ public class RecordCalendarFragment extends Fragment {
 
                         dateGameIdMap.put(day, game.getGameId());
 
-                        Log.d("CalendarDebug", "Map 저장: year=" + day.getYear()
-                                + ", month=" + day.getMonth()
-                                + ", day=" + day.getDay()
-                                + " -> ID: " + game.getGameId());
                     } catch (Exception e) {
                         Log.e("CalendarFragment", "날짜 파싱 오류: " + game.getDate());
                     }
@@ -215,10 +201,8 @@ public class RecordCalendarFragment extends Fragment {
         }
     }
 
-    // "M월" 텍스트 업데이트
+    // 몇월 텍스트 업데이트
     private void updateMonthTitle(CalendarDay date) {
-        // date.getMonth()는 라이브러리 버전에 따라 0~11 또는 1~12일 수 있습니다.
-        // 최신 버전 기준 1~12이므로 그대로 사용합니다.
         tvWeeks.setText(date.getMonth() + "월");
     }
 
@@ -234,13 +218,11 @@ public class RecordCalendarFragment extends Fragment {
 
         @Override
         public boolean shouldDecorate(CalendarDay day) {
-            // 해당 날짜가 리스트에 있으면 true -> decorate 실행
             return dates.contains(day);
         }
 
         @Override
         public void decorate(DayViewFacade view) {
-            // 배경 이미지를 셔틀콕으로 설정
             view.setBackgroundDrawable(drawable);
         }
     }
