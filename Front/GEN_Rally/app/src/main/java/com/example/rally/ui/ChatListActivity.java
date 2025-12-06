@@ -71,7 +71,10 @@ public class ChatListActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
+        findViewById(R.id.btn_back).setOnClickListener(v -> {
+            Intent intents = new Intent(ChatListActivity.this, MainActivity.class);
+            startActivity(intents);
+        });
 
         chatList = findViewById(R.id.rv_chat_list);
         adapter = new ChatListAdapter(this);

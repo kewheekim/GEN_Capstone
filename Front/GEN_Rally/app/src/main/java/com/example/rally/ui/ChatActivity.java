@@ -103,7 +103,10 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-        findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
+        findViewById(R.id.btn_back).setOnClickListener(v -> {
+            Intent intents = new Intent(ChatActivity.this, ChatListActivity.class);
+            startActivity(intents);
+        });
 
         viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         findViewByIdViews();
