@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FBFAFC"
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -151,5 +152,193 @@
         android:background="?attr/selectableItemBackgroundBorderless"/>
     />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="나의 매너"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="68dp"
+        android:layout_marginStart="44dp"
+        style="@style/Text.Medium16"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="구력"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="68dp"
+        android:layout_marginStart="236dp"
+        style="@style/Text.Medium16"
+        />
+    
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_smile"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="94dp"
+        android:layout_marginStart="44dp"
+        />
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/ic_serve"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="94dp"
+        android:layout_marginStart="236dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="좋아요"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="95dp"
+        android:layout_marginStart="72dp"
+        android:fontFamily="@font/kimm_bold"
+        android:textColor="@color/gray_800"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="6년"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="94dp"
+        android:layout_marginStart="264dp"
+        android:fontFamily="@font/kimm_bold"
+        android:textColor="@color/gray_800"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:id="@+id/tv_match_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="매칭 내역"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="173dp"
+        android:layout_marginStart="24dp"
+        style="@style/Text.Semibold18"
+        />
+
+    <ImageButton
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintTop_toBottomOf="@id/tv_tier"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="173dp"
+        android:layout_marginEnd="24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
+        />
+    
+    <ImageView
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:src="@drawable/image_match_history2"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_history"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        />
+
+    <ImageView
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:src="@drawable/image_match_history1"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_history"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="156dp"
+        />
+
+    <ImageView
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:src="@drawable/image_match_history2"
+        app:layout_constraintTop_toBottomOf="@id/tv_match_history"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="289dp"
+        />
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/gray_100"
+        android:layout_marginTop="484dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="알림 설정"
+        app:layout_constraintTop_toBottomOf="@id/view_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="24dp"
+        style="@style/Text.Regular18"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="전체 알림, 매칭 알림, 채팅, 경기 알림 설정"
+        app:layout_constraintTop_toBottomOf="@id/view_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="42dp"
+        android:layout_marginStart="24dp"
+        style="@style/Text.Regular12"
+        android:textColor="@color/gray_400"
+        />
+
+    <ImageButton
+        android:id="@+id/btn_go_noti"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintTop_toBottomOf="@id/view_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
+    />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        app:layout_constraintTop_toBottomOf="@id/view_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="91dp"
+        android:layout_marginStart="24dp"
+        style="@style/Text.Regular18"
+        />
+
+    <ImageButton
+        android:id="@+id/btn_logout"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintTop_toBottomOf="@id/view_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="94dp"
+        android:layout_marginEnd="24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
