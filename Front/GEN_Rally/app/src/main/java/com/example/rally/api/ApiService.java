@@ -187,4 +187,11 @@ public interface ApiService {
     @POST("/api/notification/recent")
     Call<List<NotificationItem>> getRecentNotifications();
 
+    @Headers("Requires-Auth:true")
+    @GET("/api/notification/unread-invitation")
+    Call<Integer> getUnreadInvitationCounts();
+
+    @Headers("Requires-Auth:true")
+    @POST("/api/notification/read-invitation")
+    Call<Void> markAsReadInvitation();
 }

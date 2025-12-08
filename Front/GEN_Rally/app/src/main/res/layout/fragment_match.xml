@@ -26,7 +26,6 @@
         app:tabIndicatorColor="@android:color/transparent"
         app:tabIndicatorHeight="0dp"
         app:tabRippleColor="@android:color/transparent"
-
         app:tabTextAppearance="@style/MatchTabText"
         app:tabTextColor="@color/match_tab_item_color"
         app:tabSelectedTextColor="@color/gray_800">
@@ -45,6 +44,29 @@
         android:text="받은/보낸 요청"/>
 </com.google.android.material.tabs.TabLayout>
 
+    <View
+        android:id="@+id/view_unread"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/bg_circle"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toEndOf="@id/tab_match"
+        android:layout_marginEnd="12dp"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/tv_unread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        style="@style/Text.Regular10"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/view_unread"
+        app:layout_constraintBottom_toBottomOf="@id/view_unread"
+        app:layout_constraintStart_toStartOf="@id/view_unread"
+        app:layout_constraintEnd_toEndOf="@id/view_unread"/>
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
@@ -53,6 +75,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 <!--    <android.widget.Button-->
 <!--        android:id="@+id/btn_start"-->
 <!--        style="@style/FlatButton"-->
@@ -66,5 +89,4 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        android:layout_marginBottom="5dp"/>-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
