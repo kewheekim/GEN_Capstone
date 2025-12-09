@@ -51,7 +51,8 @@
                 android:layout_gravity="center"
                 android:text="신청한 매칭 정보는 삭제되고,\n다시 매칭을 원하는 경우\n 재신청해야 해요"
                 android:textAlignment="center"
-                style="@style/Text.Medium18"
+                style="@style/Text.Regular18"
+                android:textColor="@color/gray_600"
                 />
         </LinearLayout>
 

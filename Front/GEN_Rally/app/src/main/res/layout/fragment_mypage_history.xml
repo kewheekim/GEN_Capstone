@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_back_arrow"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginStart="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="매칭 내역"
+            style="@style/Text.Semibold18"
+            android:textColor="@color/gray_800"
+            />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="142dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <ImageButton
+            android:id="@+id/btn_prev_week"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_back_arrow"
+            app:tint="@color/gray_500"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
+
+        <TextView
+            android:id="@+id/tv_weeks"
+            android:layout_width="78dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="2025.12"
+            style="@style/Text.Semibold16"
+            android:layout_marginHorizontal="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/btn_next_week"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow"
+            app:tint="@color/gray_500"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
+    </LinearLayout>
+    
+    <ImageView
+        android:layout_width="364dp"
+        android:layout_height="114dp"
+        android:src="@drawable/image_mypage_history1"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="57dp"
+        />
+
+    <ImageView
+        android:layout_width="364dp"
+        android:layout_height="114dp"
+        android:src="@drawable/image_mypage_history2"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="187dp"
+        />
+
+    <ImageView
+        android:layout_width="364dp"
+        android:layout_height="114dp"
+        android:src="@drawable/image_mypage_history3"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="317dp"
+        />
+    
+</androidx.constraintlayout.widget.ConstraintLayout>
