@@ -6,6 +6,7 @@ import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorCode;
 import com.gen.rally.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,19 @@ public class NotificationController {
                 .stream()
                 .map(NotificationItem::from)
                 .toList();
+    }
+
+    @GetMapping("/unread-invitation")
+    public ResponseEntity<Integer> getUnreadInvitation( @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        int count = notificationService.getUnreadInvitationCount(userId);
+        return ResponseEntity.ok(count);
+    }
+
+    @PostMapping("/read-invitation")
+    public ResponseEntity<Void> markAsReadInvitaiton(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        notificationService.markAsReadInvitation(userDetails.getUsername());
+        return ResponseEntity.ok().build();
     }
 }
 

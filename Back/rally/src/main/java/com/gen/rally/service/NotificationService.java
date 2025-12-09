@@ -84,17 +84,15 @@ public class NotificationService {
         return notificationRepository.findTop50ByUserUserIdOrderByCreatedAtDesc(userId);
     }
 
-    // 읽음 표시
+    // 받은 요청 읽음표시
     @Transactional
-    public void markAsRead(Long notificationId, String userId) {
-        Notification noti = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOTIFICATION_NOT_FOUND));
+    public void markAsReadInvitation(String userId) {
+        notificationRepository.markAsRead(userId, State.요청중);
+    }
 
-        if (!noti.getUser().getUserId().equals(userId)) {
-            throw new CustomException(ErrorCode.FORBIDDEN);
-        }
-
-        noti.setRead(true);
+    // 안 읽은 요청 알림 개수
+    public int getUnreadInvitationCount(String userId) {
+        return notificationRepository.countByUserUserIdAndTypeAndIsReadFalse( userId, State.요청중);
     }
 }
 
