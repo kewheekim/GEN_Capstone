@@ -103,7 +103,7 @@ fun ScoreResultScreen(
                     Text(
                         text = mySetWins.toString(),
                         fontSize = 36.sp,
-                        color = colorResource(id = R.color.gray_text),
+                        color = colorResource(id = R.color.green_active),
                         fontFamily = FontFamily(Font(R.font.kimm_bold)),
                         letterSpacing = (-0.06).em
                     )
