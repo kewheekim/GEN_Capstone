@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter @Setter
 public class GoalCheckDto {
-    List<Long> goalIds;
-    Long gameId;
+    private List<Long> goalIds;
+    private Long gameId;
 }

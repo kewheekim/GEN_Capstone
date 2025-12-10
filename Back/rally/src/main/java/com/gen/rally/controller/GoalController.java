@@ -1,5 +1,6 @@
 package com.gen.rally.controller;
 
+import com.gen.rally.dto.GoalCheckDto;
 import com.gen.rally.dto.GoalCreateRequest;
 import com.gen.rally.dto.GoalItem;
 import com.gen.rally.entity.CustomUserDetails;
@@ -37,7 +38,8 @@ public class GoalController {
 
     @Transactional(readOnly = false)
     @PostMapping("/check")
-    public ResponseEntity<Void> checkGoal (@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody List<Long> goalIds) {
+    public ResponseEntity<Void> checkGoal (@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody GoalCheckDto req) {
+        List<Long> goalIds = req.getGoalIds();
         goalService.checkGoals(goalIds);
         return ResponseEntity.ok().build();
     }
