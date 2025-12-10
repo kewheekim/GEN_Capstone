@@ -31,6 +31,7 @@ import com.example.rally.api.RetrofitClient;
 import com.example.rally.dto.ChatMessageDto;
 import com.example.rally.dto.ChatMessageRequest;
 import com.example.rally.dto.ChatRoomDto;
+import com.example.rally.dto.MatchConfirmDto;
 import com.example.rally.viewmodel.ChatMessage;
 import com.example.rally.viewmodel.ChatViewModel;
 import com.google.gson.Gson;
@@ -169,8 +170,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
             ChatMessage.MatchInfo info = message.getMatchInfo();
 
             if (info != null && "CREATED".equals(info.status)) {
-                // 내가 확정 메시지를 보내는 로직 실행
-                sendConfirmCard(info);
+                // 경기 확정 api 호출
+                requestConfirmMatch(info);
             } else {
                 Toast.makeText(this, "이미 확정되었거나 생성된 카드가 아닙니다.", Toast.LENGTH_SHORT).show();
             }
@@ -428,6 +429,37 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCar
         }
     }
 
+    // 경기 확정 api 호출
+    private void requestConfirmMatch(ChatMessage.MatchInfo info) {
+        if (roomId == -1L) {
+            Toast.makeText(this, "채팅방 정보가 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        MatchConfirmDto dto = new MatchConfirmDto();
+        dto.setRoomId(roomId);
+        dto.setTime(info.timeText);
+        dto.setPlace(info.place);
+
+        apiService.confirmMatch(dto)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            // STOMP로 확정 카드 메시지 보내기
+                            sendConfirmCard(info);
+                        } else {
+                            Log.e("ConfirmMatch", "확정 실패: " + response.code());
+                            Toast.makeText(ChatActivity.this, "경기 확정 실패 (" + response.code() + ")", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("ConfirmMatch", "확정 실패: " + t.getMessage());
+                        Toast.makeText(ChatActivity.this, "경기 확정 요청 중 오류 발생: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     // 경기 확정 카드
     private void sendConfirmCard(ChatMessage.MatchInfo info) {
         // 확정 타이틀 및 상태로 JSON 재생성
