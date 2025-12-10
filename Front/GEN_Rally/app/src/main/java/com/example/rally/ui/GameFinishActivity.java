@@ -59,7 +59,8 @@ public class GameFinishActivity extends AppCompatActivity {
         btnNext.setOnClickListener( v -> {
             btnNext.setEnabled(false);
             Intent intent = new Intent(this, EvaluationActivity.class);
-            // todo: 상대 프로필 url, 닉네임 넘기기? 아니면
+            intent.putExtra("opponentName", prev.getStringExtra("opponentName"));
+            intent.putExtra("opponentProfile", prev.getStringExtra("opponentProfile"));
             intent.putExtra("gameId", gameId);
             startActivity(intent);
         });

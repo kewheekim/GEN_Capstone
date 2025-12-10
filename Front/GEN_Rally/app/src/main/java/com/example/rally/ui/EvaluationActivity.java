@@ -1,5 +1,6 @@
 package com.example.rally.ui;
 
+import com.bumptech.glide.Glide;
 import com.example.rally.BuildConfig;
 import com.example.rally.R;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -25,7 +27,8 @@ public class EvaluationActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private EditText etCompliment;
     private Button btnNext;
-    private ImageView opponentProfile;
+    private ImageView ivOpponentProfile;
+    private TextView tvOpponentName;
 
     private CheckBox cbCompliment1, cbCompliment2, cbCompliment3, cbCompliment4, cbCompliment5;
     private CheckBox cbProblem1, cbProblem2, cbProblem3, cbProblem4, cbProblem5;
@@ -49,7 +52,22 @@ public class EvaluationActivity extends AppCompatActivity {
         cbProblem4 = findViewById(R.id.cb_problem4);
         cbProblem5 = findViewById(R.id.cb_problem5);
 
-        opponentProfile = findViewById(R.id.iv_profile);
+        tvOpponentName = findViewById(R.id.tv_opponent_name);
+        String opponentName = getIntent().getStringExtra("opponentName");
+        if(opponentName != null )
+            tvOpponentName.setText(opponentName);
+        else
+            tvOpponentName.setText("닉네임");
+
+        ivOpponentProfile = findViewById(R.id.iv_profile);
+        String opponentProfile = getIntent().getStringExtra("opponentProfile");
+        if (opponentProfile != null) {
+            Glide.with(getApplicationContext())
+                    .load(opponentProfile)
+                    .into(ivOpponentProfile);
+        } else {
+            ivOpponentProfile.setImageResource(R.drawable.ic_default_profile1);
+        }
 
         btnNext = findViewById(R.id.btn_next);
         btnNext.setEnabled(false);

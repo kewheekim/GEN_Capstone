@@ -237,8 +237,11 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
                             // 워치로 전달
                             PhoneDataLayerClient.sendPhoneEventToWatch(this, PATH_EVENT_GAME_FINISH, env.toString());
+                            // 경기 종료 화면
                             Intent intentToEvaluate = new Intent(this, GameFinishActivity.class);
                             intentToEvaluate.putExtra("gameId", gameId);
+                            intentToEvaluate.putExtra("opponentName", intent.getStringExtra("opponentName"));
+                            intentToEvaluate.putExtra("opponentProfile", intent.getStringExtra("opponentProfile"));
                             startActivity(intentToEvaluate);
                             break;
                         }

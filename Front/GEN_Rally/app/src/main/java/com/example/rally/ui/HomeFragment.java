@@ -116,6 +116,7 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
             long gameId = game.getGameId();
             String myName = game.getMyName();
             String opponentName = game.getOpponentName();
+            String opponentProfile = game.getOpponentProfileUrl();
             boolean localIsUser1 = game.isUser1();
 
             // 워치 연결 상태 확인
@@ -181,6 +182,7 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
             Intent intent = new Intent(requireContext(), ScoreMonitorActivity.class)
                     .putExtra("gameId", gameId)
                     .putExtra("opponentName", opponentName)
+                    .putExtra("opponentProfile", opponentProfile)
                     .putExtra("userName", myName)
                     .putExtra("localIsUser1", localIsUser1);
 
