@@ -99,7 +99,7 @@ public class KakaoService {
             isNew = true;
         }
 
-        String subject = LoginType.KAKAO + ":" + user.getSocialId();
+        String subject = user.getUserId();
         String accessToken = jwtProvider.generateAccessToken(subject);
         String refreshToken = jwtProvider.generateRefreshToken(subject);
 

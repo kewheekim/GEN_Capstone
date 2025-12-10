@@ -206,9 +206,10 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call<GeneralLoginResponse> call, Response<GeneralLoginResponse> response) {
                 int code = response.code();
                 GeneralLoginResponse body = response.body();
-                String name = body.getName();
 
                 if(code==200){
+                    String name = body.getName();
+
                     try{
                         TokenStore tokenStore = new TokenStore(requireContext().getApplicationContext());
                         tokenStore.saveTokens(body.getAccessToken(), body.getRefreshToken(), body.getUserId());
