@@ -137,9 +137,7 @@ public class GameResultService {
         // 상대의 평가
         String subject = String.valueOf(me.getUserId());
 
-        Evaluation evaluation = evaluationRepository
-                .findByGameAndSubject_UserId(game, subject)
-                .orElseThrow(() -> new CustomException(ErrorCode.EVALUATION_NOT_FOUND));
+        Evaluation evaluation = evaluationRepository.findByGameAndSubject_UserId(game, subject).orElse(null);
 
         String comment = evaluation != null ? evaluation.getComment() : null;
 
