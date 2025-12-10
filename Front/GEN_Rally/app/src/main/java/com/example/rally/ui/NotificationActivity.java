@@ -32,7 +32,7 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        View toolbarBack = findViewById(R.id.toolbar_go);
+        View toolbarBack = findViewById(R.id.btn_back);
         toolbarBack.setOnClickListener(v -> finish());
 
         rvNotifications = findViewById(R.id.rv_notifications);
