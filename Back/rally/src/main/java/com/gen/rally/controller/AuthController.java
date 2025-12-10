@@ -105,9 +105,22 @@ public class AuthController {
         return authService.socialSignup(request, socialId, loginType);
     }
 
-    // 로그아웃
-    @PostMapping("/api/users/logout")
-    public void logout(){
+    // [Android용] 카카오 로그인
+    @PostMapping("/api/auth/login/kakao")
+    public ResponseEntity<?> kakaoLoginAndroid(@RequestBody SocialLoginRequest request) {
+        System.out.println(">>> 카카오 로그인 요청 들어옴! 토큰: " + request.getAccessToken());
 
+        KakaoUserInfoDto userInfo = kakaoService.getUserInfo(request.getAccessToken());
+        KakaoLoginResponse loginResponse = kakaoService.loginOrSignup(userInfo);
+
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    // [Android용] 네이버 로그인
+    @PostMapping("/api/auth/login/naver")
+    public ResponseEntity<?> naverLoginAndroid(@RequestBody SocialLoginRequest request) {
+        NaverUserInfoDto userInfo = naverService.getUserInfo(request.getAccessToken());
+        NaverLoginResponse loginResponse = naverService.loginOrSignup(userInfo);
+        return ResponseEntity.ok(loginResponse);
     }
 }

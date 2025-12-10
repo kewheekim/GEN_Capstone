@@ -91,6 +91,7 @@ public class NaverService {
         } else {
             user = new User();
             user.setSocialId(id);
+            user.setUserId("NAVER_" + id);
             user.setName(name);
             user.setLoginType(LoginType.NAVER);
             userRepository.save(user);

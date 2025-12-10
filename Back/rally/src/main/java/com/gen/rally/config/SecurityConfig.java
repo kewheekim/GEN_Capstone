@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/kakao/**","/auth/naver/**",
+                        .requestMatchers("/auth/kakao/**","/auth/naver/**","/api/auth/login/kakao","api/auth/login/naver",
                                         "/api/users/login","/api/users/signup","/api/users/check-id", "/api/users/check-nickname",
                                         "/ws/**","/ws-score/**","/stomp/**","/chat/**", "/api/evaluation/**", "/api/match/**",
                                         "/api/invitation/**", "/api/game/**", "/api/goal/**", "/api/notification/**").permitAll()

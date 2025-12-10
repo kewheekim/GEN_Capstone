@@ -121,4 +121,11 @@ public class AuthActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    // 소셜 로그인 -> 닉네임 설정
+    public void showNicknameSetting(String defaultName) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SetNicknameFragment())
+                .commit();
+    }
 }

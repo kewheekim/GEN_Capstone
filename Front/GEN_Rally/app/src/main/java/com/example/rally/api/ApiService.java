@@ -33,6 +33,8 @@ import com.example.rally.dto.RecordAnalysisResponse;
 import com.example.rally.dto.RecordCalendarResponse;
 import com.example.rally.dto.RecordWeeklyCalorie;
 import com.example.rally.dto.SignupResponse;
+import com.example.rally.dto.SocialLoginRequest;
+import com.example.rally.dto.SocialLoginResponse;
 import com.example.rally.dto.TierAssessRequest;
 import com.example.rally.dto.TierAssessResponse;
 
@@ -193,4 +195,10 @@ public interface ApiService {
     @Headers("Requires-Auth:true")
     @POST("/api/notification/read-invitation")
     Call<Void> markAsReadInvitation();
+
+    @POST("/api/auth/login/kakao")
+    Call<SocialLoginResponse> loginKakao(@Body SocialLoginRequest request);
+
+    @POST("/api/auth/login/naver")
+    Call<SocialLoginResponse> loginNaver(@Body SocialLoginRequest request);
 }

@@ -1,7 +1,16 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("io.freefair.lombok") version "8.4"
     id("com.google.gms.google-services") version "4.4.3"
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -17,8 +26,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_BASE_URL", "\"http://172.19.0.85:8080/\"")
-        buildConfigField ("String", "WS_BASE_URL", "\"ws://172.19.0.85:8080/stomp\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080/\"")
+        buildConfigField ("String", "WS_BASE_URL", "\"ws://10.0.2.2:8080/stomp\"")
+
+        val kakaoKey = localProperties.getProperty("kakao.api.key") ?: ""
+        val naverId = localProperties.getProperty("naver.client.id") ?: ""
+        val naverSecret = localProperties.getProperty("naver.client.secret") ?: ""
+
+        buildConfigField("String", "KAKAO_APP_KEY", "\"$kakaoKey\"")
+        buildConfigField("String", "NAVER_CLIENT_ID", "\"$naverId\"")
+        buildConfigField("String", "NAVER_CLIENT_SECRET", "\"$naverSecret\"")
+        manifestPlaceholders["KAKAO_APP_KEY"] = kakaoKey
     }
 
     buildTypes {
@@ -68,4 +86,6 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0") // Chart
     implementation ("com.github.prolificinteractive:material-calendarview:2.0.1") // calendar
+    implementation ("com.kakao.sdk:v2-user:2.15.0") // 카카오 SDK
+    implementation ("com.navercorp.nid:oauth:5.9.1") // 네이버 SDK
 }
