@@ -1,6 +1,6 @@
 package com.gen.rally.controller;
 
-import com.gen.rally.dto.MatchInfoDto;
+import com.gen.rally.dto.GameCardInfoDto;
 import com.gen.rally.dto.TierAssessRequest;
 import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.entity.CustomUserDetails;
@@ -26,7 +26,7 @@ public class UserController {
 
     // 메인 화면
     @GetMapping("/api/home")
-    public List<MatchInfoDto> home(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public List<GameCardInfoDto> home(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if(userDetails == null){
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }

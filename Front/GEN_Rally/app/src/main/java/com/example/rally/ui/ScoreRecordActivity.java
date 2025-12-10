@@ -52,7 +52,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         setupClicks();
 
         Intent intent = getIntent();
-        gameId = intent.getLongExtra("gameId", 123L);
+        gameId = intent.getLongExtra("gameId", 134);
         setNumber = intent.getIntExtra("setNumber", 1);
         int opponentSets = intent.getIntExtra("opponentSets", 0);
         int userSets = intent.getIntExtra("userSets", 0);
@@ -94,9 +94,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
                         i.putExtra("user2Name", tvOpponentName.getText().toString());
 
                         startActivity(i);
-                        // 현재 스코어 기록 화면은 끝내고 결과 화면으로 넘기고 싶으면 finish()
                         finish();
-                        return;
                     }
                 } catch (Throwable t) {
                     Log.e("ScoreRecordActivity", "game_finsh: ws parse error", t);

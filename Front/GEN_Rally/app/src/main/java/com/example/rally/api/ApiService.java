@@ -22,12 +22,11 @@ import com.example.rally.dto.InvitationItem;
 import com.example.rally.dto.MatchConfirmDto;
 import com.example.rally.dto.InvitationRefuseRequest;
 import com.example.rally.dto.MatchFoundItem;
-import com.example.rally.dto.MatchInfoDto;
+import com.example.rally.dto.GameCardInfoDto;
 import com.example.rally.dto.MatchInvite;
 import com.example.rally.dto.MatchInviteResponse;
 import com.example.rally.dto.MatchRequestDetails;
 import com.example.rally.dto.MatchRequestDto;
-import com.example.rally.dto.MatchRequestInfoDto;
 import com.example.rally.dto.MatchSeekingItem;
 import com.example.rally.dto.NotificationItem;
 import com.example.rally.dto.RecordAnalysisResponse;
@@ -68,7 +67,7 @@ public interface ApiService {
 
     @Headers("Requires-Auth: true")
     @GET("/api/home")
-    Call<List<MatchInfoDto>> getHome();
+    Call<List<GameCardInfoDto>> getHome();
 
     @Headers("Requires-Auth: true")
     @POST("/api/evaluation/create")

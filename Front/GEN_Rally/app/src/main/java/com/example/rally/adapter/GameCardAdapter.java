@@ -1,7 +1,6 @@
 package com.example.rally.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.rally.R;
-import com.example.rally.dto.MatchInfoDto;
-import com.example.rally.dto.MatchRequestInfoDto;
-import com.example.rally.ui.ChatActivity;
+import com.example.rally.dto.GameCardInfoDto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,17 +28,24 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
     public interface OnChatButtonClickListener {
         void onChatButtonClick(long roomId);
     }
+    public interface OnRecordStartClickListener {
+        void onRecordStart(GameCardInfoDto game);
+    }
 
     private OnChatButtonClickListener chatButtonClickListener;
+    private OnRecordStartClickListener recordStartClickListener;
     private static final SparseBooleanArray flippedStates = new SparseBooleanArray();
-    private List<MatchInfoDto> gameList = new ArrayList<>();
+    private List<GameCardInfoDto> gameList = new ArrayList<>();
     private Context context;
 
     public void setOnChatButtonClickListener(OnChatButtonClickListener listener) {
         this.chatButtonClickListener = listener;
     }
+    public void setOnRecordStartClickListener(OnRecordStartClickListener listener) {
+        this.recordStartClickListener = listener;
+    }
     // 데이터 리스트 업데이트
-    public void setGameList(List<MatchInfoDto> gameList) {
+    public void setGameList(List<GameCardInfoDto> gameList) {
         this.gameList = gameList;
         notifyDataSetChanged();
     }
@@ -51,12 +55,12 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
         this.context = parent.getContext();
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_main_game_card, parent, false);
-        return new GameViewHolder(view, chatButtonClickListener);
+        return new GameViewHolder(view, chatButtonClickListener, recordStartClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
-        MatchInfoDto game = gameList.get(position);
+        GameCardInfoDto game = gameList.get(position);
         boolean isFlipped = flippedStates.get(position, false); // 뒤집혔는지: 기본값 false
         holder.bind(game, context, position, isFlipped);
     }
@@ -75,10 +79,12 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
         TextView tvNotYet, tvMainText;
         ImageView ivOpponentProfile;
         OnChatButtonClickListener chatButtonClickListener;
+        OnRecordStartClickListener recordStartClickListener;
 
-        public GameViewHolder(@NonNull View itemView, OnChatButtonClickListener listener) {
+        public GameViewHolder(@NonNull View itemView, OnChatButtonClickListener listener, OnRecordStartClickListener recordlistener) {
             super(itemView);
             this.chatButtonClickListener = listener;
+            this.recordStartClickListener = recordlistener;
 
             layoutInfoCard = itemView.findViewById(R.id.layout_info_card);
             layoutStartCard = itemView.findViewById(R.id.layout_start_card);
@@ -99,20 +105,22 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
             ivOpponentProfile = itemView.findViewById(R.id.iv_opponent_profile);
         }
 
-        public void bind(MatchInfoDto game, Context context, int position, boolean isFlipped) {
-            tvMatchDate.setText(game.getDate());
+        public void bind(GameCardInfoDto game, Context context, int position, boolean isFlipped) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M월 d일 (E)", Locale.KOREA);
+            String date = LocalDate.parse(game.getDate()).format(formatter);
+            tvMatchDate.setText(date);
             tvMatchTime.setText(game.getTimeRange());
             tvMatchPlace.setText(game.getPlace());
-            tvMatchStyle.setText(game.getGameStyle());
+            tvMatchStyle.setText(game.getGameType() + " | " + game.getGameStyle());
             tvOpponentName.setText(game.getOpponentName());
 
             if (game.getOpponentProfileUrl() != null) {
-                 Glide.with(context)
-                      .load(game.getOpponentProfileUrl())
-                      .into(ivOpponentProfile);
-             } else {
-            ivOpponentProfile.setImageResource(R.drawable.profile_image_male);
-             }
+                Glide.with(context)
+                        .load(game.getOpponentProfileUrl())
+                        .into(ivOpponentProfile);
+            } else {
+                ivOpponentProfile.setImageResource(R.drawable.profile_image_male);
+            }
 
             if (isFlipped) {
                 layoutInfoCard.setVisibility(View.GONE);
@@ -153,20 +161,17 @@ public class GameCardAdapter extends RecyclerView.Adapter<GameCardAdapter.GameVi
                     chatButtonClickListener.onChatButtonClick(game.getRoomId());
                 }
             });
-        }
 
+            btnRecordStart.setOnClickListener(v -> {
+                if(recordStartClickListener !=null) {
+                    recordStartClickListener.onRecordStart(game);
+                }
+            });
+        }
         private boolean isDateToday(String matchDateStr) {
             if (matchDateStr == null) return false;
             LocalDate now = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M월 d일 (E)", Locale.KOREA);
-            String todayStr = now.format(formatter);
-
-            // 문자열이 포함되어 있는지 확인 (혹시 공백 등이 다를 수 있으므로)
-            // 예: "11월 26일 (수)" == "11월 26일 (수)"
-            return matchDateStr.equals(todayStr);
-
-            // 만약 서버 데이터 형식이 "yyyy-MM-dd"라면 아래처럼 파싱해서 비교ㅅ해야 함
-            // return LocalDate.parse(matchDateStr).isEqual(now);
+            return LocalDate.parse(matchDateStr).isEqual(now);
         }
     }
 }

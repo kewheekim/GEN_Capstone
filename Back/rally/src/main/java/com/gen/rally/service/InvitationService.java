@@ -162,6 +162,7 @@ public class InvitationService {
             game.setUser2(inv.getReceiver()); // user2 = 받은 사람(나)
             game.setDate(senderReq.getGameDate() != null ? senderReq.getGameDate() : receiverReq.getGameDate());
             game.setGameType(senderReq.getGameType() != null ? senderReq.getGameType() : receiverReq.getGameType());
+            game.setGameStyle(senderReq.getGameStyle());
             game.setState(State.수락);
             gameRepo.save(game);
         }

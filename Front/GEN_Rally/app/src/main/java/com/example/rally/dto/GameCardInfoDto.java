@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MatchInfoDto {
+public class GameCardInfoDto {
     private String place;
     private String date;
     private String timeRange;
@@ -13,5 +13,8 @@ public class MatchInfoDto {
     private String gameType;
     private String opponentName;
     private String opponentProfileUrl;
+    private String myName;
     private Long roomId;
+    private Long gameId;
+    private boolean isUser1;
 }

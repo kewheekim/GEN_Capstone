@@ -22,7 +22,8 @@ import com.example.rally.adapter.GameCardAdapter;
 import com.example.rally.api.ApiService;
 import com.example.rally.api.RetrofitClient;
 import com.example.rally.auth.TokenStore;
-import com.example.rally.dto.MatchInfoDto;
+import com.example.rally.dto.GameCardInfoDto;
+import com.example.rally.wear.PhoneDataLayerClient;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -109,6 +110,82 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
     private void setupRecyclerViews() {
         gameAdapter = new GameCardAdapter();
         gameAdapter.setOnChatButtonClickListener(this);
+        gameAdapter.setOnRecordStartClickListener(game -> {
+            if (getContext() == null) return;
+
+            long gameId = game.getGameId();
+            String myName = game.getMyName();
+            String opponentName = game.getOpponentName();
+            boolean localIsUser1 = game.isUser1();
+
+            // 워치 연결 상태 확인
+            com.google.android.gms.wearable.Wearable.getNodeClient(requireContext())
+                    .getConnectedNodes()
+                    .addOnSuccessListener(nodes -> {
+                        StringBuilder sb = new StringBuilder("connected nodes: ");
+                        for (com.google.android.gms.wearable.Node n : nodes) {
+                            sb.append(n.getDisplayName()).append("(").append(n.getId()).append(") ");
+                        }
+                        android.util.Log.d("PhoneDL", sb.toString());
+                        android.widget.Toast.makeText(requireContext(), nodes.isEmpty() ? "연결된 워치 없음" : sb.toString(), android.widget.
+                                Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e ->
+                            android.util.Log.e("PhoneDL", "getConnectedNodes failed", e)
+                    );
+
+            // 워치로 게임 세팅 전송
+            PhoneDataLayerClient.sendGameSetup(
+                    requireContext(),
+                    gameId,
+                    opponentName,
+                    myName,
+                    localIsUser1,
+                    new PhoneDataLayerClient.SendCallback() {
+                        @Override
+                        public void onSuccess() {
+                            requireActivity().runOnUiThread(() ->
+                                    android.widget.Toast.makeText(
+                                            requireContext(),
+                                            "워치로 전송 완료",
+                                            android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                            );
+                        }
+
+                        @Override
+                        public void onNoNode() {
+                            requireActivity().runOnUiThread(() ->
+                                    android.widget.Toast.makeText(
+                                            requireContext(),
+                                            "연결된 워치 없음",
+                                            android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                            );
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            requireActivity().runOnUiThread(() ->
+                                    android.widget.Toast.makeText(
+                                            requireContext(),
+                                            "전송 실패: " + e.getMessage(),
+                                            android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                            );
+                        }
+                    }
+            );
+
+            // 경기 모니터링 화면으로 전환
+            Intent intent = new Intent(requireContext(), ScoreMonitorActivity.class)
+                    .putExtra("gameId", gameId)
+                    .putExtra("opponentName", opponentName)
+                    .putExtra("userName", myName)
+                    .putExtra("localIsUser1", localIsUser1);
+
+            startActivity(intent);
+        });
         rvGames.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvGames.setAdapter(gameAdapter);
     }
@@ -117,9 +194,9 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
         ApiService apiService = RetrofitClient.getSecureClient(requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
 
         apiService.getHome()
-                .enqueue(new Callback<List<MatchInfoDto>>() {
+                .enqueue(new Callback<List<GameCardInfoDto>>() {
                 @Override
-                public void onResponse(@NonNull Call<List<MatchInfoDto>> call, @NonNull Response<List<MatchInfoDto>> response) {
+                public void onResponse(@NonNull Call<List<GameCardInfoDto>> call, @NonNull Response<List<GameCardInfoDto>> response) {
                     if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                         Log.d("HomeFragment", "홈 데이터 로드 성공: " + response.body().size() + "개");
                         rvGames.setVisibility(View.VISIBLE);
@@ -133,7 +210,7 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<List<MatchInfoDto>> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<List<GameCardInfoDto>> call, @NonNull Throwable t) {
                     Log.e("HomeFragment", "홈 데이터 로드 실패", t);
                     rvGames.setVisibility(View.GONE);
                     ivGameNull.setVisibility(View.VISIBLE);
@@ -149,4 +226,5 @@ public class HomeFragment extends Fragment implements GameCardAdapter.OnChatButt
 
         startActivity(intent);
     }
+
 }

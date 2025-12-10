@@ -1,7 +1,7 @@
 package com.gen.rally.service;
 
 import com.gen.rally.config.jwt.JwtProvider;
-import com.gen.rally.dto.MatchInfoDto;
+import com.gen.rally.dto.GameCardInfoDto;
 import com.gen.rally.dto.TierAssessRequest;
 import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.dto.auth.*;
@@ -131,13 +131,13 @@ public class UserService {
     }
 
     // 홈 화면 갱신
-    public List<MatchInfoDto> getHome(String userId){
+    public List<GameCardInfoDto> getHome(String userId){
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(()-> new CustomException(ErrorCode.FORBIDDEN));
 
         List<Game> games = gameRepository.findGamesByUserAndState(user, State.경기확정);
         return games.stream()
-                .map(game -> new MatchInfoDto(game, userId))
+                .map(game -> new GameCardInfoDto(game, userId))
                 .collect(Collectors.toList());
     }
 
