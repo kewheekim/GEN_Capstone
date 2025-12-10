@@ -212,7 +212,7 @@
         <!-- 매너 지수 -->
         <TextView
             android:id="@+id/tv_manner"
-            android:layout_width="wrap_content"
+            android:layout_width="79dp"
             android:layout_height="wrap_content"
             android:text="매너 지수"
             style="@style/Text.Medium12"
@@ -267,7 +267,7 @@
             android:src="@drawable/ic_tier_silver1"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="238dp"
-            app:layout_constraintStart_toEndOf="@id/rating_bar"
+            app:layout_constraintStart_toEndOf="@id/tv_manner"
             android:layout_marginStart="60dp"
             android:alpha="0.6"
             />

@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
     Button btnAccept;
     private Long invitationId;
     private String invitationState;
+    LinearLayout mannerNull;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.rating_bar);
         btnRefuse = findViewById(R.id.btn_refuse);
         btnAccept = findViewById(R.id.btn_accept);
+        mannerNull = findViewById(R.id.layout_manner_null);
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -245,7 +248,12 @@ public class InvitationDetailsActivity extends AppCompatActivity {
         }
         // 매너 지수
         float manner = (float) opponent.getMannerScore();
-        ratingBar.setRating(manner);
+        if(manner !=0)
+            ratingBar.setRating(manner);
+        else {
+            ratingBar.setVisibility(View.GONE);
+            mannerNull.setVisibility(View.VISIBLE);
+        }
 
         // 티어
         switch (opponent.getTier()) {

@@ -2,10 +2,12 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -44,8 +46,9 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         ImageView ivTier = findViewById(R.id.iv_tier);
         Button btnRequest = findViewById(R.id.btn_request);
         RatingBar ratingBar = findViewById(R.id.rating_bar);
+        LinearLayout mannerNull = findViewById(R.id.layout_manner_null);
 
-        // 3. 데이터 바인딩
+        // 데이터 바인딩
         tvName.setText(user.getName());
 
         if (user.getProfileImage() != null) {
@@ -103,20 +106,24 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
         tvStyle.setText(gameStyleMap[user.getGameStyle()]);
 
         // 매너 지수
-        if(user.getMannerScore()!=0) {
-
+        double manner = user.getMannerScore();
+        if(manner !=0) {
+            ratingBar.setRating((float) user.getMannerScore());
+        } else {
+            ratingBar.setVisibility(View.GONE);
+            mannerNull.setVisibility(View.VISIBLE);
         }
-        ratingBar.setRating((float) user.getMannerScore());
 
+        // 티어 이미지
         switch (user.getTier()) {
             case 0:
-                //ivTier.setImageResource(R.drawble.ic_tier_bronze1);
+                //ivTier.setImageResource(R.drawable.ic_tier_bronze1);
                 break;
             case 1:
-                //ivTier.setImageResource(R.drawble.ic_tier_bronze2);
+                //ivTier.setImageResource(R.drawable.ic_tier_bronze2);
                 break;
             case 2:
-                //ivTier.setImageResource(R.drawble.ic_tier_bronze3);
+                //ivTier.setImageResource(R.drawable.ic_tier_bronze3);
                 break;
             case 3:
                  ivTier.setImageResource(R.drawable.ic_tier_silver1);
@@ -128,25 +135,25 @@ public class PopupCandidateDetailActivity extends AppCompatActivity {
                 ivTier.setImageResource(R.drawable.ic_tier_silver3);
                 break;
             case 6:
-                //ivTier.setImageResource(R.drawble.ic_tier_gold1);
+                //ivTier.setImageResource(R.drawable.ic_tier_gold1);
                 break;
             case 7:
-                //ivTier.setImageResource(R.drawble.ic_tier_gold2);
+                //ivTier.setImageResource(R.drawable.ic_tier_gold2);
                 break;
             case 8:
-                //ivTier.setImageResource(R.drawble.ic_tier_gold3);
+                //ivTier.setImageResource(R.drawable.ic_tier_gold3);
                 break;
             case 9:
-                //ivTier.setImageResource(R.drawble.ic_tier_dia1);
+                //ivTier.setImageResource(R.drawable.ic_tier_dia1);
                 break;
             case 10:
-                //ivTier.setImageResource(R.drawble.ic_tier_dia2);
+                //ivTier.setImageResource(R.drawable.ic_tier_dia2);
                 break;
             case 11:
-                //ivTier.setImageResource(R.drawble.ic_tier_dia3);
+                //ivTier.setImageResource(R.drawable.ic_tier_dia3);
                 break;
             default:
-                //ivTier.setImageResource(R.drawble.ic_tier_dia1);
+                //ivTier.setImageResource(R.drawable.ic_tier_dia1);
         }
 
         // X 버튼: 닫기
