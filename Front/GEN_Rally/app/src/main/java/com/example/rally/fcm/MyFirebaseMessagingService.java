@@ -96,7 +96,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if(response.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "fcm 토큰 갱신 성공", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "fcm 토큰 갱신 실패", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "fcm 토큰 갱신 실패", Toast.LENGTH_SHORT).show();
                 }
             }
 

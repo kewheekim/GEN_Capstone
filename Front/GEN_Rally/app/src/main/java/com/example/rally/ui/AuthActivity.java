@@ -2,11 +2,13 @@ package com.example.rally.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.rally.R;
+import com.kakao.sdk.common.util.Utility;
 
 import javax.annotation.Nullable;
 
@@ -16,6 +18,8 @@ public class AuthActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+        String keyHash = Utility.INSTANCE.getKeyHash(this);
+        Log.d("KakaoKeyHash", "keyHash = " + keyHash);
 
         // 최초 실행 시 LoginFragment 표시
         if (savedInstanceState == null) {

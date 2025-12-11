@@ -12,5 +12,6 @@ public class GoalItem {
     private String theme;
     private String type;
     private Integer targetWeeksCount;  // 목표 기간 또는 횟수
+    @Builder.Default
     private Integer progressCount = 0;  // 실천 횟수
 }

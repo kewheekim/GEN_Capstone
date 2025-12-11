@@ -26,15 +26,7 @@
             android:name=".ui.GoalAchieveActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.GoalCreateActivity"
-            android:exported="true"
-            android:label="GoalCreate">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".ui.GoalCreateActivity" />
         <activity
             android:name=".ui.MatSuccessActivity"
             android:exported="false" />
@@ -62,15 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true"
-            android:label="Main">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".ui.MainActivity"/>
         <activity android:name=".ui.MatConditionActivity" />
         <activity android:name=".ui.MatTypeActivity" />
         <activity android:name=".ui.SetTimeActivity" />
