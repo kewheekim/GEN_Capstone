@@ -172,11 +172,11 @@ public class LoginFragment extends Fragment {
                     if (body.isNew()) {
                         Log.d("SocialLogin", "신규 유저 -> 닉네임 설정으로 이동");
                         if (getActivity() instanceof AuthActivity) {
-                            ((AuthActivity) getActivity()).showNicknameSetting(body.getName());
+                            ((AuthActivity) getActivity()).showNicknameSetting(body.getNickname());
                         }
                     } else {
                         Log.d("SocialLogin", "기존 유저 -> 메인으로 이동");
-                        Toast.makeText(getContext(), body.getName() + "님 환영합니다!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), body.getNickname() + "님 환영합니다!", Toast.LENGTH_SHORT).show();
                         if (getActivity() instanceof AuthActivity) {
                             ((AuthActivity) getActivity()).loginSuccess();
                         }

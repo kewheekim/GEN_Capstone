@@ -6,6 +6,6 @@ import lombok.Getter;
 public class SocialLoginResponse {
     private TokenResponse token;
     private boolean isNew;
-    private String name;
+    private String nickname;
     private String socialId;
 }
