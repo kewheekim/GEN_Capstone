@@ -4,6 +4,7 @@ import com.gen.rally.dto.TierAssessRequest;
 import com.gen.rally.dto.TierAssessResponse;
 import com.gen.rally.dto.auth.*;
 import com.gen.rally.entity.CustomUserDetails;
+import com.gen.rally.entity.User;
 import com.gen.rally.enums.LoginType;
 import com.gen.rally.exception.CustomException;
 import com.gen.rally.exception.ErrorResponse;
@@ -96,9 +97,9 @@ public class AuthController {
     // 소셜 로그인 후 -> 세부 정보 설정
     @PostMapping("/api/users/profile")
     public ResponseEntity<?> socialSignup(@RequestBody SocialSignupRequest request, @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
-        String socialId = userDetails.getUsername();
-        LoginType loginType = LoginType.KAKAO;
-        return authService.socialSignup(request, socialId, loginType);
+        User user = userRepository.findByUserId(userDetails.getUsername())
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return authService.socialSignup(request, user.getSocialId(), user.getLoginType());
     }
 
     // [Android용] 카카오 로그인

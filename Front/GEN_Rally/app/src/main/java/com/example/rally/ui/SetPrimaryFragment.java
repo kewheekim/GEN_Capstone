@@ -21,6 +21,7 @@ import com.example.rally.api.RetrofitClient;
 import com.example.rally.auth.TokenStore;
 import com.example.rally.dto.GeneralSignupRequest;
 import com.example.rally.dto.SignupResponse;
+import com.example.rally.dto.SocialSignupRequest;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -48,6 +49,7 @@ public class SetPrimaryFragment extends Fragment {
     private RadioGroup radioGroup;
     private RadioButton rbSkill, rbLocation, rbTime, rbStyle;
     private int checkedIndex = -1;
+    private boolean isSocialSignup = false;
 
     public SetPrimaryFragment(){
         super(R.layout.fragment_signup_primary);
@@ -64,12 +66,26 @@ public class SetPrimaryFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    public static SetPrimaryFragment newInstanceForSocial(String name, byte[] selectedImg, String gender) {
+        SetPrimaryFragment fragment = new SetPrimaryFragment();
+        Bundle args = new Bundle();
+        args.putBoolean("isSocialSignup", true);
+        args.putString(ARG_NAME, name);
+        args.putByteArray(ARG_IMAGE_BYTES, selectedImg);
+        args.putString(ARG_GENDER, gender);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getString(ARG_ID);
-            userPw = getArguments().getString(ARG_PW);
+            if(!isSocialSignup) {
+                userId = getArguments().getString(ARG_ID);
+                userPw = getArguments().getString(ARG_PW);
+            }
             name = getArguments().getString(ARG_NAME);
             imageBytes = getArguments().getByteArray(ARG_IMAGE_BYTES);
             gender = getArguments().getString(ARG_GENDER);
@@ -145,7 +161,11 @@ public class SetPrimaryFragment extends Fragment {
                 })
                 .addOnSuccessListener(uri -> {
                     String downloadUrl = uri.toString();
-                    callSignup(apiService, downloadUrl);
+                    if(isSocialSignup) {
+                        callSocialProfile(apiService, downloadUrl);
+                    } else {
+                        callSignup(apiService, downloadUrl);
+                    }
                 })
                 .addOnFailureListener(e -> {
                     btnNext.setEnabled(true);
@@ -208,4 +228,34 @@ public class SetPrimaryFragment extends Fragment {
                         }
                     });
     }
+
+    private void callSocialProfile(ApiService apiService, @NonNull String imageUrl) {
+        SocialSignupRequest request = new SocialSignupRequest();
+        request.setName(name);
+        request.setGender(gender);
+        request.setPrimaryThing(String.valueOf(checkedIndex));
+        request.setImageUrl(imageUrl);
+        request.setFcmToken(fcmToken);
+
+        apiService.setSocialProfile(request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    if (getActivity() instanceof AuthActivity) {
+                        ((AuthActivity) getActivity()).showComplete(name, imageBytes);
+                    }
+                } else {
+                    Log.e("SignUp", "서버 에러 응답: " + response.body().toString());
+                    Toast.makeText(getContext(),"서버 에러", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("SocialProfile", t.getMessage());
+                Toast.makeText(getContext(), "네트워크 오류: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }

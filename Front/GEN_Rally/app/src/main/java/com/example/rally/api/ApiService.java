@@ -35,6 +35,7 @@ import com.example.rally.dto.RecordWeeklyCalorie;
 import com.example.rally.dto.SignupResponse;
 import com.example.rally.dto.SocialLoginRequest;
 import com.example.rally.dto.SocialLoginResponse;
+import com.example.rally.dto.SocialSignupRequest;
 import com.example.rally.dto.TierAssessRequest;
 import com.example.rally.dto.TierAssessResponse;
 
@@ -201,4 +202,8 @@ public interface ApiService {
 
     @POST("/api/auth/login/naver")
     Call<SocialLoginResponse> loginNaver(@Body SocialLoginRequest request);
+
+    @Headers("Requires-Auth:true")
+    @POST ("/api/users/profile")
+    Call<Void> setSocialProfile (@Body SocialSignupRequest request);
 }

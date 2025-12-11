@@ -30,7 +30,6 @@ import retrofit2.Response;
 public class SetNicknameFragment extends Fragment {
     private static final String ARG_ID = "id";
     private static final String ARG_PW = "pw";
-
     private String userId;
     private String userPw;
 
