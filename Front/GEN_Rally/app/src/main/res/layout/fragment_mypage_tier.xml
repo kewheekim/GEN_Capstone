@@ -48,19 +48,6 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rally의 티어는 승패와 매너점수, 00에 따른\n철저한 점수 계산을 통해 티어를 부여하고 있습니다."
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        android:layout_marginTop="282dp"
-        android:gravity="center"
-        style="@style/Text.Regular12"
-        android:textColor="@color/gray_600"
-        />
-
-    <TextView
         android:id="@+id/tv_tier_level"
         android:layout_width="182dp"
         android:layout_height="54dp"
@@ -161,8 +148,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="티어설명"
-                style="@style/Text.Medium14"
+                android:text="배드민턴의 재미를 하나씩 알아가고 있어요."
+                style="@style/Text.Medium12"
                 android:textColor="@color/gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -217,8 +204,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="티어설명"
-                style="@style/Text.Medium14"
+                android:text="경험으로 경기 기술과 자신감을 쌓아가고 있어요."
+                style="@style/Text.Medium12"
                 android:textColor="@color/gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -269,8 +256,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="티어설명"
-                style="@style/Text.Medium14"
+                android:text="자신만의 플레이 스타일을 만들어갈 수 있어요."
+                style="@style/Text.Medium12"
                 android:textColor="@color/gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -321,8 +308,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="티어설명"
-                style="@style/Text.Medium14"
+                android:text="치밀한 전략을 펼치고, 게임 흐름을 읽을 수 있어요."
+                style="@style/Text.Medium12"
                 android:textColor="@color/gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -363,7 +350,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Rally는 어쩌고저쩌고 해요... "
+                android:text="회원가입 시 실력 진단 테스트를 통해 첫 티어가 배정되며,\n승패와 매너점수에 따라 티어가 변동돼요. "
                 style="@style/Text.Medium16"/>
 
         </LinearLayout>

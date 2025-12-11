@@ -80,14 +80,14 @@
     
     <Button
         android:id="@+id/btn_update_profile"
-        android:layout_width="97dp"
+        android:layout_width="104dp"
         android:layout_height="38dp"
-        style="@style/FlatButton"
         android:background="@drawable/bg_next_button_inactive"
         android:enabled="false"
         android:text="프로필 수정"
         android:textSize="14dp"
         android:textColor="@color/gray_800"
+        style="@style/Text.Medium14"
         app:layout_constraintTop_toTopOf="@id/iv_profile"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"
