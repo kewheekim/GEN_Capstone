@@ -42,14 +42,13 @@ public class NaverService {
     @Value("${naver.redirect-uri}")
     private String redirectUri;
 
-    public NaverTokenResponse getAccessToken(String code, String state) {
+    public NaverTokenResponse getAccessToken(String code) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", "authorization_code");
         formData.add("client_id", clientId);
         formData.add("client_secret", clientSecret);
         formData.add("redirect_uri", redirectUri);
         formData.add("code", code);
-        formData.add("state", state);
 
         return webClient.post()
                 .uri("/oauth2.0/token")
