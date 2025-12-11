@@ -17,4 +17,5 @@ public class SocialSignupRequest {
     private String imageUrl;
     private Gender gender;
     private Primary primaryThing;
+    private String fcmToken;
 }

@@ -52,7 +52,9 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         user.setName(request.getName());
+        user.setImageUrl(request.getImageUrl());
         user.setGender(request.getGender());
+        user.setFcmToken(request.getFcmToken());
         user.setPrimaryThing(request.getPrimaryThing());
 
         userRepository.save(user);
