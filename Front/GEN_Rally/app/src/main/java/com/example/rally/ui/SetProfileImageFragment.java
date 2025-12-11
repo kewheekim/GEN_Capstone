@@ -30,10 +30,12 @@ public class SetProfileImageFragment extends Fragment {
     private static final String ARG_ID = "id";
     private static final String ARG_PW = "pw";
     private static final String ARG_NAME = "name";
+    private static final String ARG_IS_SOCIAL = "isSocialSignup";
     private static final int REQUEST_IMAGE_PICK = 1001;
     private static final String TAG = "SetProfileImageFrag";
     private byte[] selectedImage;
     private String userId, userPw, name;
+    private boolean isSocialSignup = false;
     private ImageButton imgBtn, btnBack;
     private ImageView imgView;
     private Button btnNext;
@@ -53,13 +55,28 @@ public class SetProfileImageFragment extends Fragment {
         return fragment;
     }
 
+    // 소셜 회원가입
+    public static SetProfileImageFragment newInstanceForSocial(String name) {
+        SetProfileImageFragment fragment = new SetProfileImageFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_IS_SOCIAL, true);
+        args.putString(ARG_NAME, name);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getString(ARG_ID);
-            userPw = getArguments().getString(ARG_PW);
-            name = getArguments().getString(ARG_NAME);
+            isSocialSignup = getArguments().getBoolean(ARG_IS_SOCIAL, false);
+            if (isSocialSignup) {
+                name = getArguments().getString(ARG_NAME);
+            } else {
+                userId = getArguments().getString(ARG_ID);
+                userPw = getArguments().getString(ARG_PW);
+                name = getArguments().getString(ARG_NAME);
+            }
         }
     }
 
@@ -85,7 +102,14 @@ public class SetProfileImageFragment extends Fragment {
                 return;
             }
             if (getActivity() instanceof AuthActivity) {
-                ((AuthActivity) getActivity()).showSetGender(userId, userPw, name, selectedImage);
+                AuthActivity activity = (AuthActivity) getActivity();
+                if (isSocialSignup) {
+                    // 소셜 회원가입
+                    activity.showSetGenderForSocial(name, selectedImage);
+                } else {
+                    //  일반 회원가입
+                    activity.showSetGender(userId, userPw, name, selectedImage);
+                }
             }
         });
     }

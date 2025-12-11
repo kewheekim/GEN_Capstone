@@ -30,8 +30,12 @@ import retrofit2.Response;
 public class SetNicknameFragment extends Fragment {
     private static final String ARG_ID = "id";
     private static final String ARG_PW = "pw";
+    private static final String ARG_DEFAULT_NAME = "defaultName";
+    private static final String ARG_IS_SOCIAL = "isSocialSignup";
+    private boolean isSocialSignup = false;
     private String userId;
     private String userPw;
+    private String defaultName;
 
     private EditText etNickname;
     private View nameBox;
@@ -54,12 +58,26 @@ public class SetNicknameFragment extends Fragment {
         return fragment;
     }
 
+    public static SetNicknameFragment newInstanceForSocial(String defaultName) {
+        SetNicknameFragment fragment = new SetNicknameFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_IS_SOCIAL, true);
+        args.putString(ARG_DEFAULT_NAME, defaultName);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getString(ARG_ID);
-            userPw = getArguments().getString(ARG_PW);
+            isSocialSignup = getArguments().getBoolean(ARG_IS_SOCIAL, false);
+            if (isSocialSignup) {
+                defaultName = getArguments().getString(ARG_DEFAULT_NAME);
+            } else {
+                userId = getArguments().getString(ARG_ID);
+                userPw = getArguments().getString(ARG_PW);
+            }
         }
     }
 
@@ -73,9 +91,18 @@ public class SetNicknameFragment extends Fragment {
         btnNext.setTextColor(Color.WHITE);
         btnBack = view.findViewById(R.id.btn_back);
 
+        if(isSocialSignup && defaultName !=null) {
+            etNickname.setText(defaultName);
+        }
+
         btnBack.setOnClickListener(v -> {
             if (getActivity() instanceof AuthActivity) {
-                ((AuthActivity) getActivity()).backToSignup();
+                AuthActivity activity = (AuthActivity) getActivity();
+                if(isSocialSignup) {
+                    activity.backToLogin();
+                } else{
+                    activity.backToSignup();
+                }
             }
         });
 
@@ -127,13 +154,15 @@ public class SetNicknameFragment extends Fragment {
                     CheckNicknameResponse body = response.body();
                     if (body.available) {
                         if (getActivity() instanceof AuthActivity) {
-                            ((AuthActivity) getActivity()).showSetProfile(userId, userPw, nickname);
+                            AuthActivity activity = (AuthActivity) getActivity();
+                            if (isSocialSignup) {
+                                //  소셜 회원가입
+                                activity.showSetProfileForSocial(nickname);
+                            } else {
+                                // 일반 회원가입
+                                activity.showSetProfile(userId, userPw, nickname);
+                            }
                         }
-                    } else {
-                        nameBox.setBackgroundResource(R.drawable.bg_button_inactive);
-                        tvError.setVisibility(View.VISIBLE);
-                        tvError.setText(body.message);
-                        tvError.setTextColor(Color.parseColor("red"));
                     }
                 }
 

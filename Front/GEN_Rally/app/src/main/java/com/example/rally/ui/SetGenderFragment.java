@@ -21,9 +21,11 @@ public class SetGenderFragment extends Fragment {
     private static final String ARG_PW = "pw";
     private static final String ARG_NAME = "name";
     private static final String ARG_IMAGE_BYTES = "imageBytes";
+    private static final String ARG_IS_SOCIAL = "isSocialSignup";
     private static final String ARG_GENDER = "gender";
     private String userId, userPw, name;
     private byte[] imageBytes;
+    private boolean isSocialSignup = false;
     private String selectedGender = null;
     private ImageButton btnMale, btnFemale, btnBack;
     private Button btnNext;
@@ -42,15 +44,30 @@ public class SetGenderFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    // 소셜 회원가입
+    public static SetGenderFragment newInstanceForSocial(String name, byte[] selectedImg) {
+        SetGenderFragment fragment = new SetGenderFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_IS_SOCIAL, true);
+        args.putString(ARG_NAME, name);
+        args.putByteArray(ARG_IMAGE_BYTES, selectedImg);
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userId = getArguments().getString(ARG_ID);
-            userPw = getArguments().getString(ARG_PW);
-            name = getArguments().getString(ARG_NAME);
-            imageBytes = getArguments().getByteArray(ARG_IMAGE_BYTES);
+            isSocialSignup = getArguments().getBoolean(ARG_IS_SOCIAL, false);
+            if (isSocialSignup) {
+                name = getArguments().getString(ARG_NAME);
+                imageBytes = getArguments().getByteArray(ARG_IMAGE_BYTES);
+            } else {
+                userId = getArguments().getString(ARG_ID);
+                userPw = getArguments().getString(ARG_PW);
+                name = getArguments().getString(ARG_NAME);
+                imageBytes = getArguments().getByteArray(ARG_IMAGE_BYTES);
+            }
         }
     }
 
@@ -102,9 +119,16 @@ public class SetGenderFragment extends Fragment {
             btnNext.setTextColor(Color.parseColor("#FFFFFF"));
         });
 
+        // setPrimary로 이동
         btnNext.setOnClickListener(v -> {
+            if (selectedGender == null) return;
             if (getActivity() instanceof AuthActivity) {
-                ((AuthActivity) getActivity()).showSetPrimary(userId, userPw, name, imageBytes, selectedGender);
+                AuthActivity activity = (AuthActivity) getActivity();
+                if (isSocialSignup) {
+                    activity.showSetPrimaryForSocial(name, imageBytes, selectedGender);
+                } else {
+                    activity.showSetPrimary(userId, userPw, name, imageBytes, selectedGender);
+                }
             }
         });
     }

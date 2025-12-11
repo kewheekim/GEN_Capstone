@@ -125,7 +125,31 @@ public class AuthActivity extends AppCompatActivity {
     // 소셜 로그인 -> 닉네임 설정
     public void showNicknameSetting(String defaultName) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.auth_fragment_container, new SetNicknameFragment())
+                .replace(R.id.auth_fragment_container, SetNicknameFragment.newInstanceForSocial(defaultName))
+                .addToBackStack(null)
+                .commit();
+    }
+    // 소셜로그인 닉네임 -> 프로필 이미지
+    public void showSetProfileForSocial(String name) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_fragment_container,
+                        SetProfileImageFragment.newInstanceForSocial(name))
+                .addToBackStack(null)
+                .commit();
+    }
+    // 소셜로그인 프로필 이미지 -> 성별
+    public void showSetGenderForSocial(String name, byte[] image) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_fragment_container,
+                        SetGenderFragment.newInstanceForSocial(name, image))
+                .addToBackStack(null)
+                .commit();
+    }
+    // 소셜로그인 성별 -> 우선순위
+    public void showSetPrimaryForSocial(String name, byte[] image, String gender) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.auth_fragment_container, SetPrimaryFragment.newInstanceForSocial(name, image, gender))
+                .addToBackStack(null)
                 .commit();
     }
 }

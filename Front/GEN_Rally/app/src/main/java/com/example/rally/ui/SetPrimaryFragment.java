@@ -41,6 +41,7 @@ public class SetPrimaryFragment extends Fragment {
     private static final String ARG_NAME = "name";
     private static final String ARG_IMAGE_BYTES = "imageBytes";
     private static final String ARG_GENDER = "gender";
+    private static final String ARG_IS_SOCIAL = "isSocialSignup";
     private String userId, userPw, name, gender, fcmToken;
     private byte[] imageBytes;
     private StorageReference storage;
@@ -70,7 +71,7 @@ public class SetPrimaryFragment extends Fragment {
     public static SetPrimaryFragment newInstanceForSocial(String name, byte[] selectedImg, String gender) {
         SetPrimaryFragment fragment = new SetPrimaryFragment();
         Bundle args = new Bundle();
-        args.putBoolean("isSocialSignup", true);
+        args.putBoolean(ARG_IS_SOCIAL, true);
         args.putString(ARG_NAME, name);
         args.putByteArray(ARG_IMAGE_BYTES, selectedImg);
         args.putString(ARG_GENDER, gender);
@@ -82,6 +83,7 @@ public class SetPrimaryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            isSocialSignup = getArguments().getBoolean(ARG_IS_SOCIAL, false);
             if(!isSocialSignup) {
                 userId = getArguments().getString(ARG_ID);
                 userPw = getArguments().getString(ARG_PW);
@@ -237,7 +239,8 @@ public class SetPrimaryFragment extends Fragment {
         request.setImageUrl(imageUrl);
         request.setFcmToken(fcmToken);
 
-        apiService.setSocialProfile(request).enqueue(new Callback<Void>() {
+        ApiService api =  RetrofitClient.getSecureClient(requireContext(), BuildConfig.API_BASE_URL).create(ApiService.class);
+        api.setSocialProfile(request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -245,7 +248,7 @@ public class SetPrimaryFragment extends Fragment {
                         ((AuthActivity) getActivity()).showComplete(name, imageBytes);
                     }
                 } else {
-                    Log.e("SignUp", "서버 에러 응답: " + response.body().toString());
+                    Log.e("SignUp", "서버 에러 응답"+response.code());
                     Toast.makeText(getContext(),"서버 에러", Toast.LENGTH_LONG).show();
                 }
             }
@@ -257,5 +260,4 @@ public class SetPrimaryFragment extends Fragment {
             }
         });
     }
-
 }
