@@ -85,12 +85,8 @@ public class AuthController {
 
     // naver 로그인 & 회원가입
     @GetMapping("/auth/naver/callback")
-    public ResponseEntity<?> naverCallback(@RequestParam String code, @RequestParam String state) throws IOException {
-        // 개발 중이므로 검증은 생략 or rally-test만 허용
-        if (!state.equals("rally-test")) {
-            throw new CustomException(ErrorCode.INVALID_STATE);
-        }
-        NaverTokenResponse tokenDto = naverService.getAccessToken(code, state);
+    public ResponseEntity<?> naverCallback(@RequestParam String code) throws IOException {
+        NaverTokenResponse tokenDto = naverService.getAccessToken(code);
         NaverUserInfoDto userInfo = naverService.getUserInfo(tokenDto.getAccessToken());
         NaverLoginResponse loginResponse = naverService.loginOrSignup(userInfo);
 
