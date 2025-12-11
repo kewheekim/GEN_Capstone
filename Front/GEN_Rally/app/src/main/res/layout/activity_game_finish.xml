@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:text="경기를 함께한 상대의 매너를 평가하고\n 칭찬해 경기 결과를 확인해보세요!"
         android:textColor="@color/white"
-        android:fontFamily="@font/pretendard_variable"
+        android:fontFamily="@font/pretendard_semibold"
         android:textFontWeight="700"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,6 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="20sp"
+        android:lineSpacingExtra="10dp"
         />
     <ImageView
         android:id="@+id/iv_finish_gif"
