@@ -92,7 +92,7 @@ public class KakaoService {
             user = new User();
 
             user.setSocialId(id);
-            user.setUserId("KAKAO_" + id);
+            user.setUserId(id);
             user.setName(name);
             user.setLoginType(LoginType.KAKAO);
             userRepository.save(user);
