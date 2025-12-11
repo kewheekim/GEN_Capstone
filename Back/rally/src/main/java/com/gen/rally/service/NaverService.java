@@ -97,7 +97,7 @@ public class NaverService {
             isNew = true;
         }
 
-        String subject = LoginType.NAVER + ":" + user.getSocialId();
+        String subject = user.getSocialId();
         String accessToken = jwtProvider.generateAccessToken(subject);
         String refreshToken = jwtProvider.generateRefreshToken(subject);
 
