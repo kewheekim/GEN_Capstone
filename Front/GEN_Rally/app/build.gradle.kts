@@ -26,8 +26,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_BASE_URL", "\"http://211.253.8.36:8080/\"")
-        buildConfigField ("String", "WS_BASE_URL", "\"ws://211.253.8.36:8080/stomp\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://211.253.26.214:8080/\"")
+        buildConfigField ("String", "WS_BASE_URL", "\"ws://211.253.26.214:8080/stomp\"")
 
         val kakaoKey = localProperties.getProperty("kakao.api.key") ?: ""
         val naverId = localProperties.getProperty("naver.client.id") ?: ""

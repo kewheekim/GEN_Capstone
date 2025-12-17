@@ -7,6 +7,6 @@
         <domain includeSubdomains="true">10.0.2.2</domain>
     </domain-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">211.253.8.36</domain>
+        <domain includeSubdomains="true">211.253.26.214</domain>
     </domain-config>
 </network-security-config>

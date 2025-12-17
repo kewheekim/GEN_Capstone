@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -96,7 +97,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if(response.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "fcm 토큰 갱신 성공", Toast.LENGTH_SHORT).show();
                 } else {
-                    //Toast.makeText(getApplicationContext(), "fcm 토큰 갱신 실패", Toast.LENGTH_SHORT).show();
+                    Log.e("Firebase", "fcm 토큰 갱신 실패");
                 }
             }
 

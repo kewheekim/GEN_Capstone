@@ -46,12 +46,10 @@
 
         <activity
             android:name=".ui.SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true"> <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity
             android:name=".ui.MainActivity"/>
@@ -79,16 +77,7 @@
         <activity android:name=".ui.SurveyActivity" />
         <activity android:name=".ui.ScoreMonitorActivity" />
         <activity android:name=".ui.TutorialActivity" />
-        <activity
-            android:name=".ui.ScoreRecordActivity"
-            android:exported="true"
-            android:label="ScoreRecord">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.ScoreRecordActivity"/>
         <activity android:name=".ui.EvaluationActivity"/>
         <activity android:name=".ui.TierActivity" />
         <activity android:name=".ui.ChatListActivity" />

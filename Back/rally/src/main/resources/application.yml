@@ -35,7 +35,7 @@ logging:
 
 firebase:
   credentials:
-    path: C:\Capstone\GEN_Capstone\rally-eb414-firebase-adminsdk-fbsvc-72e951da9e.json
+    path: C:\Capstone\GEN_Capstone\firebase-adminsdk.json
 
 ---
 spring:
