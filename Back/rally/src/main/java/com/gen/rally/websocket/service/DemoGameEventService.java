@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class DemoGameEventService {
 
+    private final MessageBus messageBus; // ✅ set_finish에서 game_finish 브로드캐스트에 필요
     private final ObjectMapper mapper = new ObjectMapper();
-    private final MessageBus messageBus;
 
     // gameId별 demo 상태(메모리)
     private final Map<Long, DemoState> games = new ConcurrentHashMap<>();
@@ -23,11 +23,6 @@ public class DemoGameEventService {
         this.messageBus = messageBus;
     }
 
-    /**
-     * ✅ 데모 이벤트 적용 + 상대에게 브로드캐스트
-     * - true 반환: 상태가 바뀌었고 publish까지 완료
-     * - false 반환: 무시(멱등/스냅샷요청/유효성 실패 등)
-     */
     public boolean applyIfValid(String rawJson) {
         try {
             JsonNode root = mapper.readTree(rawJson);
@@ -35,27 +30,36 @@ public class DemoGameEventService {
             long gameId = root.path("gameId").asLong(0L);
             if (gameId <= 0 || type == null) return false;
 
-            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset(mapper));
+            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset());
 
-            // 스냅샷 요청은 "상태 갱신"이 아니라서 여기서는 무시(별도 API에서 getLatestSnapshot 호출)
+            // snapshot_request는 상태 적용 X
             if ("snapshot_request".equals(type)) return false;
 
-            // 게임이 끝났으면 game_finish 외 이벤트는 무시
+            // 이미 게임 끝났으면 game_finish 외 이벤트 무시(선택)
             if (st.gameFinished && !"game_finish".equals(type)) return false;
 
-            boolean changed = false;
-
             switch (type) {
-                case "set_start" -> {
-                    // ⚠️ 데모에서는 "start 눌렀더니 0:0으로 리셋" 되면 안 되니까
-                    // 점수/세트 reset 절대 하지 말고, 타이머/paused만 갱신
-                    long startAt = root.path("payload").path("startAt").asLong(System.currentTimeMillis());
-                    st.startAt = startAt;
-                    st.paused = false;
-                    st.lastActivityAt = System.currentTimeMillis();
-                    changed = true;
 
-                    // 원하면 set_start 브로드캐스트 payload에 현재 점수도 같이 넣어줄 수도 있음(아래 buildSetStartEvent 참고)
+                case "set_start" -> {
+                    JsonNode p = root.path("payload");
+                    int setNum = p.path("setNumber").asInt(st.setNumber);
+                    String firstServer = p.path("firstServer").asText("USER1");
+                    long startAt = p.path("startAt").asLong(System.currentTimeMillis());
+
+                    st.setNumber = setNum;
+                    st.serve = firstServer;
+
+                    // ✅ 데모에서 “프리셋 점수 유지”하고 싶으면 아래 2줄을 지워.
+                    // st.u1Score = 0;
+                    // st.u2Score = 0;
+
+                    st.setStartAt = startAt;
+                    if (st.startAt == 0L) st.startAt = startAt;
+
+                    st.paused = false;
+                    st.pauseStartedAt = 0L;
+                    st.totalPaused = 0L;
+                    return true;
                 }
 
                 case "score_add" -> {
@@ -63,148 +67,148 @@ public class DemoGameEventService {
                     if ("user1".equalsIgnoreCase(to)) st.u1Score = clamp(st.u1Score + 1, 0, 30);
                     else if ("user2".equalsIgnoreCase(to)) st.u2Score = clamp(st.u2Score + 1, 0, 30);
                     else return false;
-
                     st.lastActivityAt = System.currentTimeMillis();
-                    changed = true;
+                    return true;
                 }
 
                 case "score_undo" -> {
                     String from = root.path("payload").path("from").asText("user1");
                     if ("user1".equalsIgnoreCase(from)) st.u1Score = clamp(st.u1Score - 1, 0, 30);
                     else if ("user2".equalsIgnoreCase(from)) st.u2Score = clamp(st.u2Score - 1, 0, 30);
-
                     st.lastActivityAt = System.currentTimeMillis();
-                    changed = true;
+                    return true;
                 }
 
                 case "set_pause" -> {
+                    if (st.paused) return false;
+                    long at = root.path("payload").path("pausedAt")
+                            .asLong(root.path("payload").path("timeStamp")
+                                    .asLong(System.currentTimeMillis()));
                     st.paused = true;
+                    st.pauseStartedAt = at;
                     st.lastActivityAt = System.currentTimeMillis();
-                    changed = true;
+                    return true;
                 }
 
                 case "set_resume" -> {
+                    if (!st.paused) return false;
+                    long at = root.path("payload").path("resumedAt")
+                            .asLong(root.path("payload").path("timeStamp")
+                                    .asLong(System.currentTimeMillis()));
+                    if (st.pauseStartedAt > 0L) {
+                        st.totalPaused += Math.max(0L, at - st.pauseStartedAt);
+                    }
                     st.paused = false;
+                    st.pauseStartedAt = 0L;
                     st.lastActivityAt = System.currentTimeMillis();
-                    changed = true;
+                    return true;
                 }
 
-                case "game_finish" -> {
+                /**
+                 * ✅ 핵심: GameEventService의 set_finish 패턴 그대로 이식
+                 * - 세트 요약 저장
+                 * - sets 증가
+                 * - 게임 종료면 game_finish 브로드캐스트
+                 */
+                case "set_finish" -> {
                     JsonNode p = root.path("payload");
+                    String winner = p.path("winner").asText(""); // "user1"|"user2"
+                    long finishedAt = root.path("eventTime").asLong(System.currentTimeMillis());
 
-                    long totalElapsedSec = p.path("totalElapsedSec").asLong(-1L);
-                    if (totalElapsedSec >= 0) st.totalElapsedSec = totalElapsedSec;
+                    if (st.setStartAt == 0L) st.setStartAt = finishedAt;
+
+                    long elapsedMs = Math.max(0L, finishedAt - st.setStartAt - st.totalPaused);
+                    long elapsedSec = elapsedMs / 1000L;
+
+                    // 세트 요약 저장(현재 세트 번호 기준)
+                    st.completedSets.add(
+                            new DemoSetSummary(st.setNumber, st.u1Score, st.u2Score, st.setStartAt, finishedAt, elapsedSec)
+                    );
+
+                    // sets 증가
+                    if ("user1".equalsIgnoreCase(winner)) st.u1Sets++;
+                    else if ("user2".equalsIgnoreCase(winner)) st.u2Sets++;
                     else {
-                        if (st.startAt > 0) st.totalElapsedSec = Math.max(0L, (System.currentTimeMillis() - st.startAt) / 1000L);
-                        else st.totalElapsedSec = 0L;
+                        // winner가 비면 점수로 판정(데모 안정장치)
+                        if (st.u1Score > st.u2Score) st.u1Sets++;
+                        else if (st.u2Score > st.u1Score) st.u2Sets++;
                     }
 
-                    JsonNode setsNode = p.get("sets");
-                    if (setsNode != null && setsNode.isArray()) {
+                    // 다음 세트 준비
+                    st.setNumber++;
+                    st.u1Score = 0;
+                    st.u2Score = 0;
+
+                    st.setStartAt = 0L;
+                    st.paused = true;
+                    st.pauseStartedAt = 0L;
+                    st.totalPaused = 0L;
+
+                    st.lastActivityAt = System.currentTimeMillis();
+
+                    // ✅ 게임 종료 판단 (2선승)
+                    if (st.u1Sets >= 2 || st.u2Sets >= 2) {
+                        ObjectNode gf = mapper.createObjectNode();
+                        gf.put("path", "/rally/event/game_finish");
+                        gf.put("type", "game_finish");
+                        gf.put("gameId", gameId);
+
+                        ObjectNode payload = mapper.createObjectNode();
+                        payload.put("winner", (st.u1Sets > st.u2Sets) ? "user1" : "user2");
+                        payload.put("user1Sets", st.u1Sets);
+                        payload.put("user2Sets", st.u2Sets);
+                        payload.put("setNumberFinished", st.setNumber - 1);
+
+                        // 세트별 점수/시간
                         ArrayNode arr = mapper.createArrayNode();
-                        for (JsonNode s : setsNode) {
-                            ObjectNode one = mapper.createObjectNode();
-                            one.put("setNumber", s.path("setNumber").asInt(0));
-                            one.put("user1Score", s.path("user1Score").asInt(0));
-                            one.put("user2Score", s.path("user2Score").asInt(0));
-                            one.put("elapsedSec", s.path("elapsedSec").asLong(0L));
-                            arr.add(one);
+                        long total = 0L;
+                        for (DemoSetSummary ss : st.completedSets) {
+                            ObjectNode s = mapper.createObjectNode();
+                            s.put("setNumber", ss.setNumber);
+                            s.put("user1Score", ss.user1Score);
+                            s.put("user2Score", ss.user2Score);
+                            s.put("elapsedSec", ss.elapsedSec);
+                            arr.add(s);
+                            total += ss.elapsedSec;
                         }
-                        st.sets = arr;
-                    } else {
-                        if (st.sets == null) st.sets = mapper.createArrayNode();
-                        st.sets.add(mapper.createObjectNode()
-                                .put("setNumber", st.setNumber)
-                                .put("user1Score", st.u1Score)
-                                .put("user2Score", st.u2Score)
-                                .put("elapsedSec", 0L));
+                        payload.set("sets", arr);
+                        payload.put("totalElapsedSec", total);
+
+                        gf.set("payload", payload);
+
+                        // ✅ 여기서만 브로드캐스트!
+                        messageBus.publish("/topic/game." + gameId, mapper.writeValueAsString(gf));
+
+                        st.gameFinished = true;
+                        st.totalElapsedSec = total;
                     }
 
+                    return true;
+                }
+
+                // (선택) 클라가 game_finish를 보내는 경우도 허용하고 싶다면
+                case "game_finish" -> {
                     st.gameFinished = true;
                     st.paused = true;
                     st.lastActivityAt = System.currentTimeMillis();
-                    changed = true;
+                    return true;
                 }
 
                 default -> {
                     return false;
                 }
             }
-
-            if (!changed) return false;
-
-            // ✅ 여기서 "상대에게 브로드캐스트"
-            // - 실코드처럼 rawJson 그대로 보내도 되지만,
-            // - 데모는 watch/phone이 바로 쓰기 쉽게 "score 이벤트는 절대 점수 포함" 형태로 보내는 게 안전함.
-            String out = buildBroadcastEvent(type, gameId, st, root);
-            messageBus.publish("/topic/game." + gameId, out);
-
-            return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    /**
-     * ✅ 데모 broadcast는 "watch/phone이 즉시 반영 가능하게" 절대값을 넣어서 보내는 게 제일 안전
-     * - /rally/event/score 처럼 u1/u2 score 포함
-     * - set_start도 현재 점수 유지한 채로 보내기 가능
-     */
-    private String buildBroadcastEvent(String type, long gameId, DemoState st, JsonNode inboundRoot) throws Exception {
-        // 네 워치 수신 쪽이 path 기반이면 path도 같이 내려주면 편함
-        // (실코드에서 gf.put("path", "/rally/event/game_finish") 한 것처럼)
-        String path = switch (type) {
-            case "set_start" -> "/rally/event/set_start";
-            case "score_add", "score_undo" -> "/rally/event/score";
-            case "set_pause" -> "/rally/event/pause";
-            case "set_resume" -> "/rally/event/resume";
-            case "game_finish" -> "/rally/event/game_finish";
-            default -> "/rally/event/unknown";
-        };
-
-        ObjectNode out = mapper.createObjectNode();
-        out.put("path", path);
-        out.put("type", type);
-        out.put("gameId", gameId);
-
-        ObjectNode p = mapper.createObjectNode();
-
-        // 공통(현재 상태 절대값)
-        p.put("setNumber", st.setNumber);
-        p.put("user1Score", st.u1Score);
-        p.put("user2Score", st.u2Score);
-        p.put("user1Sets", st.u1Sets);
-        p.put("user2Sets", st.u2Sets);
-        p.put("currentServer", st.serve);
-
-        // set_start 타임스탬프
-        if ("set_start".equals(type)) {
-            long startAt = inboundRoot.path("payload").path("startAt").asLong(System.currentTimeMillis());
-            p.put("startAt", startAt);
-            p.put("firstServer", st.serve);
-        }
-
-        // pause/resume 타임스탬프
-        if ("set_pause".equals(type) || "set_resume".equals(type)) {
-            long ts = inboundRoot.path("payload").path("timeStamp").asLong(System.currentTimeMillis());
-            p.put("timeStamp", ts);
-        }
-
-        // game_finish는 sets/totalElapsed 같이 포함
-        if ("game_finish".equals(type)) {
-            p.put("totalElapsedSec", st.totalElapsedSec);
-            if (st.sets != null) p.set("sets", st.sets);
-        }
-
-        out.set("payload", p);
-        return mapper.writeValueAsString(out);
-    }
-
+    /** snapshot은 “요청 시 제공” */
     public String getLatestSnapshot(Long gameId) {
         try {
             if (gameId == null || gameId <= 0) return null;
 
-            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset(mapper));
+            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset());
 
             ObjectNode payload = mapper.createObjectNode();
 
@@ -212,17 +216,25 @@ public class DemoGameEventService {
             payload.set("user1", mapper.createObjectNode().put("score", st.u1Score).put("sets", st.u1Sets));
             payload.set("user2", mapper.createObjectNode().put("score", st.u2Score).put("sets", st.u2Sets));
             payload.put("serve", st.serve);
-            payload.put("lastAppliedSeq", 0);
 
-            payload.set("setsSummary", st.sets != null ? st.sets : buildSetsSummary());
-            payload.set("vitals", buildVitals(st));
-
+            // stopWatch
             ObjectNode stopWatch = mapper.createObjectNode();
             stopWatch.put("startAt", st.startAt);
             stopWatch.put("paused", st.paused);
-            stopWatch.put("pauseStartedAt", 0L);
-            stopWatch.put("totalPaused", 0L);
+            stopWatch.put("pauseStartedAt", st.pauseStartedAt);
+            stopWatch.put("totalPaused", st.totalPaused);
             payload.set("stopWatch", stopWatch);
+
+            // setsSummary: completedSets가 있으면 그걸 내려줌
+            ArrayNode setsSummary = mapper.createArrayNode();
+            for (DemoSetSummary ss : st.completedSets) {
+                setsSummary.add(mapper.createObjectNode()
+                        .put("setNumber", ss.setNumber)
+                        .put("user1Score", ss.user1Score)
+                        .put("user2Score", ss.user2Score)
+                        .put("elapsedSec", ss.elapsedSec));
+            }
+            payload.set("setsSummary", setsSummary);
 
             payload.put("gameFinished", st.gameFinished);
             payload.put("totalElapsedSec", st.totalElapsedSec);
@@ -238,43 +250,9 @@ public class DemoGameEventService {
         }
     }
 
-    public Long extractgameId(String rawJson) {
-        try {
-            JsonNode node = mapper.readTree(rawJson);
-            long id = node.path("gameId").asLong(0L);
-            return (id <= 0L) ? null : id;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public void reset(Long gameId) {
         if (gameId == null) return;
         games.remove(gameId);
-    }
-
-    private ArrayNode buildSetsSummary() {
-        ArrayNode arr = mapper.createArrayNode();
-        arr.add(mapper.createObjectNode().put("setNumber", 1).put("user1Score", 21).put("user2Score", 19).put("elapsedSec", 1012));
-        arr.add(mapper.createObjectNode().put("setNumber", 2).put("user1Score", 17).put("user2Score", 21).put("elapsedSec", 906));
-        return arr;
-    }
-
-    private ObjectNode buildVitals(DemoState st) {
-        ObjectNode v = mapper.createObjectNode();
-        v.put("calories", 204);
-        v.put("steps", 3230);
-        v.put("minHr", 83);
-        v.put("maxHr", 91);
-
-        ArrayNode series = mapper.createArrayNode();
-        long base = System.currentTimeMillis() - 3 * 60_000L;
-        int[] bpm = new int[]{83,83,84,84,85,86,88,89,89,89,90,91,90,89,88,88,88,88,88,87,87,88,88,88,87,87,86,88,88,87,89};
-        for (int i = 0; i < bpm.length; i++) {
-            series.add(mapper.createObjectNode().put("bpm", bpm[i]).put("epochMs", base + i * 1000L));
-        }
-        v.set("heartSeries", series);
-        return v;
     }
 
     private static int clamp(int v, int min, int max) {
@@ -285,40 +263,75 @@ public class DemoGameEventService {
         return n.has(f) && !n.get(f).isNull() ? n.get(f).asText() : null;
     }
 
+    // ====== demo state ======
     static class DemoState {
         int setNumber;
+
         int u1Sets, u2Sets;
         int u1Score, u2Score;
+
         String serve;
 
-        long startAt;
+        long startAt;       // 경기 시작(전체)
+        long setStartAt;    // 세트 시작
         boolean paused;
+
+        long pauseStartedAt;
+        long totalPaused;
+
         long lastActivityAt;
 
         boolean gameFinished;
         long totalElapsedSec;
-        ArrayNode sets;
 
-        static DemoState preset(ObjectMapper mapper) {
+        java.util.List<DemoSetSummary> completedSets = new java.util.ArrayList<>();
+
+        static DemoState preset() {
             DemoState s = new DemoState();
+
+            // ✅ 너가 쓰던 프리셋 그대로
             s.setNumber = 3;
             s.u1Sets = 1;
             s.u2Sets = 1;
             s.u1Score = 18;
             s.u2Score = 19;
+
             s.serve = "USER1";
             s.startAt = 0L;
+            s.setStartAt = 0L;
+
             s.paused = true;
+            s.pauseStartedAt = 0L;
+            s.totalPaused = 0L;
+
             s.lastActivityAt = System.currentTimeMillis();
-
-            ArrayNode arr = mapper.createArrayNode();
-            arr.add(mapper.createObjectNode().put("setNumber", 1).put("user1Score", 21).put("user2Score", 19).put("elapsedSec", 1012));
-            arr.add(mapper.createObjectNode().put("setNumber", 2).put("user1Score", 17).put("user2Score", 21).put("elapsedSec", 906));
-            s.sets = arr;
-
             s.gameFinished = false;
             s.totalElapsedSec = 0L;
+
+            // 1/2세트 요약도 넣고 싶으면:
+            s.completedSets.add(new DemoSetSummary(1, 21, 19, 0L, 0L, 1012));
+            s.completedSets.add(new DemoSetSummary(2, 17, 21, 0L, 0L, 906));
+
             return s;
+        }
+    }
+
+    static class DemoSetSummary {
+        final int setNumber;
+        final int user1Score;
+        final int user2Score;
+        final long startedAt;
+        final long finishedAt;
+        final long elapsedSec;
+
+        DemoSetSummary(int setNumber, int user1Score, int user2Score,
+                       long startedAt, long finishedAt, long elapsedSec) {
+            this.setNumber = setNumber;
+            this.user1Score = user1Score;
+            this.user2Score = user2Score;
+            this.startedAt = startedAt;
+            this.finishedAt = finishedAt;
+            this.elapsedSec = elapsedSec;
         }
     }
 }
