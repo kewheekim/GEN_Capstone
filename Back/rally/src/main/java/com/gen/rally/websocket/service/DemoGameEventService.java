@@ -115,8 +115,8 @@ public class DemoGameEventService {
 
             // stopWatch (폰/워치 UI에서 필요할 수 있어 포함)
             ObjectNode stopWatch = mapper.createObjectNode();
-            stopWatch.put("startAt", 0L);
-            stopWatch.put("paused",true);
+            stopWatch.put("startAt", st.startAt);
+            stopWatch.put("paused",st.paused);
             stopWatch.put("pauseStartedAt", 0L);
             stopWatch.put("totalPaused", 0L);
             payload.set("stopWatch", stopWatch);
