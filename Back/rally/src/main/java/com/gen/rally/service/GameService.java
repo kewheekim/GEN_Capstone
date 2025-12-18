@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,7 +26,7 @@ public class GameService {
     private final ChatMessageRepository messageRepository;
 
 
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("M월 d일(E)");
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("M월 d일(E)", Locale.KOREA);
 
 
     public List<MatchFoundItem> findFound(String myUserId, Long userId) {
