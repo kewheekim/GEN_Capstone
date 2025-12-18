@@ -27,14 +27,20 @@ public class DemoGameEventService {
             DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset());
 
             // 종료, 세트 시작 무시
-            if ("set_start".equals(type)
-                    || "set_finish".equals(type)
+            if ("set_finish".equals(type)
                     || "game_finish".equals(type)
                     || "snapshot_request".equals(type)) {
                 return false;
             }
 
             switch (type) {
+                case "set_start" -> {
+                    long startAt = root.path("payload").path("startAt").asLong(System.currentTimeMillis());
+                    st.startAt = startAt;
+                    st.paused = false;
+                    st.lastActivityAt = System.currentTimeMillis();
+                    return true;
+                }
                 case "score_add" -> {
                     String to = root.path("payload").path("scoreTo").asText("");
                     if ("user1".equalsIgnoreCase(to)) {
@@ -109,8 +115,8 @@ public class DemoGameEventService {
 
             // stopWatch (폰/워치 UI에서 필요할 수 있어 포함)
             ObjectNode stopWatch = mapper.createObjectNode();
-            stopWatch.put("startAt", st.startAt);
-            stopWatch.put("paused", st.paused);
+            stopWatch.put("startAt", 0L);
+            stopWatch.put("paused",true);
             stopWatch.put("pauseStartedAt", 0L);
             stopWatch.put("totalPaused", 0L);
             payload.set("stopWatch", stopWatch);
@@ -215,11 +221,11 @@ public class DemoGameEventService {
             s.u1Sets = 1;
             s.u2Sets = 1;
             s.u1Score = 18;
-            s.u2Score = 18;
+            s.u2Score = 19;
 
             s.serve = "USER1";
-            s.startAt = System.currentTimeMillis();
-            s.paused = false;
+            s.startAt = 0L;
+            s.paused = true;
             s.lastActivityAt = System.currentTimeMillis();
 
             return s;
