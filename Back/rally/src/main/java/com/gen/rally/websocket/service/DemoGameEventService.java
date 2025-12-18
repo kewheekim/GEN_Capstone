@@ -24,14 +24,10 @@ public class DemoGameEventService {
             long gameId = root.path("gameId").asLong(0L);
             if (gameId <= 0 || type == null) return false;
 
-            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset());
+            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset(mapper));
+            if ("snapshot_request".equals(type)) return false;
+            if (st.gameFinished && !"game_finish".equals(type)) return false;
 
-            // 종료, 세트 시작 무시
-            if ("set_finish".equals(type)
-                    || "game_finish".equals(type)
-                    || "snapshot_request".equals(type)) {
-                return false;
-            }
 
             switch (type) {
                 case "set_start" -> {
@@ -74,6 +70,52 @@ public class DemoGameEventService {
                     st.lastActivityAt = System.currentTimeMillis();
                     return true;
                 }
+                case "game_finish" -> {
+                    JsonNode p = root.path("payload");
+
+                    // (1) totalElapsedSec: 클라이언트가 보내주면 그걸 신뢰(전시용)
+                    long totalElapsedSec = p.path("totalElapsedSec").asLong(-1L);
+                    if (totalElapsedSec >= 0) {
+                        st.totalElapsedSec = totalElapsedSec;
+                    } else {
+                        // (2) 없으면 startAt 기반으로 계산(대충)
+                        if (st.startAt > 0) {
+                            long now = System.currentTimeMillis();
+                            st.totalElapsedSec = Math.max(0L, (now - st.startAt) / 1000L);
+                        } else {
+                            st.totalElapsedSec = 0L;
+                        }
+                    }
+
+                    // (3) 세트 결과 배열: 클라가 sets를 보내면 그걸로 덮어쓰기
+                    JsonNode setsNode = p.get("sets");
+                    if (setsNode != null && setsNode.isArray()) {
+                        ArrayNode arr = mapper.createArrayNode();
+                        for (JsonNode s : setsNode) {
+                            ObjectNode one = mapper.createObjectNode();
+                            one.put("setNumber", s.path("setNumber").asInt(0));
+                            one.put("user1Score", s.path("user1Score").asInt(0));
+                            one.put("user2Score", s.path("user2Score").asInt(0));
+                            one.put("elapsedSec", s.path("elapsedSec").asLong(0L));
+                            arr.add(one);
+                        }
+                        st.sets = arr;
+                    } else {
+                        // (4) 없으면 “현재 3세트 점수”를 마지막으로 넣어도 됨(전시용)
+                        if (st.sets == null) st.sets = mapper.createArrayNode();
+                        st.sets.add(mapper.createObjectNode()
+                                .put("setNumber", st.setNumber)
+                                .put("user1Score", st.u1Score)
+                                .put("user2Score", st.u2Score)
+                                .put("elapsedSec", 0L));
+                    }
+
+                    st.gameFinished = true;
+                    st.paused = true;
+                    st.lastActivityAt = System.currentTimeMillis();
+                    return true;
+                }
+
                 default -> {
                     return false;
                 }
@@ -93,7 +135,7 @@ public class DemoGameEventService {
         try {
             if (gameId == null || gameId <= 0) return null;
 
-            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset());
+            DemoState st = games.computeIfAbsent(gameId, k -> DemoState.preset(mapper));
 
             ObjectNode payload = mapper.createObjectNode();
 
@@ -109,7 +151,8 @@ public class DemoGameEventService {
             payload.put("lastAppliedSeq", 0);
 
             // 1/2세트 결과
-            payload.set("setsSummary", buildSetsSummary());
+            if (st.sets != null) payload.set("setsSummary", st.sets);
+            else payload.set("setsSummary", buildSetsSummary());
 
             // 생체데이터
             payload.set("vitals", buildVitals(st));
@@ -121,6 +164,9 @@ public class DemoGameEventService {
             stopWatch.put("pauseStartedAt", 0L);
             stopWatch.put("totalPaused", 0L);
             payload.set("stopWatch", stopWatch);
+
+            payload.put("gameFinished", st.gameFinished);
+            payload.put("totalElapsedSec", st.totalElapsedSec);
 
             ObjectNode root = mapper.createObjectNode();
             root.put("type", "snapshot");
@@ -213,8 +259,11 @@ public class DemoGameEventService {
         boolean paused;
 
         long lastActivityAt;
+        boolean gameFinished;
+        long totalElapsedSec;         // 경기 누적 시간(초)
+        ArrayNode sets;
 
-        static DemoState preset() {
+        static DemoState preset(ObjectMapper mapper) {
             DemoState s = new DemoState();
 
             // 시작 조건
@@ -228,6 +277,11 @@ public class DemoGameEventService {
             s.startAt = 0L;
             s.paused = true;
             s.lastActivityAt = System.currentTimeMillis();
+
+            ArrayNode arr = mapper.createArrayNode();
+            arr.add(mapper.createObjectNode().put("setNumber", 1).put("user1Score", 21).put("user2Score", 19).put("elapsedSec", 1012));
+            arr.add(mapper.createObjectNode().put("setNumber", 2).put("user1Score", 17).put("user2Score", 21).put("elapsedSec", 906));
+
 
             return s;
         }
