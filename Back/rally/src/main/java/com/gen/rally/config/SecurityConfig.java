@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/kakao/**","/auth/naver/**","/api/auth/login/kakao","/api/auth/login/naver",
                                         "/api/users/**",
-                                        "/ws/**","/ws-score/**","/stomp/**","/chat/**", "/api/evaluation/**", "/api/match/**",
+                                        "/ws/**","/ws-score/**","/ws-score-demo/**","/stomp/**","/chat/**", "/api/evaluation/**", "/api/match/**",
                                         "/api/invitation/**", "/api/game/**", "/api/goal/**", "/api/notification/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(login -> login.disable())

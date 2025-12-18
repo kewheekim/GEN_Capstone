@@ -1,0 +1,83 @@
+package com.gen.rally.websocket.handler;
+
+import com.gen.rally.websocket.bus.MessageBus;
+import com.gen.rally.websocket.service.DemoGameEventService;
+import com.gen.rally.websocket.util.QueryString;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.*;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Component
+public class WsDemoHandler extends TextWebSocketHandler {
+
+    private final MessageBus bus;
+    private final DemoGameEventService service;
+
+    public WsDemoHandler(MessageBus bus, DemoGameEventService service){
+        this.bus = bus;
+        this.service = service;
+    }
+
+    private static String room(Long gameId){ return "/topic/game." + gameId; }
+
+    private final ConcurrentMap<String, Long> sessionToGame = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Long, AtomicInteger> gameConnCount = new ConcurrentHashMap<>();
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession s) throws Exception {
+        Map<String,String> q = QueryString.parse(s.getUri());
+        String gameIdStr = q.get("gameId");
+        long gameId;
+
+        try { gameId = Long.parseLong(gameIdStr); }
+        catch (Exception e) { s.close(); return; }
+
+        sessionToGame.put(s.getId(), gameId);
+        gameConnCount.computeIfAbsent(gameId, k -> new AtomicInteger(0)).incrementAndGet();
+
+        bus.join(room(gameId), s);
+
+        String snap = service.getLatestSnapshot(gameId);
+        if (snap != null) s.sendMessage(new TextMessage(snap));
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession s, TextMessage m) throws Exception {
+        String raw = m.getPayload();
+
+        if (raw.contains("\"type\":\"snapshot_request\"")) {
+            Long gameId = service.extractgameId(raw);
+            String snap = service.getLatestSnapshot(gameId);
+            if (snap != null) s.sendMessage(new TextMessage(snap));
+            return;
+        }
+
+        boolean applied = service.applyIfValid(raw);
+        if (applied) {
+            Long gameId = service.extractgameId(raw);
+            if (gameId != null) bus.publish(room(gameId), raw);
+        }
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession s, CloseStatus status){
+        bus.leave(s);
+
+        Long gameId = sessionToGame.remove(s.getId());
+        if (gameId == null) return;
+
+        AtomicInteger cnt = gameConnCount.get(gameId);
+        if (cnt == null) return;
+
+        int left = cnt.decrementAndGet();
+        if (left <= 0) {
+            gameConnCount.remove(gameId);
+            service.reset(gameId);
+        }
+    }
+}
