@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -26,7 +28,7 @@ public class InvitationService {
     private final NotificationService notiService;
     private final UserRepository userRepo;
     private final MatchRequestRepository requestRepo;
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("M월 d일(E)");
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("M월 d일(E)", Locale.KOREA);
 
     public ResponseEntity<MatchInviteResponse> invite(String userId, MatchInviteRequest req
     ) {

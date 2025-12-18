@@ -27,7 +27,7 @@ public class MatchRequestService {
     private final MatchInvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
-    DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일(E)");
+    DateTimeFormatter formatter= DateTimeFormatter.ofPattern("M월 d일(E)", Locale.KOREA);
 
     public Long createMatchRequest(String userId, MatchRequestCreateDto userInput) {
         User user = userRepository.findByUserId(userId)
