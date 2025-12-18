@@ -262,6 +262,15 @@ public class DemoGameEventService {
     private static String text(JsonNode n, String f) {
         return n.has(f) && !n.get(f).isNull() ? n.get(f).asText() : null;
     }
+    public Long extractgameId(String rawJson) {
+        try {
+            JsonNode node = mapper.readTree(rawJson);
+            long id = node.path("gameId").asLong(0L);
+            return (id <= 0L) ? null : id;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     // ====== demo state ======
     static class DemoState {
