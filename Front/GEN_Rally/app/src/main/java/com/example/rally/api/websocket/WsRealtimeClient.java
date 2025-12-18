@@ -13,6 +13,9 @@ public class WsRealtimeClient implements RealtimeClient {
     private WebSocket socket;
     private Consumer<String> listener;
     private int backoffMs = 1000;
+    private volatile boolean manualClose = false;
+    private final Handler main = new Handler(Looper.getMainLooper());
+    private Runnable reconnectTask;
 
     public WsRealtimeClient(String url) {
         this.url = url;
@@ -44,11 +47,26 @@ public class WsRealtimeClient implements RealtimeClient {
 
     private void scheduleReconnect() {
         int delay = Math.min(backoffMs, 30000);
-        new Handler(Looper.getMainLooper()).postDelayed(this::connect, delay);
+        //  이전 예약 취소 (중복 재연결 방지)
+        if (reconnectTask != null) main.removeCallbacks(reconnectTask);
+        reconnectTask = this::connect;
+        main.postDelayed(reconnectTask, delay);
         backoffMs = Math.min(backoffMs * 2, 30000);
     }
 
     @Override public void subscribe(String topic, Consumer<String> onMessage) { this.listener = onMessage; }
     @Override public void send(String body) { if (socket != null) socket.send(body); }
-    @Override public void disconnect() { if (socket != null) socket.close(1000, "bye"); }
+    @Override public void disconnect() {
+        manualClose = true;
+
+        // 예약된 재연결 취소
+        if (reconnectTask != null) main.removeCallbacks(reconnectTask);
+        reconnectTask = null;
+
+        if (socket != null) {
+            socket.close(1000, "bye");
+            socket.cancel();
+            socket = null;
+        }
+    }
 }

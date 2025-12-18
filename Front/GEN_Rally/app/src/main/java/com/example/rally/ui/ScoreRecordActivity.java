@@ -52,7 +52,7 @@ public class ScoreRecordActivity extends AppCompatActivity {
         setupClicks();
 
         Intent intent = getIntent();
-        gameId = intent.getLongExtra("gameId", 134);
+        gameId = intent.getLongExtra("gameId", 1);
         setNumber = intent.getIntExtra("setNumber", 1);
         int opponentSets = intent.getIntExtra("opponentSets", 0);
         int userSets = intent.getIntExtra("userSets", 0);
@@ -111,6 +111,16 @@ public class ScoreRecordActivity extends AppCompatActivity {
         tvTimer.setText("00:00:00");
         btnBack.setColorFilter(ContextCompat.getColor(this, R.color.white));
         updateButtonsForState();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (client != null) client.disconnect();
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isFinishing() && client != null) client.disconnect();
     }
 
     private void bindViews() {

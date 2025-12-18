@@ -352,6 +352,7 @@ public class ScoreMonitorActivity extends AppCompatActivity {
 
     @Override protected void onStop() {
         super.onStop();
+        if (client != null) client.disconnect();
         androidx.localbroadcastmanager.content.LocalBroadcastManager
                 .getInstance(this)
                 .unregisterReceiver(watchEventReceiver);
