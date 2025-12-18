@@ -189,4 +189,9 @@ public class GameEventService {
     }
 
     private static String text(JsonNode n, String f){ return n.has(f) && !n.get(f).isNull() ? n.get(f).asText() : null; }
+
+    public void reset(Long gameId) {
+        if (gameId == null) return;
+        games.remove(gameId); // 메모리 상태 초기화
+    }
 }
