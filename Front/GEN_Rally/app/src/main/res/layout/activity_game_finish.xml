@@ -9,6 +9,16 @@
     android:fitsSystemWindows="true"
     android:background="@color/green_active">
 
+    <ImageView
+        android:id="@+id/iv_finish_gif"
+        android:layout_width="412dp"
+        android:layout_height="500dp"
+        android:src="@drawable/game_finish_gif"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="192dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,15 +47,7 @@
         android:textSize="20sp"
         android:lineSpacingExtra="10dp"
         />
-    <ImageView
-        android:id="@+id/iv_finish_gif"
-        android:layout_width="412dp"
-        android:layout_height="500dp"
-        android:src="@drawable/game_finish_gif"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="192dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <android.widget.Button
         android:id="@+id/btn_next"
