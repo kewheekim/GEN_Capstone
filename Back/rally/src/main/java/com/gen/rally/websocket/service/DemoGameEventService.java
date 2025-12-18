@@ -39,6 +39,7 @@ public class DemoGameEventService {
                     st.startAt = startAt;
                     st.paused = false;
                     st.lastActivityAt = System.currentTimeMillis();
+
                     return true;
                 }
                 case "score_add" -> {
