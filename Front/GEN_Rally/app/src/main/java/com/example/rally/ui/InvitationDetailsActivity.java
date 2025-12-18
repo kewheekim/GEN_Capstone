@@ -67,7 +67,7 @@ public class InvitationDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invitation_received_detail);
+        setContentView(R.layout.activity_invitation_detail);
         btnBack = findViewById(R.id.btn_back);
         tvDateType = findViewById(R.id.tv_date_type);
         tvMyTime = findViewById(R.id.tv_my_time);
